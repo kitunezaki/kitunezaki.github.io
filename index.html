@@ -53203,6 +53203,7 @@ return { ACESFilmicToneMapping, AddEquation, AddOperation, AdditiveAnimationBlen
 
 <script>
 
+
 // ============================================================
 // 1. REAL TERRAIN DATA & CONSTANTS
 // ============================================================
@@ -60007,26 +60008,41 @@ function buildSkierFigure() {
     heel.position.set(0, 0.072, -0.105);
     g.add(heel);
 
+    const cuffPivot = new THREE.Group();
+    cuffPivot.position.set(0, 0.068, -0.070);
+    cuffPivot.rotation.order = 'XYZ';
+    cuffPivot.rotation.x = 0.24;
+    g.add(cuffPivot);
+
     const cuff = makeLathe([
       [0.056, 0.00], [0.058, 0.05], [0.062, 0.12], [0.065, 0.175], [0.054, 0.19]
     ], 14, 0.96, 1.12, bootShell);
-    cuff.position.set(0, 0.068, -0.070);
-    cuff.rotation.x = 0.24;
-    g.add(cuff);
+    cuff.position.set(0, 0, 0);
+    cuff.rotation.x = 0;
+    cuffPivot.add(cuff);
 
     const strap = new THREE.Mesh(new THREE.CylinderGeometry(0.066, 0.065, 0.026, 12), bootRed);
     strap.scale.set(0.98, 1.0, 1.14);
-    strap.position.set(0, 0.215, -0.034);
-    strap.rotation.x = 0.24;
-    g.add(strap);
+    strap.position.set(0, 0.151, 0);
+    strap.rotation.x = 0;
+    cuffPivot.add(strap);
 
-    for (let bi = 0; bi < 3; bi++) {
-      const b = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.015, 0.044), bootBuckle);
-      b.position.set(sideSign * 0.056, 0.072 + bi * 0.046, -0.018 - bi * 0.014);
-      b.rotation.x = 0.18;
-      g.add(b);
-    }
+    const b0 = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.015, 0.044), bootBuckle);
+    b0.position.set(sideSign * 0.056, 0.072, -0.018);
+    b0.rotation.x = 0.18;
+    g.add(b0);
 
+    const b1 = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.015, 0.044), bootBuckle);
+    b1.position.set(sideSign * 0.056, 0.058, 0.025);
+    b1.rotation.x = -0.06;
+    cuffPivot.add(b1);
+
+    const b2 = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.015, 0.044), bootBuckle);
+    b2.position.set(sideSign * 0.056, 0.099, 0.001);
+    b2.rotation.x = -0.06;
+    cuffPivot.add(b2);
+
+    g.userData.cuffPivot = cuffPivot;
     skierFigure.add(g);
     return g;
   }
@@ -60296,7 +60312,8 @@ function buildSkierFigure() {
 
   skierRig = {
     L_SHIN, L_THIGH, L_UPPER, L_FORE,
-    bootL, bootR, shinL, shinR, kneeL, kneeR, thighL, thighR,
+    bootL, bootR, bootCuffL: bootL.userData.cuffPivot, bootCuffR: bootR.userData.cuffPivot,
+    shinL, shinR, kneeL, kneeR, thighL, thighR,
     pelvisG, lumbarG, chestG, neckG, headG,
     armL, armR,
     // Reusable scratch vectors/matrices (zero per-frame GC churn)
@@ -60325,6 +60342,10 @@ function buildSkierFigure() {
     _vAnkleR: new THREE.Vector3(),
     _vHipL: new THREE.Vector3(),
     _vHipR: new THREE.Vector3(),
+    _vHipOffL: new THREE.Vector3(),
+    _vHipOffR: new THREE.Vector3(),
+    _vShinInBoot: new THREE.Vector3(),
+    _qBootInv: new THREE.Quaternion(),
     _vTipInFig: new THREE.Vector3(),
     _vTipWorld: new THREE.Vector3(),
     _mFigInv: new THREE.Matrix4()
@@ -60386,6 +60407,13 @@ const skierPose = {
   microComp: makeSpring(0),     // continuous micro-terrain knee/hip compliance
   microAnkleL: makeSpring(0),   // subtle left ankle dorsiflexion compliance
   microAnkleR: makeSpring(0),   // subtle right ankle dorsiflexion compliance
+  groundDelta: makeSpring(0),   // critically-damped terrain-smoothing offset (Fix 1)
+  cuffPitchL: makeSpring(0.24), // boot cuff forward flex spring L (Fix 3)
+  cuffPitchR: makeSpring(0.24), // boot cuff forward flex spring R (Fix 3)
+  cuffRollL: makeSpring(0),     // boot cuff lateral flex spring L (Fix 3)
+  cuffRollR: makeSpring(0),     // boot cuff lateral flex spring R (Fix 3)
+  prevFlexL: -1,
+  prevFlexR: -1,
   hipWorldY: makeSpring(0),     // world-space hip suspension
   pelvisX: makeSpring(0),
   pelvisY: makeSpring(0.84),
@@ -60459,10 +60487,15 @@ function resetSkierPose() {
   skierPose.lastTorsoPitchLocal = 0;
   skierPose.lastTorsoPitchWorld = 0;
   skierPose.lastHeadPitchWorld = 0;
+  skierPose.prevFlexL = -1;
+  skierPose.prevFlexR = -1;
   for (const k of Object.keys(skierPose)) {
     const v = skierPose[k];
     if (v && typeof v === 'object' && 'v' in v) v.v = 0;
   }
+  skierPose.groundDelta.x = 0;
+  skierPose.cuffPitchL.x = 0.24; skierPose.cuffPitchR.x = 0.24;
+  skierPose.cuffRollL.x = 0;     skierPose.cuffRollR.x = 0;
   skierPose.poleDirLX.x = 0.14;  skierPose.poleDirLY.x = -0.46; skierPose.poleDirLZ.x = -0.87;
   skierPose.poleDirRX.x = -0.14; skierPose.poleDirRY.x = -0.46; skierPose.poleDirRZ.x = -0.87;
 }
@@ -60521,14 +60554,14 @@ function solveAndPoseLeg(sideSign, anklePos, hipPos, kneeAng, insideFactor, shin
   const a = (L1 * L1 - L2 * L2 + d * d) / (2 * d);
   const h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
 
-  // Knees drive forward (+Z), angulate cleanly into turn (+X * kneeAng), with inside knee driving higher
-  const isInside = sideSign * kneeAng > 0;
-  const poleX = isInside ? (kneeAng * 0.88 + sideSign * 0.02) : (kneeAng * 0.78 + sideSign * 0.03);
-  const poleY = 0.06 + insideFactor * 0.05;
-  const pole = rig._vPole.set(poleX, poleY, 1.0).normalize();
-  const bend = rig._vBend.copy(pole).addScaledVector(dir, -pole.dot(dir));
-  if (bend.lengthSq() < 1e-6) bend.set(0, 0, 1);
-  bend.normalize();
+  // Equalized inside/outside horizontal knee yaw, hard-capped to plausible <= 14.3 deg band.
+  // Edging/angulation reads via hip lateral shift, hip roll, and parallel shin inclination.
+  const MAX_KNEE_YAW = 0.25; // ~14.32 deg hard cap (target p95 <= 15 deg, hard max <= 20 deg)
+  const yawRad = clamp(kneeAng * 0.24, -MAX_KNEE_YAW, MAX_KNEE_YAW);
+  const tx = Math.sin(yawRad);
+  const tz = Math.cos(yawRad);
+  const by = -(tx * dir.x + tz * dir.z) / Math.max(0.25, dir.y);
+  const bend = rig._vBend.set(tx, by, tz).normalize();
 
   const kneePos = rig._vKnee.copy(anklePos).addScaledVector(dir, a).addScaledVector(bend, h);
 
@@ -60628,7 +60661,7 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   // convexity > 0: convex crest/roller -> fold knees; < 0: concave dip -> extend legs
   const convexity = 0.65 * (sBack - sFwd) + 0.35 * (sFwd - sFar);
   skierPose.lastConvexity = convexity;
-  const curveOffset = clamp(-convexity * 1.25, -0.16, 0.08) * smoothstep(2.5, 11.0, skier.speed);
+  const curveOffset = clamp(-convexity * 1.90, -0.24, 0.08) * smoothstep(2.5, 11.0, skier.speed);
   const absorbS = driveSpring(skierPose.absorb, curveOffset, 6.2, dt, snap);
   const crestS = driveSpring(skierPose.crestSmooth, clamp(convexity, -0.15, 0.20), 3.6, dt, snap);
   const crestFold = clamp(crestS * 0.85, 0, 0.14) * moveMask;
@@ -60642,8 +60675,8 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const groomRipple = (0.58 * smoothNoise1D(distU * 0.26, 211.3) + 0.42 * smoothNoise1D(distU * 0.58, 223.7)) * 0.016 * moveMask;
   const groomDiffLR = smoothNoise1D(distU * 0.42, 241.9) * 0.010 * moveMask;
   const microCompS = driveSpring(skierPose.microComp, clamp(-microBump * 0.75 + groomRipple, -0.032, 0.028), 8.5, dt, snap);
-  const microAnkleLS = driveSpring(skierPose.microAnkleL, clamp(-microCompS * 0.35 + groomDiffLR * 0.6 + crestFold * 0.06, -0.014, 0.016), 10.5, dt, snap);
-  const microAnkleRS = driveSpring(skierPose.microAnkleR, clamp(-microCompS * 0.35 - groomDiffLR * 0.6 + crestFold * 0.06, -0.014, 0.016), 10.5, dt, snap);
+  const microAnkleLS = driveSpring(skierPose.microAnkleL, clamp(-microCompS * 0.35 + groomDiffLR * 0.6 + crestFold * 0.08, -0.014, 0.018), 10.5, dt, snap);
+  const microAnkleRS = driveSpring(skierPose.microAnkleR, clamp(-microCompS * 0.35 - groomDiffLR * 0.6 + crestFold * 0.08, -0.014, 0.018), 10.5, dt, snap);
 
   // 1b. Continuous non-periodic micro-life layer (fixes glide statue without mechanical sine bobs)
   const straightMask = (1 - smoothstep(0.18, 0.55, acS)) * moveMask * (1 - tuckF * 0.65);
@@ -60670,10 +60703,12 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const gazeScanPitch = (scanP1 * 0.085 + scanP2 * 0.040) * (0.45 + 0.55 * straightMask);
   const gazeScanRoll = smoothNoise1D(simTime * 0.34, 23.5) * 0.048;
 
-  // 3. Ski-edge angulation signal
+  // 3. Ski-edge angulation signal (carve-only; strip passive terrain cross-slope)
   const avgSkiRoll = 0.5 * (leftSkiMesh.rotation.z + rightSkiMesh.rotation.z);
-  const edgeSignal = clamp(-avgSkiRoll / 0.42, -1.25, 1.25);
-  const kneeAngTgt = lerp(cS, edgeSignal, 0.50);
+  const carveSkiRoll = avgSkiRoll - terrainRoll * 0.85;
+  const carveMask = smoothstep(0.10, 0.38, acS);
+  const edgeSignal = clamp(-carveSkiRoll / 0.42, -1.0, 1.0) * carveMask;
+  const kneeAngTgt = clamp(lerp(cS, edgeSignal, 0.40) * (0.25 + 0.75 * carveMask), -1.0, 1.0);
   const kneeAngS = driveSpring(skierPose.kneeAng, kneeAngTgt, 11.0, dt, snap);
 
   // Keep skierFigure origin locked to skisGroup (no figure-wide rigid Z tilt that lifts boots off skis!)
@@ -60692,16 +60727,26 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   rig.bootR.rotation.order = 'XYZ';
   rig.bootR.rotation.copy(rightSkiMesh.rotation);
 
-  // Rolled & pitched ankle joint centers with subtle shin-cuff dorsiflexion micro-compliance
-  const ankleL = rig._vAnkleL.set(0, 0.152 - Math.abs(microAnkleLS) * 0.35, -0.065 + microAnkleLS).applyEuler(rig.bootL.rotation).add(rig.bootL.position);
-  const ankleR = rig._vAnkleR.set(0, 0.152 - Math.abs(microAnkleRS) * 0.35, -0.065 + microAnkleRS).applyEuler(rig.bootR.rotation).add(rig.bootR.position);
+  // Rolled & pitched ankle joint centers tracking the flexing boot cuff pivot arc
+  const cuffAngL = snap ? 0.24 : skierPose.cuffPitchL.x;
+  const cuffAngR = snap ? 0.24 : skierPose.cuffPitchR.x;
+  const ankleL = rig._vAnkleL.set(
+    0,
+    0.068 + 0.084 * Math.cos(cuffAngL) - Math.abs(microAnkleLS) * 0.35,
+    -0.070 + 0.084 * Math.sin(cuffAngL) + microAnkleLS
+  ).applyEuler(rig.bootL.rotation).add(rig.bootL.position);
+  const ankleR = rig._vAnkleR.set(
+    0,
+    0.068 + 0.084 * Math.cos(cuffAngR) - Math.abs(microAnkleRS) * 0.35,
+    -0.070 + 0.084 * Math.sin(cuffAngR) + microAnkleRS
+  ).applyEuler(rig.bootR.rotation).add(rig.bootR.position);
 
   // Pelvis targets: knees drive inside, inside hip dips lower -> asymmetric inside/outside knee bend
   const midSkiY = 0.5 * (skiYL + skiYR);
   const maxReachPelvisY = Math.min(ankleL.y, ankleR.y) + 0.835;
   const minClearPelvisY = Math.max(ankleL.y, ankleR.y) + 0.25;
   const baseHeight = 0.925 - speedNorm * 0.055 - tuckF * 0.075 - brakeF * 0.070;
-  // Zero-lag symmetric spatial terrain smoothing along heading (cancels DEM creases & rollers in world Y without downhill ramp lag)
+  // Symmetric spatial terrain smoothing along heading
   const sL1 = 4.0, sL2 = 8.0;
   const yM2 = terrainMeshHeightAt(skier.x - hx * sL2, skier.z - hz * sL2);
   const yM1 = terrainMeshHeightAt(skier.x - hx * sL1, skier.z - hz * sL1);
@@ -60721,45 +60766,119 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   // Smooth crest compensation (no raw DEM facet jitter injected into torso pitch)
   const pitchCompS = driveSpring(skierPose.pitchComp, clamp(localPitchExcess * 0.50 + crestFold * 0.75, -0.14, 0.18) * moveMask, 4.2, dt, snap);
   const upperClampY = Math.max(minClearPelvisY, Math.min(midSkiY + 0.985, maxReachPelvisY));
-  const postureYTgt = baseHeight - turnFlexS + unweightS * 0.145 + absorbS * 0.42 + microCompS * 0.55 + breathWave * 0.005 + glideSettleY;
+  const absorbY = absorbS < 0 ? absorbS * 0.80 : absorbS * 0.42;
+  const postureYTgt = baseHeight - turnFlexS + unweightS * 0.140 + absorbY + microCompS * 0.55 + breathWave * 0.005 + glideSettleY;
   const tRollComp = clamp(terrainRoll * 0.62, -0.36, 0.36);
   const pelvisXTgt = cS * 0.275 + glideLatX;
   const pelvisZTgt = -0.145 + unweightS * 0.095 - acS * 0.032 - tuckF * 0.035 - brakeF * 0.055 - Math.max(0, -absorbS) * 0.16 + microCompS * 0.45;
-  const pelvisRollTgt = -cS * 0.52 + tRollComp + glideRoll;
-  const pelvisPitchTgt = 0.11 + speedNorm * 0.07 + tuckF * 0.12 - brakeF * 0.08 + crestFold * 0.12 - pitchCompS * 0.25 + torsoNoiseP * 0.35;
+  const pelvisRollTgt = -cS * 0.55 + tRollComp + glideRoll;
+  const pelvisPitchTgt = 0.11 + speedNorm * 0.07 + tuckF * 0.12 - brakeF * 0.08 + crestFold * 0.16 - pitchCompS * 0.25 + torsoNoiseP * 0.35;
   const pelvisYawTgt = cS * 0.08 + anticipateS * 0.04;
 
   const pelvisXS = driveSpring(skierPose.pelvisX, pelvisXTgt, 9.5, dt, snap);
   const pelvisZS = driveSpring(skierPose.pelvisZ, pelvisZTgt, 9.5, dt, snap);
-  const prevPelvisY = skierPose.pelvisY.x;
-  const postureYS = driveSpring(skierPose.hipWorldY, postureYTgt, 6.0, dt, snap);
-  const groundDelta = 0.24 * Math.tanh((smoothGroundY - skier.y) / 0.24);
-  const desiredWorldY = (skier.y + groundDelta) + 0.016 + (postureYS + 0.015) * cosSmoothP - pelvisZS * sinSmoothP;
-  const pelvisYFromWorld = (desiredWorldY - y0 - pelvisXS * ex - pelvisZS * ez) / ey;
-  const pelvisYS = clamp(pelvisYFromWorld, minClearPelvisY, upperClampY);
-  skierPose.pelvisY.x = pelvisYS;
-  skierPose.pelvisY.v = (snap || dt <= 1e-4) ? 0 : clamp((pelvisYS - prevPelvisY) / dt, -2.0, 2.0);
   const pelvisRollS = driveSpring(skierPose.pelvisRoll, pelvisRollTgt, 9.5, dt, snap);
   const pelvisPitchS = driveSpring(skierPose.pelvisPitch, pelvisPitchTgt, 5.0, dt, snap);
   const pelvisYawS = driveSpring(skierPose.pelvisYaw, pelvisYawTgt, 9.5, dt, snap);
 
-  rig.pelvisG.position.set(pelvisXS, pelvisYS, pelvisZS);
   rig._ePelvis.set(pelvisPitchS, pelvisYawS, pelvisRollS, 'YXZ');
   rig._qPelvis.setFromEuler(rig._ePelvis);
+  const hipOffL = rig._vHipOffL.set(0.118, -0.020, 0.005).applyQuaternion(rig._qPelvis);
+  const hipOffR = rig._vHipOffR.set(-0.118, -0.020, 0.005).applyQuaternion(rig._qPelvis);
+
+  const prevPelvisY = skierPose.pelvisY.x;
+  const postureYS = driveSpring(skierPose.hipWorldY, postureYTgt, 6.0, dt, snap);
+  // Fix 1: Predictive 1-frame look-ahead + C1 soft-threshold deadband + critically-damped spring for groundDelta
+  const dLead = clamp(skier.speed * Math.min(dt, 1 / 30), 0, 1.0);
+  const lx = skier.x + hx * dLead;
+  const lz = skier.z + hz * dLead;
+  const yLead = terrainMeshHeightAt(lx, lz);
+  const yLM2 = terrainMeshHeightAt(lx - hx * sL2, lz - hz * sL2);
+  const yLM1 = terrainMeshHeightAt(lx - hx * sL1, lz - hz * sL1);
+  const yLP1 = terrainMeshHeightAt(lx + hx * sL1, lz + hz * sL1);
+  const yLP2 = terrainMeshHeightAt(lx + hx * sL2, lz + hz * sL2);
+  const smoothGroundYLead = (yLM2 + yLM1 * 2.0 + yLead * 2.0 + yLP1 * 2.0 + yLP2) * 0.125;
+  const rawGroundDiff = smoothGroundYLead - yLead;
+  const crestRelax = smoothstep(0.025, 0.055, Math.max(0, convexity));
+  const gdDz = lerp(0.062, 0.015, crestRelax);
+  const gdSmall = lerp(0.15, 0.85, crestRelax);
+  const gdShrunk = gdSmall * rawGroundDiff + (1.0 - gdSmall) * (rawGroundDiff - gdDz * Math.tanh(rawGroundDiff / gdDz));
+  const groundDeltaRaw = 0.28 * Math.tanh(gdShrunk / 0.28);
+  const groundDeltaS = driveSpring(skierPose.groundDelta, groundDeltaRaw, 48.0, dt, snap);
+  const desiredWorldY = (skier.y + groundDeltaS) + 0.016 + (postureYS + 0.015) * cosSmoothP - pelvisZS * sinSmoothP;
+  let py = (desiredWorldY - y0 - pelvisXS * ex - pelvisZS * ez) / ey;
+
+  // Fix 1 & 3: Smooth anatomical soft floor (caps crest knee flex <= ~120.5 deg) & soft ceiling (prevents reach-lock)
+  const L1 = rig.L_SHIN, L2 = rig.L_THIGH;
+  const dMinTarget = 0.452;
+  const h2L = (pelvisXS + hipOffL.x - ankleL.x) ** 2 + (pelvisZS + hipOffL.z - ankleL.z) ** 2;
+  const h2R = (pelvisXS + hipOffR.x - ankleR.x) ** 2 + (pelvisZS + hipOffR.z - ankleR.z) ** 2;
+  const reqMinY = Math.max(
+    minClearPelvisY,
+    ankleL.y - hipOffL.y + Math.sqrt(Math.max(0, dMinTarget * dMinTarget - h2L)),
+    ankleR.y - hipOffR.y + Math.sqrt(Math.max(0, dMinTarget * dMinTarget - h2R))
+  );
+  const maxSoftY = upperClampY - 0.003;
+  const softBand = 0.020;
+  if (py > maxSoftY - softBand) py = (maxSoftY - softBand) + softBand * Math.tanh((py - (maxSoftY - softBand)) / softBand);
+  if (py < reqMinY + softBand)  py = (reqMinY + softBand)  - softBand * Math.tanh(((reqMinY + softBand) - py) / softBand);
+  py = clamp(py, reqMinY, upperClampY - 0.001);
+
+  // Fix 1: Exact 2-leg feasible-interval knee angular-rate clamp (<= 138 deg/s; handles skisPitch jumps)
+  if (!snap && dt > 1e-4 && skierPose.prevFlexL >= 0 && skierPose.prevFlexR >= 0) {
+    const maxDegStep = 4.6 * (dt * 30.0);
+    let loY = reqMinY;
+    let hiY = upperClampY - 0.001;
+    const legs = [
+      [skierPose.prevFlexL, ankleL, hipOffL, h2L],
+      [skierPose.prevFlexR, ankleR, hipOffR, h2R]
+    ];
+    for (let li = 0; li < 2; li++) {
+      const [pfDeg, ank, hOff, h2] = legs[li];
+      const fHi = Math.min(121.5, pfDeg + maxDegStep) * Math.PI / 180;
+      const fLo = Math.max(29.0,  pfDeg - maxDegStep) * Math.PI / 180;
+      const dLoSq = Math.max(0, L1 * L1 + L2 * L2 + 2 * L1 * L2 * Math.cos(fHi));
+      const dHiSq = Math.max(0, L1 * L1 + L2 * L2 + 2 * L1 * L2 * Math.cos(fLo));
+      loY = Math.max(loY, ank.y - hOff.y + Math.sqrt(Math.max(0, dLoSq - h2)));
+      hiY = Math.min(hiY, ank.y - hOff.y + Math.sqrt(Math.max(0, dHiSq - h2)));
+    }
+    py = (loY <= hiY) ? clamp(py, loY, hiY) : clamp(0.5 * (loY + hiY), reqMinY, upperClampY - 0.001);
+  }
+  const pelvisYS = clamp(py, minClearPelvisY, upperClampY);
+  skierPose.pelvisY.x = pelvisYS;
+  skierPose.pelvisY.v = (snap || dt <= 1e-4) ? 0 : clamp((pelvisYS - prevPelvisY) / dt, -2.0, 2.0);
+
+  rig.pelvisG.position.set(pelvisXS, pelvisYS, pelvisZS);
   rig.pelvisG.quaternion.copy(rig._qPelvis);
 
   // Compute exact hip socket positions in skierFigure space & solve closed-chain 2-bone leg IK
-  const hipL = rig._vHipL.set(0.118, -0.020, 0.005).applyQuaternion(rig._qPelvis).add(rig.pelvisG.position);
-  const hipR = rig._vHipR.set(-0.118, -0.020, 0.005).applyQuaternion(rig._qPelvis).add(rig.pelvisG.position);
+  const hipL = rig._vHipL.copy(hipOffL).add(rig.pelvisG.position);
+  const hipR = rig._vHipR.copy(hipOffR).add(rig.pelvisG.position);
 
   const insideL = clamp(kneeAngS, 0, 1);
   const insideR = clamp(-kneeAngS, 0, 1);
   skierPose.lastKneeFlexL = solveAndPoseLeg(1, ankleL, hipL, kneeAngS, insideL, rig.shinL, rig.kneeL, rig.thighL, rig);
   skierPose.lastKneeFlexR = solveAndPoseLeg(-1, ankleR, hipR, kneeAngS, insideR, rig.shinR, rig.kneeR, rig.thighR, rig);
+  skierPose.prevFlexL = skierPose.lastKneeFlexL * 180 / Math.PI;
+  skierPose.prevFlexR = skierPose.lastKneeFlexR * 180 / Math.PI;
+
+  // Fix 3: Boot cuff flex tracks forward & subtle lateral shin inclination through damped spring
+  function updateBootCuff(bootG, cuffPivot, anklePos, kneePos, pitchSp, rollSp) {
+    rig._qBootInv.copy(bootG.quaternion).invert();
+    rig._vShinInBoot.subVectors(kneePos, anklePos).applyQuaternion(rig._qBootInv);
+    const shinPitchBoot = Math.atan2(rig._vShinInBoot.z, Math.max(0.05, rig._vShinInBoot.y));
+    const shinRollBoot = -Math.atan2(rig._vShinInBoot.x, Math.max(0.05, rig._vShinInBoot.y));
+    const cuffPitchTgt = clamp(0.24 + (shinPitchBoot - 0.24) * 0.90, 0.16, 0.92);
+    const cuffRollTgt = clamp(shinRollBoot * 0.35, -0.10, 0.10);
+    cuffPivot.rotation.x = driveSpring(pitchSp, cuffPitchTgt, 32.0, dt, snap);
+    cuffPivot.rotation.z = driveSpring(rollSp, cuffRollTgt, 24.0, dt, snap);
+  }
+  updateBootCuff(rig.bootL, rig.bootCuffL, ankleL, rig.kneeL.position, skierPose.cuffPitchL, skierPose.cuffRollL);
+  updateBootCuff(rig.bootR, rig.bootCuffR, ankleR, rig.kneeR.position, skierPose.cuffPitchR, skierPose.cuffRollR);
 
   // Upper-body hip counter-angulation ("C-shape"), fall-line counter-rotation, breathing & crest poise
   const lumbarPitchTgt = 0.12 + speedNorm * 0.11 + acS * 0.06 + tuckF * 0.18 - brakeF * 0.10 - pitchCompS * 0.25 + breathWave * 0.010 + torsoNoiseP * 0.5;
-  const lumbarRollTgt  = cS * 0.36 - tRollComp * 0.62 - glideRoll * 0.65 + torsoNoiseR * 0.5;
+  const lumbarRollTgt  = cS * 0.38 - tRollComp * 0.62 - glideRoll * 0.65 + torsoNoiseR * 0.5;
   const lumbarYawTgt   = -cS * 0.19 - anticipateS * 0.08 + fallAngle * 0.05 + torsoNoiseY * 0.5;
   const lumbarPitchS = driveSpring(skierPose.lumbarPitch, lumbarPitchTgt, 4.4, dt, snap);
   const lumbarRollS  = driveSpring(skierPose.lumbarRoll,  lumbarRollTgt,  9.0, dt, snap);
@@ -60767,8 +60886,8 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   rig.lumbarG.rotation.order = 'YXZ';
   rig.lumbarG.rotation.set(lumbarPitchS, lumbarYawS, lumbarRollS);
 
-  const chestPitchTgt = 0.09 + speedNorm * 0.09 + tuckF * 0.16 - brakeF * 0.06 - crestFold * 0.35 - pitchCompS * 0.30 + breathWave * 0.018 + torsoNoiseP;
-  const chestRollTgt  = cS * 0.24 - tRollComp * 0.38 - glideRoll * 0.35 + torsoNoiseR;
+  const chestPitchTgt = 0.09 + speedNorm * 0.09 + tuckF * 0.16 - brakeF * 0.06 - crestFold * 0.39 - pitchCompS * 0.30 + breathWave * 0.018 + torsoNoiseP;
+  const chestRollTgt  = cS * 0.25 - tRollComp * 0.38 - glideRoll * 0.35 + torsoNoiseR;
   const chestYawTgt   = -cS * 0.21 - anticipateS * 0.12 + fallAngle * 0.06 + torsoNoiseY;
   const chestPitchS = driveSpring(skierPose.chestPitch, chestPitchTgt, 4.0, dt, snap);
   const chestRollS  = driveSpring(skierPose.chestRoll,  chestRollTgt,  8.5, dt, snap);
