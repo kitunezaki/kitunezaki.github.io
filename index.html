@@ -59,6 +59,7 @@
   }
   .top-btn:hover { background: rgba(28, 42, 68, 0.72); }
   body.hud-hidden #hud-tl,
+  body.hud-hidden #hud-bottom,
   body.hud-hidden #hud-bl,
   body.hud-hidden #hud-br,
   body.hud-hidden #title-card { display: none !important; }
@@ -82,15 +83,23 @@
     font-size: clamp(11px, 1.3vw, 13px); letter-spacing: 0.08em; color: #ffe2be;
   }
 
+  /* Bottom HUD container: responsive wrap-reverse prevents overlap at 854x480 */
+  #hud-bottom {
+    position: fixed; bottom: 14px; left: 16px; right: 16px; z-index: 10;
+    display: flex; flex-wrap: wrap-reverse; align-items: flex-end;
+    justify-content: space-between; gap: 6px 12px;
+    pointer-events: none;
+  }
+
   /* Controls help bottom-left */
   #hud-bl {
-    position: fixed; bottom: 16px; left: 20px; z-index: 10;
+    position: static;
     padding: 8px 13px; border-radius: 8px;
     background: rgba(15, 24, 42, 0.42);
     backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 232, 204, 0.18);
     color: rgba(255, 246, 235, 0.9); font-size: 12px; letter-spacing: 0.04em;
-    line-height: 1.5;
+    line-height: 1.5; pointer-events: auto;
   }
   #hud-bl kbd {
     display: inline-block; padding: 1px 5px; margin: 0 1px; border-radius: 4px;
@@ -100,10 +109,17 @@
 
   /* Credit bottom-right */
   #hud-br {
-    position: fixed; bottom: 16px; right: 20px; z-index: 10;
+    position: static; margin-left: auto;
     padding: 6px 11px; border-radius: 6px;
     background: rgba(15, 24, 42, 0.38);
     color: rgba(255, 242, 226, 0.82); font-size: 11px; letter-spacing: 0.05em;
+    white-space: nowrap; pointer-events: auto;
+  }
+  @media (max-width: 1080px) {
+    #hud-bottom { bottom: 10px; left: 12px; right: 12px; gap: 6px 10px; }
+    #hud-bl { padding: 6px 10px; font-size: 11px; line-height: 1.4; }
+    #hud-bl kbd { font-size: 10px; padding: 1px 4px; }
+    #hud-br { padding: 4px 9px; font-size: 10px; }
   }
 
   /* Fade overlay */
@@ -53158,6 +53174,7 @@ if ( typeof window !== 'undefined' ) {
 }
 
 return { ACESFilmicToneMapping, AddEquation, AddOperation, AdditiveAnimationBlendMode, AdditiveBlending, AgXToneMapping, AlphaFormat, AlwaysCompare, AlwaysDepth, AlwaysStencilFunc, AmbientLight, AnimationAction, AnimationClip, AnimationLoader, AnimationMixer, AnimationObjectGroup, AnimationUtils, ArcCurve, ArrayCamera, ArrowHelper, AttachedBindMode, Audio, AudioAnalyser, AudioContext, AudioListener, AudioLoader, AxesHelper, BackSide, BasicDepthPacking, BasicShadowMap, BatchedMesh, Bone, BooleanKeyframeTrack, Box2, Box3, Box3Helper, BoxGeometry, BoxHelper, BufferAttribute, BufferGeometry, BufferGeometryLoader, ByteType, Cache, Camera, CameraHelper, CanvasTexture, CapsuleGeometry, CatmullRomCurve3, CineonToneMapping, CircleGeometry, ClampToEdgeWrapping, Clock, Color, ColorKeyframeTrack, ColorManagement, CompressedArrayTexture, CompressedCubeTexture, CompressedTexture, CompressedTextureLoader, ConeGeometry, ConstantAlphaFactor, ConstantColorFactor, CubeCamera, CubeReflectionMapping, CubeRefractionMapping, CubeTexture, CubeTextureLoader, CubeUVReflectionMapping, CubicBezierCurve, CubicBezierCurve3, CubicInterpolant, CullFaceBack, CullFaceFront, CullFaceFrontBack, CullFaceNone, Curve, CurvePath, CustomBlending, CustomToneMapping, CylinderGeometry, Cylindrical, Data3DTexture, DataArrayTexture, DataTexture, DataTextureLoader, DataUtils, DecrementStencilOp, DecrementWrapStencilOp, DefaultLoadingManager, DepthFormat, DepthStencilFormat, DepthTexture, DetachedBindMode, DirectionalLight, DirectionalLightHelper, DiscreteInterpolant, DisplayP3ColorSpace, DodecahedronGeometry, DoubleSide, DstAlphaFactor, DstColorFactor, DynamicCopyUsage, DynamicDrawUsage, DynamicReadUsage, EdgesGeometry, EllipseCurve, EqualCompare, EqualDepth, EqualStencilFunc, EquirectangularReflectionMapping, EquirectangularRefractionMapping, Euler, EventDispatcher, ExtrudeGeometry, FileLoader, Float16BufferAttribute, Float32BufferAttribute, Float64BufferAttribute, FloatType, Fog, FogExp2, FramebufferTexture, FrontSide, Frustum, GLBufferAttribute, GLSL1, GLSL3, GreaterCompare, GreaterDepth, GreaterEqualCompare, GreaterEqualDepth, GreaterEqualStencilFunc, GreaterStencilFunc, GridHelper, Group, HalfFloatType, HemisphereLight, HemisphereLightHelper, IcosahedronGeometry, ImageBitmapLoader, ImageLoader, ImageUtils, IncrementStencilOp, IncrementWrapStencilOp, InstancedBufferAttribute, InstancedBufferGeometry, InstancedInterleavedBuffer, InstancedMesh, Int16BufferAttribute, Int32BufferAttribute, Int8BufferAttribute, IntType, InterleavedBuffer, InterleavedBufferAttribute, Interpolant, InterpolateDiscrete, InterpolateLinear, InterpolateSmooth, InvertStencilOp, KeepStencilOp, KeyframeTrack, LOD, LatheGeometry, Layers, LessCompare, LessDepth, LessEqualCompare, LessEqualDepth, LessEqualStencilFunc, LessStencilFunc, Light, LightProbe, Line, Line3, LineBasicMaterial, LineCurve, LineCurve3, LineDashedMaterial, LineLoop, LineSegments, LinearDisplayP3ColorSpace, LinearEncoding, LinearFilter, LinearInterpolant, LinearMipMapLinearFilter, LinearMipMapNearestFilter, LinearMipmapLinearFilter, LinearMipmapNearestFilter, LinearSRGBColorSpace, LinearToneMapping, LinearTransfer, Loader, LoaderUtils, LoadingManager, LoopOnce, LoopPingPong, LoopRepeat, LuminanceAlphaFormat, LuminanceFormat, MOUSE, Material, MaterialLoader, MathUtils, Matrix3, Matrix4, MaxEquation, Mesh, MeshBasicMaterial, MeshDepthMaterial, MeshDistanceMaterial, MeshLambertMaterial, MeshMatcapMaterial, MeshNormalMaterial, MeshPhongMaterial, MeshPhysicalMaterial, MeshStandardMaterial, MeshToonMaterial, MinEquation, MirroredRepeatWrapping, MixOperation, MultiplyBlending, MultiplyOperation, NearestFilter, NearestMipMapLinearFilter, NearestMipMapNearestFilter, NearestMipmapLinearFilter, NearestMipmapNearestFilter, NeverCompare, NeverDepth, NeverStencilFunc, NoBlending, NoColorSpace, NoToneMapping, NormalAnimationBlendMode, NormalBlending, NotEqualCompare, NotEqualDepth, NotEqualStencilFunc, NumberKeyframeTrack, Object3D, ObjectLoader, ObjectSpaceNormalMap, OctahedronGeometry, OneFactor, OneMinusConstantAlphaFactor, OneMinusConstantColorFactor, OneMinusDstAlphaFactor, OneMinusDstColorFactor, OneMinusSrcAlphaFactor, OneMinusSrcColorFactor, OrthographicCamera, P3Primaries, PCFShadowMap, PCFSoftShadowMap, PMREMGenerator, Path, PerspectiveCamera, Plane, PlaneGeometry, PlaneHelper, PointLight, PointLightHelper, Points, PointsMaterial, PolarGridHelper, PolyhedronGeometry, PositionalAudio, PropertyBinding, PropertyMixer, QuadraticBezierCurve, QuadraticBezierCurve3, Quaternion, QuaternionKeyframeTrack, QuaternionLinearInterpolant, RED_GREEN_RGTC2_Format, RED_RGTC1_Format, REVISION, RGBADepthPacking, RGBAFormat, RGBAIntegerFormat, RGBA_ASTC_10x10_Format, RGBA_ASTC_10x5_Format, RGBA_ASTC_10x6_Format, RGBA_ASTC_10x8_Format, RGBA_ASTC_12x10_Format, RGBA_ASTC_12x12_Format, RGBA_ASTC_4x4_Format, RGBA_ASTC_5x4_Format, RGBA_ASTC_5x5_Format, RGBA_ASTC_6x5_Format, RGBA_ASTC_6x6_Format, RGBA_ASTC_8x5_Format, RGBA_ASTC_8x6_Format, RGBA_ASTC_8x8_Format, RGBA_BPTC_Format, RGBA_ETC2_EAC_Format, RGBA_PVRTC_2BPPV1_Format, RGBA_PVRTC_4BPPV1_Format, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT3_Format, RGBA_S3TC_DXT5_Format, RGB_BPTC_SIGNED_Format, RGB_BPTC_UNSIGNED_Format, RGB_ETC1_Format, RGB_ETC2_Format, RGB_PVRTC_2BPPV1_Format, RGB_PVRTC_4BPPV1_Format, RGB_S3TC_DXT1_Format, RGFormat, RGIntegerFormat, RawShaderMaterial, Ray, Raycaster, Rec709Primaries, RectAreaLight, RedFormat, RedIntegerFormat, ReinhardToneMapping, RenderTarget, RepeatWrapping, ReplaceStencilOp, ReverseSubtractEquation, RingGeometry, SIGNED_RED_GREEN_RGTC2_Format, SIGNED_RED_RGTC1_Format, SRGBColorSpace, SRGBTransfer, Scene, ShaderChunk, ShaderLib, ShaderMaterial, ShadowMaterial, Shape, ShapeGeometry, ShapePath, ShapeUtils, ShortType, Skeleton, SkeletonHelper, SkinnedMesh, Source, Sphere, SphereGeometry, Spherical, SphericalHarmonics3, SplineCurve, SpotLight, SpotLightHelper, Sprite, SpriteMaterial, SrcAlphaFactor, SrcAlphaSaturateFactor, SrcColorFactor, StaticCopyUsage, StaticDrawUsage, StaticReadUsage, StereoCamera, StreamCopyUsage, StreamDrawUsage, StreamReadUsage, StringKeyframeTrack, SubtractEquation, SubtractiveBlending, TOUCH, TangentSpaceNormalMap, TetrahedronGeometry, Texture, TextureLoader, TorusGeometry, TorusKnotGeometry, Triangle, TriangleFanDrawMode, TriangleStripDrawMode, TrianglesDrawMode, TubeGeometry, TwoPassDoubleSide, UVMapping, Uint16BufferAttribute, Uint32BufferAttribute, Uint8BufferAttribute, Uint8ClampedBufferAttribute, Uniform, UniformsGroup, UniformsLib, UniformsUtils, UnsignedByteType, UnsignedInt248Type, UnsignedIntType, UnsignedShort4444Type, UnsignedShort5551Type, UnsignedShortType, VSMShadowMap, Vector2, Vector3, Vector4, VectorKeyframeTrack, VideoTexture, WebGL1Renderer, WebGL3DRenderTarget, WebGLArrayRenderTarget, WebGLCoordinateSystem, WebGLCubeRenderTarget, WebGLMultipleRenderTargets, WebGLRenderTarget, WebGLRenderer, WebGLUtils, WebGPUCoordinateSystem, WireframeGeometry, WrapAroundEnding, ZeroCurvatureEnding, ZeroFactor, ZeroSlopeEnding, ZeroStencilOp, _SRGBAFormat, createCanvasElement, sRGBEncoding };
+
 })();
 </script>
 </head>
@@ -53183,17 +53200,18 @@ return { ACESFilmicToneMapping, AddEquation, AddOperation, AdditiveAnimationBlen
     <p>実地形データ（国土地理院DEM）× 星野リゾート トマム</p>
   </div>
 
-  <div id="hud-bl">
-    <kbd>←</kbd><kbd>→</kbd> / <kbd>A</kbd><kbd>D</kbd> ターン　
-    <kbd>↑</kbd> / <kbd>W</kbd> 加速　
-    <kbd>↓</kbd> / <kbd>S</kbd> ブレーキ　
-    <kbd>C</kbd> 視点切替　
-    <kbd>H</kbd> HUD　
-    <kbd>Space</kbd> DEMO　
-    <kbd>R</kbd> リスタート
+  <div id="hud-bottom">
+    <div id="hud-bl">
+      <kbd>←</kbd><kbd>→</kbd> / <kbd>A</kbd><kbd>D</kbd> ターン　
+      <kbd>↑</kbd> / <kbd>W</kbd> 加速　
+      <kbd>↓</kbd> / <kbd>S</kbd> ブレーキ　
+      <kbd>C</kbd> 視点切替　
+      <kbd>H</kbd> HUD　
+      <kbd>Space</kbd> DEMO　
+      <kbd>R</kbd> リスタート
+    </div>
+    <div id="hud-br">地形データ: 国土地理院 数値標高モデル</div>
   </div>
-
-  <div id="hud-br">地形データ: 国土地理院 数値標高モデル</div>
   <div id="top-controls">
     <button id="btn-cam" class="top-btn" title="視点切替 (C)">🎥 追尾</button>
     <button id="btn-hud" class="top-btn" title="HUD表示切替 (H)">HUD</button>
@@ -53202,7 +53220,6 @@ return { ACESFilmicToneMapping, AddEquation, AddOperation, AdditiveAnimationBlen
   <div id="fade"></div>
 
 <script>
-
 
 // ============================================================
 // 1. REAL TERRAIN DATA & CONSTANTS
@@ -53946,13 +53963,13 @@ function createTerrainTexture() {
         if (dhs < 68) forestMask *= smoothstep(34, 66, dhs);
 
         if (forestMask > 0.005) {
-          // Clean deep conifer-pine tones with subtle forest-floor snow dapple (keeps crisp forest-vs-piste contrast)
+          // Clean snowy-evergreen conifer tones with winter forest-floor snow dapple (avoids brown-mud tint at sunset)
           const pineVar = (vnoise(nx * 145, ny * 110) - 0.5) * 10;
-          const dapple = smoothstep(0.62, 0.88, vnoise(nx * 185, ny * 140)) * 0.16;
-          const fr = lerp(24 + pineVar * 0.45 - shadowTint * 8, 196 - shadowTint * 24, dapple);
-          const fg = lerp(58 + pineVar * 0.65 - shadowTint * 12, 206 - shadowTint * 14, dapple);
-          const fb = lerp(54 + pineVar * 0.55 - shadowTint * 4, 218 - shadowTint * 4, dapple);
-          const m = smoothstep(0.08, 0.72, forestMask) * 0.82;
+          const dapple = smoothstep(0.56, 0.86, vnoise(nx * 185, ny * 140)) * 0.22;
+          const fr = lerp(34 + pineVar * 0.40 - shadowTint * 8, 206 - shadowTint * 24, dapple);
+          const fg = lerp(66 + pineVar * 0.55 - shadowTint * 10, 216 - shadowTint * 14, dapple);
+          const fb = lerp(74 + pineVar * 0.50 - shadowTint * 2, 230 - shadowTint * 2, dapple);
+          const m = smoothstep(0.08, 0.72, forestMask) * 0.74;
           r = r + (fr - r) * m;
           g = g + (fg - g) * m;
           b = b + (fb - b) * m;
@@ -54065,6 +54082,7 @@ function buildSky() {
     uniforms: {
       uSunDir: { value: SUN_DIR },
       uHorizon: { value: _lightingState.skyHorizon },
+      uFogColor: { value: _lightingState.fogColor },
       uMidSky:  { value: _lightingState.skyMid },
       uZenith:  { value: _lightingState.skyZenith },
       uSunsetT: { value: 0.0 },
@@ -54081,6 +54099,7 @@ function buildSky() {
     fragmentShader: `
       uniform vec3 uSunDir;
       uniform vec3 uHorizon;
+      uniform vec3 uFogColor;
       uniform vec3 uMidSky;
       uniform vec3 uZenith;
       uniform float uSunsetT;
@@ -54126,10 +54145,11 @@ function buildSky() {
         float sunAmt = max(dot(d, sunD), 0.0);
         float cosTheta = dot(d, sunD);
 
-        // Air-mass driven physical Rayleigh vertical gradient anchored strictly to uHorizon at d.y = 0
+        // Air-mass driven physical Rayleigh vertical gradient; warm alpenglow stays on sunward horizon
         float raySlope = mix(5.4, 3.9, uSunsetT) + (1.0 - sunElev) * 0.8;
         float rayT = 1.0 - exp(-h * raySlope);
-        vec3 col = mix(uHorizon, uMidSky, smoothstep(0.0, 0.55, rayT));
+        vec3 horizonDir = mix(uFogColor, uHorizon, smoothstep(0.15, 0.85, sunAmt) * uSunsetT + (1.0 - uSunsetT));
+        vec3 col = mix(horizonDir, uMidSky, smoothstep(0.0, 0.55, rayT));
         col = mix(col, uZenith, smoothstep(0.38, 0.96, rayT));
 
         // Anti-solar Belt of Venus twilight band during sunset descent
@@ -54162,11 +54182,11 @@ function buildSky() {
         // Crisp HDR sun disc (>1.0 triggers selective bloom halo)
         col += mix(vec3(1.0, 0.99, 0.96), vec3(1.0, 0.92, 0.76), uSunsetT) * smoothstep(0.9986, 0.9995, sunAmt) * 2.2;
 
-        // Lock horizon band (d.y <= 0.04) cleanly into uHorizon so fogged distant terrain melts seamlessly
+        // Lock horizon band (d.y <= 0.04) cleanly into cool fog away from sun & warm alpenglow toward sun
         float horizLock = 1.0 - smoothstep(-0.02, 0.045, d.y);
-        col = mix(col, uHorizon, horizLock * 0.92);
+        col = mix(col, horizonDir, horizLock * 0.92);
         if (d.y < 0.0) {
-          col = mix(uHorizon, uHorizon * 0.92, clamp(-d.y * 3.0, 0.0, 1.0));
+          col = mix(horizonDir, horizonDir * 0.92, clamp(-d.y * 3.0, 0.0, 1.0));
         }
 
         gl_FragColor = vec4(col, 1.0);
@@ -54182,7 +54202,7 @@ function buildSky() {
 // Lights (dynamic daytime -> sunset arc) & ~120m radius skier-following directional shadow map
 let sunLight = null;
 let hemiLight = null;
-let terrainShaderUniforms = null;
+const terrainShaderUniforms = { uSunsetT: { value: 0.0 } };
 function buildLights() {
   const sun = new THREE.DirectionalLight(0xfff9ee, 2.85);
   sun.castShadow = true;
@@ -54211,19 +54231,20 @@ function updateSunShadowCamera(cx, cy, cz) {
 }
 
 const _dayHorizon = new THREE.Color(0xc8ddf4);
-const _setHorizon = new THREE.Color(0xeba880);
+const _setHorizon = new THREE.Color(0xdba892);
+const _setFogCol  = new THREE.Color(0x9ab2d2);
 const _dayMid = new THREE.Color(0x4f99de);
-const _setMid = new THREE.Color(0x7d76a6);
+const _setMid = new THREE.Color(0x757eb0);
 const _dayZenith = new THREE.Color(0x1149a6);
-const _setZenith = new THREE.Color(0x132450);
+const _setZenith = new THREE.Color(0x132656);
 const _daySunCol = new THREE.Color(0xfff9ee);
-const _setSunCol = new THREE.Color(0xffb674);
+const _setSunCol = new THREE.Color(0xffcfa0);
 const _dayHemiSky = new THREE.Color(0x7eb8f7);
-const _setHemiSky = new THREE.Color(0x8ea6dc);
+const _setHemiSky = new THREE.Color(0x8fb8f0);
 const _dayHemiGnd = new THREE.Color(0x5272a0);
-const _setHemiGnd = new THREE.Color(0x475576);
+const _setHemiGnd = new THREE.Color(0x5876a4);
 const _dayTrackCol = new THREE.Color(0x648ab5);
-const _setTrackCol = new THREE.Color(0x4a6284);
+const _setTrackCol = new THREE.Color(0x4c6890);
 
 function updateLightingArc(progress) {
   const p = _lightingState.overrideProgress !== null ? _lightingState.overrideProgress : clamp(progress, 0, 1);
@@ -54236,7 +54257,7 @@ function updateLightingArc(progress) {
   _lightingState.skyHorizon.copy(_dayHorizon).lerp(_setHorizon, sT);
   _lightingState.skyMid.copy(_dayMid).lerp(_setMid, sT);
   _lightingState.skyZenith.copy(_dayZenith).lerp(_setZenith, sT);
-  _lightingState.fogColor.copy(_lightingState.skyHorizon);
+  _lightingState.fogColor.copy(_dayHorizon).lerp(_setFogCol, sT);
   _lightingState.sunColor.copy(_daySunCol).lerp(_setSunCol, sT);
   _lightingState.hemiSky.copy(_dayHemiSky).lerp(_setHemiSky, sT);
   _lightingState.hemiGround.copy(_dayHemiGnd).lerp(_setHemiGnd, sT);
@@ -54380,9 +54401,8 @@ function buildTerrain() {
   mat.onBeforeCompile = (shader) => {
     shader.uniforms.uSunDir = { value: SUN_DIR };
     shader.uniforms.uFogHorizon = { value: _lightingState.fogColor };
-    shader.uniforms.uSunsetT = { value: 0.0 };
+    shader.uniforms.uSunsetT = terrainShaderUniforms.uSunsetT;
     shader.uniforms.uPisteMask = { value: terrainPisteMaskTex };
-    terrainShaderUniforms = shader.uniforms;
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', `
         #include <common>
@@ -54507,22 +54527,23 @@ function buildTerrain() {
             float ndl = dot(N, L);
             float ndv = clamp(dot(N, V), 0.0, 1.0);
 
-            // Crisp cobalt-blue alpine shadow tint on slopes facing away from sun
+            // Crisp cobalt-blue alpine shadow tint on slopes facing away from sun (stronger cool shadow contrast at sunset)
             float awaySun = smoothstep(0.40, -0.18, ndl);
             float slopeDown = smoothstep(0.06, 0.50, 1.0 - clamp(N.y, 0.0, 1.0));
             float blueDepth = clamp(awaySun * 0.72 + slopeDown * awaySun * 0.30 + slopeDown * 0.12, 0.0, 1.0);
             vec3 dayShadowMul = vec3(0.68, 0.83, 1.12);
-            vec3 setShadowMul = vec3(0.74, 0.81, 1.08);
+            vec3 setShadowMul = vec3(0.60, 0.78, 1.22);
             vec3 dayShadowAdd = vec3(0.004, 0.024, 0.068);
-            vec3 setShadowAdd = vec3(0.010, 0.016, 0.048);
+            vec3 setShadowAdd = vec3(0.004, 0.024, 0.082);
             vec3 shadowBlue = gl_FragColor.rgb * mix(dayShadowMul, setShadowMul, uSunsetT) + mix(dayShadowAdd, setShadowAdd, uSunsetT);
-            gl_FragColor.rgb = mix(gl_FragColor.rgb, shadowBlue, blueDepth * 0.58 * snowMask);
+            gl_FragColor.rgb = mix(gl_FragColor.rgb, shadowBlue, blueDepth * mix(0.58, 0.74, uSunsetT) * snowMask);
 
-            // Soft grazing-angle snow sheen
+            // Soft grazing-angle snow sheen (warm alpenglow strictly on sun-facing slopes at sunset)
             float fresnel = pow(1.0 - ndv, 3.2);
             float sheenFade = 1.0 - smoothstep(420.0, 2200.0, camDist);
             float litFactor = 0.38 + 0.62 * smoothstep(-0.15, 0.55, ndl);
-            vec3 sheenCol = mix(vec3(0.76, 0.88, 1.0), vec3(0.95, 0.84, 0.78), uSunsetT);
+            float sunLitWarm = uSunsetT * smoothstep(0.15, 0.65, ndl);
+            vec3 sheenCol = mix(vec3(0.76, 0.88, 1.0), vec3(1.0, 0.86, 0.72), sunLitWarm);
             gl_FragColor.rgb += sheenCol * fresnel * 0.14 * litFactor * sheenFade * snowMask;
 
             // Subtle view-dependent crystalline snow glint on sunlit snow ONLY (small-scale & restrained)
@@ -54545,10 +54566,24 @@ function buildTerrain() {
               gl_FragColor.rgb += glintCol * glint * 0.26 * (1.0 - 0.45 * uSunsetT);
             }
           }
+          float nonSnow = 1.0 - snowMask;
+          float bareOrForest = 1.0 - smoothstep(0.32, 0.65, minAlb);
+          if (bareOrForest > 0.001 && uSunsetT > 0.001) {
+            // Keep lower-valley forested slopes & sun-facing exposed non-snow/feathered patches cool winter pine-blue at sunset
+            float ndlV = dot(N, L);
+            float coolSlope = smoothstep(0.35, -0.20, ndlV);
+            float sunBare = smoothstep(-0.10, 0.35, ndlV);
+            float lumG = dot(gl_FragColor.rgb, vec3(0.299, 0.587, 0.114));
+            vec3 valleyShade = gl_FragColor.rgb * vec3(0.58, 0.74, 1.12) + vec3(0.004, 0.014, 0.036);
+            vec3 sunCoolGround = mix(gl_FragColor.rgb * vec3(0.58, 0.82, 1.22), vec3(lumG * 0.76, lumG * 0.88, lumG * 1.10), 0.55) + vec3(0.004, 0.014, 0.040);
+            gl_FragColor.rgb = mix(gl_FragColor.rgb, valleyShade, clamp(coolSlope * 0.72 * uSunsetT * nonSnow, 0.0, 0.72));
+            gl_FragColor.rgb = mix(gl_FragColor.rgb, sunCoolGround, clamp(sunBare * 0.75 * uSunsetT * bareOrForest, 0.0, 0.75));
+          }
 
-          // Subtle valley height-fog layer (atmospheric depth in lower Tomamu basin, matched to sky horizon)
-          float valleyFog = smoothstep(900.0, 520.0, vSnowWorldPos.y) * smoothstep(380.0, 3200.0, camDist) * mix(0.24, 0.32, uSunsetT);
-          gl_FragColor.rgb = mix(gl_FragColor.rgb, uFogHorizon, clamp(valleyFog, 0.0, 0.45));
+          // Subtle cool valley height-fog layer (keeps lower Tomamu basin snow-toned through sunset)
+          float valleyFog = smoothstep(900.0, 520.0, vSnowWorldPos.y) * smoothstep(380.0, 3200.0, camDist) * mix(0.22, 0.28, uSunsetT);
+          vec3 valleyFogCol = mix(uFogHorizon, vec3(0.56, 0.69, 0.86), uSunsetT * 0.82);
+          gl_FragColor.rgb = mix(gl_FragColor.rgb, valleyFogCol, clamp(valleyFog, 0.0, 0.42));
         }
         #include <tonemapping_fragment>
       `);
@@ -55244,8 +55279,8 @@ function buildTrees() {
         const bWidth = bLen * (spec.widthRatio || 1.06) * (0.88 + geoRng() * 0.26);
         const pitch = w.pitch + (geoRng() - 0.5) * 0.12;
         const droop = bLen * (w.droop + (geoRng() - 0.5) * 0.12);
-        const tent = bWidth * 0.16;
-        const roll = ((bi & 1) ? 1 : -1) * (0.24 + geoRng() * 0.24);
+        const tent = bWidth * 0.24;
+        const roll = ((bi & 1) ? 1 : -1) * (0.28 + geoRng() * 0.26);
         const qIdx = (spec.windDrop && windAlign < -0.35 && geoRng() < 0.55) ? 3 : w.quad;
         const bHash = geoRng();
         const segsLen = wi < nW - 3 ? 2 : 1;
@@ -55255,15 +55290,58 @@ function buildTrees() {
           yaw, bLen, bWidth, pitch, droop, tent, qIdx, whorlNorm, bHash, w.tint, segsLen, roll
         ));
 
-        // Tilted crossing sprig on lower/mid boughs for lush multi-angle volume
-        if (wi < nW - 3 && !spec.isDead && geoRng() < 0.65) {
-          const crossYaw = yaw + ((bi & 1) ? 0.34 : -0.34);
+        // Tilted crossing sprig on lower/mid boughs for lush multi-angle <8m 3D volume
+        if (wi < nW - 2 && !spec.isDead && geoRng() < 0.85) {
+          const crossYaw = yaw + ((bi & 1) ? 0.36 : -0.36);
           folParts.push(makeArchedBoughCard(
-            { x: basePos.x, y: yBase - 0.18 + (geoRng() - 0.5) * 0.24, z: basePos.z },
-            crossYaw, bLen * 0.80, bWidth * 0.78, pitch - 0.08, droop * 1.04, tent * 0.85,
-            qIdx, whorlNorm, bHash + 0.13, w.tint, 1, -roll * 1.25
+            { x: basePos.x, y: yBase - 0.16 + (geoRng() - 0.5) * 0.24, z: basePos.z },
+            crossYaw, bLen * 0.84, bWidth * 0.82, pitch - 0.08, droop * 1.04, tent * 0.90,
+            qIdx, whorlNorm, bHash + 0.13, w.tint, 1, -roll * 1.65
           ));
         }
+      }
+    }
+
+    // Inner sculpted 3D needle-mass core cones (eliminates hollow flat-card look at <8m with 0 extra draw calls)
+    if (!spec.isDead) {
+      const qr = quadRects[spec.whorls[0].quad];
+      const coreTiers = [
+        { y: spec.trunkH * 0.34, h: spec.trunkH * 0.36, r: spec.whorls[0].r * 0.54, col: 0x1e3f2f },
+        { y: spec.trunkH * 0.56, h: spec.trunkH * 0.34, r: spec.whorls[0].r * 0.40, col: 0x244936 },
+        { y: spec.trunkH * 0.76, h: spec.trunkH * 0.28, r: spec.whorls[0].r * 0.26, col: 0x2b553f }
+      ];
+      for (let ci = 0; ci < coreTiers.length; ci++) {
+        const ct = coreTiers[ci];
+        const cg = new THREE.ConeGeometry(ct.r, ct.h, 7, 1, false);
+        const cPos = cg.attributes.position;
+        const cUv = cg.attributes.uv;
+        const cCol = new Float32Array(cPos.count * 3);
+        const cMeta = new Float32Array(cPos.count * 4);
+        const tc = new THREE.Color(ct.col);
+        const sp = trunkBuilt.spineAt(ct.y);
+        for (let vi = 0; vi < cPos.count; vi++) {
+          let vx = cPos.getX(vi), vy = cPos.getY(vi), vz = cPos.getZ(vi);
+          const rad = Math.hypot(vx, vz);
+          if (rad > 0.05) {
+            const jit = 0.82 + 0.36 * (((vi + ci * 3) % 5) / 4);
+            vx *= jit; vz *= jit;
+            cPos.setXYZ(vi, vx, vy, vz);
+          }
+          // Map UV onto dense opaque needle patch inside quadrant
+          const uOrig = cUv.getX(vi), vOrig = cUv.getY(vi);
+          cUv.setXY(vi, lerp(qr.u0, qr.u1, 0.34 + uOrig * 0.32), lerp(qr.v0, qr.v1, 0.30 + vOrig * 0.42));
+          const ao = rad > 0.05 ? 0.64 : 0.84;
+          cCol[vi * 3] = tc.r * ao; cCol[vi * 3 + 1] = tc.g * ao; cCol[vi * 3 + 2] = tc.b * ao;
+          cMeta[vi * 4] = rad > 0.05 ? 0.34 : 0.18;
+          cMeta[vi * 4 + 1] = 0.65;
+          cMeta[vi * 4 + 2] = 0.30 + ci * 0.25;
+          cMeta[vi * 4 + 3] = 0.41 + ci * 0.17;
+        }
+        cg.translate(sp.x, ct.y, sp.z);
+        cg.computeVertexNormals();
+        cg.setAttribute('color', new THREE.BufferAttribute(cCol, 3));
+        cg.setAttribute('aBranchMeta', new THREE.BufferAttribute(cMeta, 4));
+        folParts.push(cg);
       }
     }
 
@@ -55456,15 +55534,28 @@ function buildTrees() {
   const nearBuilt = specs.map(makeNearConiferVariant);
   const farGeos = specs.map(makeFarConiferGeo);
 
-  // Shared vertex deformation snippet (load-linked droop, per-tree whorl jitter, and snapped/blunted tops)
+  // Shared vertex deformation snippet (load-linked droop, per-tree whorl jitter, snapped tops & ordered LOD crossfade)
   const TREE_VERT_COMMON = `
     attribute vec4 aBranchMeta;
     attribute vec4 aTreeParams;
+    attribute float aLodAlpha;
     varying vec3 vTreeLocalPos;
     varying vec3 vTreeWorldPos;
     varying vec3 vBoughWorldN;
     varying vec4 vBranchMeta;
     varying vec4 vTreeParams;
+    varying float vLodAlpha;
+  `;
+  const BAYER4_GLSL = `
+    float treeBayer4(vec2 p) {
+      vec2 f = floor(mod(p, 4.0));
+      float b0 = mod(f.x + f.y, 2.0);
+      vec2 f2 = floor(f * 0.5);
+      float b1 = mod(f2.x + f2.y, 2.0);
+      float a0 = mod(f.x, 2.0);
+      float a1 = mod(f2.x, 2.0);
+      return (b0 * 8.0 + a0 * 4.0 + b1 * 2.0 + a1 + 0.5) / 16.0;
+    }
   `;
   const TREE_VERT_DEFORM = `
     #include <begin_vertex>
@@ -55496,10 +55587,11 @@ function buildTrees() {
       vTreeLocalPos = transformed;
       vBranchMeta = aBranchMeta;
       vTreeParams = aTreeParams;
+      vLodAlpha = aLodAlpha;
     }
   `;
 
-  // 3A. Bark material for near-LOD trunks
+  // 3A. Bark material for near-LOD trunks (with ordered-dither LOD crossfade)
   const barkMat = new THREE.MeshStandardMaterial({
     map: barkTex,
     vertexColors: true,
@@ -55507,6 +55599,28 @@ function buildTrees() {
     metalness: 0.0,
     fog: true
   });
+  barkMat.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', `
+        #include <common>
+        attribute float aLodAlpha;
+        varying float vLodAlpha;
+      `)
+      .replace('#include <begin_vertex>', `
+        #include <begin_vertex>
+        vLodAlpha = aLodAlpha;
+      `);
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', `
+        #include <common>
+        varying float vLodAlpha;
+        ${BAYER4_GLSL}
+      `)
+      .replace('#include <alphatest_fragment>', `
+        #include <alphatest_fragment>
+        if (vLodAlpha < 0.995 && treeBayer4(gl_FragCoord.xy) >= vLodAlpha) discard;
+      `);
+  };
 
   // 3B. Alpha-tested branch-card material (near LOD) with upper-surface-only snow & atmospheric blend
   const foliageMat = new THREE.MeshStandardMaterial({
@@ -55550,9 +55664,12 @@ function buildTrees() {
         varying vec3 vBoughWorldN;
         varying vec4 vBranchMeta;
         varying vec4 vTreeParams;
+        varying float vLodAlpha;
+        ${BAYER4_GLSL}
       `)
       .replace('#include <alphatest_fragment>', `
         {
+          if (vLodAlpha < 0.995 && treeBayer4(gl_FragCoord.xy) >= vLodAlpha) discard;
           float camDistAlpha = length(cameraPosition - vTreeWorldPos);
           diffuseColor.a = clamp(diffuseColor.a * (1.0 + smoothstep(28.0, 128.0, camDistAlpha) * 0.36), 0.0, 1.0);
         }
@@ -55586,7 +55703,7 @@ function buildTrees() {
           float deadReduce = 1.0 - deadM * 0.80;
           float snowAmt = clamp(isUpper * snowSample.r * (0.28 + 0.92 * snowL) * boughClump * tipExpose * deadReduce, 0.0, 0.92);
 
-          vec3 snowTint = mix(vec3(0.90, 0.94, 0.99), vec3(0.96, 0.89, 0.84), uSunsetT * 0.45);
+          vec3 snowTint = mix(vec3(0.90, 0.94, 0.99), vec3(0.88, 0.92, 0.99), uSunsetT * 0.35);
           diffuseColor.rgb = mix(diffuseColor.rgb, snowTint, snowAmt);
 
           // Subtle distance atmospheric blend matching horizon fog
@@ -55667,6 +55784,8 @@ function buildTrees() {
         varying vec3 vBoughWorldN;
         varying vec4 vBranchMeta;
         varying vec4 vTreeParams;
+        varying float vLodAlpha;
+        ${BAYER4_GLSL}
         float farSnowHash(vec2 p) {
           return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
         }
@@ -55681,6 +55800,10 @@ function buildTrees() {
           );
         }
       `)
+      .replace('#include <alphatest_fragment>', `
+        #include <alphatest_fragment>
+        if (vLodAlpha < 0.995 && treeBayer4(gl_FragCoord.xy) < (1.0 - vLodAlpha)) discard;
+      `)
       .replace('#include <color_fragment>', `
         #include <color_fragment>
         {
@@ -55691,23 +55814,23 @@ function buildTrees() {
           float deadM = vTreeParams.y;
           float tSeed = vTreeParams.w;
 
-          // Inner core darkening (trunk stays brown, foliage has depth)
+          // Inner core darkening (trunk stays brown, foliage has depth; match near-LOD luminance around 125-160m)
           float isFoliage = step(0.05, rFrac);
-          float innerAO = mix(0.68, 1.04, smoothstep(0.15, 0.85, rFrac));
-          diffuseColor.rgb *= mix(1.0, innerAO, isFoliage);
+          float innerAO = mix(0.74, 1.12, smoothstep(0.15, 0.85, rFrac));
+          diffuseColor.rgb *= mix(1.0, innerAO * 1.12, isFoliage);
 
           // Dead / winter-stressed russet blend
           vec3 deadCol = vec3(0.32, 0.23, 0.16);
           diffuseColor.rgb = mix(diffuseColor.rgb, deadCol, clamp(deadM * 0.85, 0.0, 1.0) * isFoliage);
 
-          // Patchy organic upper-surface snow (smooth multi-octave hash noise, zero grid artifacts)
-          float upFace = smoothstep(0.24, 0.56, vBoughWorldN.y);
+          // Patchy organic upper-surface snow matched to near-LOD snow coverage
+          float upFace = smoothstep(0.14, 0.48, vBoughWorldN.y);
           vec2 nUV = vTreeLocalPos.xz * 1.15 + vec2(tSeed * 19.3, bHash * 13.7);
           float patchN = farSnowNoise(nUV) * 0.62 + farSnowNoise(nUV * 2.3 + vec2(vTreeLocalPos.y * 0.7)) * 0.38;
-          float patchyMask = smoothstep(0.28, 0.72, patchN);
+          float patchyMask = smoothstep(0.24, 0.68, patchN);
           float deadReduce = 1.0 - deadM * 0.80;
-          float snowAmt = clamp(upFace * patchyMask * (0.28 + 0.72 * snowL) * (0.55 + 0.45 * rFrac) * deadReduce * isFoliage, 0.0, 0.82);
-          vec3 snowTint = mix(vec3(0.90, 0.94, 0.98), vec3(0.95, 0.89, 0.84), uSunsetT * 0.40);
+          float snowAmt = clamp(upFace * patchyMask * (0.30 + 0.74 * snowL) * (0.55 + 0.45 * rFrac) * deadReduce * isFoliage, 0.0, 0.86);
+          vec3 snowTint = mix(vec3(0.90, 0.94, 0.99), vec3(0.88, 0.92, 0.99), uSunsetT * 0.35);
           diffuseColor.rgb = mix(diffuseColor.rgb, snowTint, snowAmt);
 
           // Distant aerial perspective softening into horizon sky/fog
@@ -55999,15 +56122,22 @@ function buildTrees() {
   // 5. Allocate Far & Near InstancedMeshes (add farInst[3] before farInst[2] so last InstancedMesh with count>500 is farInst[2])
   const farInst = [];
   const farBaseMatrices = [];
+  const farLodAttrs = [];
   const nearTrunkInst = [];
   const nearFoliageInst = [];
   const nearParamsAttr = [];
+  const nearTrunkLodAttrs = [];
+  const nearFolLodAttrs = [];
 
   for (let v = 0; v < 4; v++) {
     const cnt = placedPerVar[v];
     const fGeo = farGeos[v].clone();
     const fParamArr = new Float32Array(Math.max(1, cnt) * 4);
     fGeo.setAttribute('aTreeParams', new THREE.InstancedBufferAttribute(fParamArr, 4));
+    const fLodArr = new Float32Array(Math.max(1, cnt)).fill(1.0);
+    const fLodAttr = new THREE.InstancedBufferAttribute(fLodArr, 1);
+    fLodAttr.setUsage(THREE.DynamicDrawUsage);
+    fGeo.setAttribute('aLodAlpha', fLodAttr);
     const fim = new THREE.InstancedMesh(fGeo, farMat, Math.max(1, cnt));
     fim.count = cnt;
     fim.castShadow = true;
@@ -56015,21 +56145,31 @@ function buildTrees() {
     fim.frustumCulled = false;
     farInst.push(fim);
     farBaseMatrices.push(new Float32Array(Math.max(1, cnt) * 16));
+    farLodAttrs.push(fLodAttr);
 
     const maxN = MAX_NEAR_PER_VAR[v];
     const ntGeo = nearBuilt[v].trunkGeo.clone();
+    const ntLodArr = new Float32Array(maxN).fill(1.0);
+    const ntLodAttr = new THREE.InstancedBufferAttribute(ntLodArr, 1);
+    ntLodAttr.setUsage(THREE.DynamicDrawUsage);
+    ntGeo.setAttribute('aLodAlpha', ntLodAttr);
     const ntim = new THREE.InstancedMesh(ntGeo, barkMat, maxN);
     ntim.count = 0;
     ntim.castShadow = true;
     ntim.receiveShadow = true;
     ntim.frustumCulled = false;
     nearTrunkInst.push(ntim);
+    nearTrunkLodAttrs.push(ntLodAttr);
 
     const nfGeo = nearBuilt[v].foliageGeo.clone();
     const nfParamArr = new Float32Array(maxN * 4);
     const nfAttr = new THREE.InstancedBufferAttribute(nfParamArr, 4);
     nfAttr.setUsage(THREE.DynamicDrawUsage);
     nfGeo.setAttribute('aTreeParams', nfAttr);
+    const nfLodArr = new Float32Array(maxN).fill(1.0);
+    const nfLodAttr = new THREE.InstancedBufferAttribute(nfLodArr, 1);
+    nfLodAttr.setUsage(THREE.DynamicDrawUsage);
+    nfGeo.setAttribute('aLodAlpha', nfLodAttr);
     const nfim = new THREE.InstancedMesh(nfGeo, foliageMat, maxN);
     nfim.customDepthMaterial = nearFoliageDepthMat;
     nfim.count = 0;
@@ -56038,6 +56178,7 @@ function buildTrees() {
     nfim.frustumCulled = false;
     nearFoliageInst.push(nfim);
     nearParamsAttr.push(nfAttr);
+    nearFolLodAttrs.push(nfLodAttr);
   }
 
   const _m = new THREE.Matrix4();
@@ -56071,9 +56212,11 @@ function buildTrees() {
     scene.add(nearFoliageInst[v]);
   }
 
-  // 6. Camera-Based Dynamic LOD Switching (promotes up to 254 closest trees within 150m to alpha-tested branch cards)
-  const LOD_RADIUS = 150.0;
+  // 6. Camera-Based Dynamic LOD Switching with 32m ordered-dither crossfade (124m..156m)
+  const LOD_RADIUS = 158.0;
   const LOD_R2 = LOD_RADIUS * LOD_RADIUS;
+  const LOD_FADE_IN = 124.0;
+  const LOD_FADE_OUT = 156.0;
   let lastLodX = Infinity, lastLodZ = Infinity;
   const activeFarSlots = [[], [], [], []];
   const nearCounts = [0, 0, 0, 0];
@@ -56082,21 +56225,23 @@ function buildTrees() {
 
   updateTreeLOD = (camPos, force = false) => {
     if (!camPos) return;
-    if (!force && Math.hypot(camPos.x - lastLodX, camPos.z - lastLodZ) < 5.0) return;
+    if (!force && Math.hypot(camPos.x - lastLodX, camPos.z - lastLodZ) < 2.5) return;
     lastLodX = camPos.x;
     lastLodZ = camPos.z;
 
-    // Restore previously promoted far slots from saved matrices
+    // Restore previously promoted far slots from saved matrices & reset far aLodAlpha
     const farDirty = [false, false, false, false];
     for (let v = 0; v < 4; v++) {
       const prev = activeFarSlots[v];
       if (prev.length > 0) {
         const baseArr = farBaseMatrices[v];
         const dstArr = farInst[v].instanceMatrix.array;
+        const fLod = farLodAttrs[v].array;
         for (let i = 0; i < prev.length; i++) {
           const slot = prev[i];
           const off = slot * 16;
           for (let k = 0; k < 16; k++) dstArr[off + k] = baseArr[off + k];
+          fLod[slot] = 1.0;
         }
         prev.length = 0;
         farDirty[v] = true;
@@ -56115,12 +56260,17 @@ function buildTrees() {
     }
     _nearCandidates.sort((a, b) => a.d2 - b.d2);
 
-    // Promote closest trees up to per-variant budget
+    // Promote closest trees up to per-variant budget with complementary ordered-dither crossfade
     for (let i = 0; i < _nearCandidates.length; i++) {
-      const rec = _nearCandidates[i].rec;
+      const cand = _nearCandidates[i];
+      const rec = cand.rec;
       const v = rec.vIdx;
       const nSlot = nearCounts[v];
       if (nSlot >= MAX_NEAR_PER_VAR[v]) continue;
+
+      const d = Math.sqrt(cand.d2);
+      const fadeT = d <= LOD_FADE_IN ? 0.0 : clamp((d - LOD_FADE_IN) / (LOD_FADE_OUT - LOD_FADE_IN), 0.0, 1.0);
+      const nearAlpha = 1.0 - fadeT;
 
       _m.fromArray(rec.matrixArr);
       nearTrunkInst[v].setMatrixAt(nSlot, _m);
@@ -56129,11 +56279,20 @@ function buildTrees() {
       nearTrunkInst[v].setColorAt(nSlot, _c);
       nearFoliageInst[v].setColorAt(nSlot, _c);
       nearParamsAttr[v].setXYZW(nSlot, rec.snowLoad, rec.deadMix, rec.brokenTop, rec.seed);
+      nearTrunkLodAttrs[v].setX(nSlot, nearAlpha);
+      nearFolLodAttrs[v].setX(nSlot, nearAlpha);
 
-      // Hide far slot with zero scale while keeping valid world position at (rec.x, rec.y, rec.z)
-      _zeroMat.makeScale(0, 0, 0);
-      _zeroMat.setPosition(rec.x, rec.y, rec.z);
-      farInst[v].setMatrixAt(rec.slot, _zeroMat);
+      if (fadeT <= 0.005) {
+        // Fully near: hide far slot with zero scale while keeping valid world position
+        _zeroMat.makeScale(0, 0, 0);
+        _zeroMat.setPosition(rec.x, rec.y, rec.z);
+        farInst[v].setMatrixAt(rec.slot, _zeroMat);
+        farLodAttrs[v].setX(rec.slot, 0.0);
+      } else {
+        // Crossfade zone (124..156m): keep far slot visible at complementary dither fraction
+        farInst[v].setMatrixAt(rec.slot, _m);
+        farLodAttrs[v].setX(rec.slot, fadeT);
+      }
 
       activeFarSlots[v].push(rec.slot);
       nearCounts[v] = nSlot + 1;
@@ -56149,8 +56308,13 @@ function buildTrees() {
         if (nearTrunkInst[v].instanceColor) nearTrunkInst[v].instanceColor.needsUpdate = true;
         if (nearFoliageInst[v].instanceColor) nearFoliageInst[v].instanceColor.needsUpdate = true;
         nearParamsAttr[v].needsUpdate = true;
+        nearTrunkLodAttrs[v].needsUpdate = true;
+        nearFolLodAttrs[v].needsUpdate = true;
       }
-      if (farDirty[v]) farInst[v].instanceMatrix.needsUpdate = true;
+      if (farDirty[v]) {
+        farInst[v].instanceMatrix.needsUpdate = true;
+        farLodAttrs[v].needsUpdate = true;
+      }
     }
   };
 
@@ -57184,8 +57348,11 @@ function buildRisonareTomamu() {
 }
 
 // 3. Unkai Terrace (雲海テラス / 霧氷テラス, 1,088m):
-//    Gondola summit station (open cable bay at x=±3.4) + timber Terrace Cafe + protruding curved Cloud Walk on cliff side
+//    Gondola summit station + Tenbo Cafe + Cloud9 Plan cluster (Cloud Walk, Sky Wedge, Cloud Bar, Cloud Pool)
+//    Static parts merged by material to keep scene draw calls lean.
+let m16Cloud9Telemetry = [];
 function buildUnkaiTerrace() {
+  m16Cloud9Telemetry = [];
   const [ux, uz] = normToWorld(DATA.gondolaTop[0], DATA.gondolaTop[1]);
   const uy = terrainMeshHeightAt(ux, uz);
 
@@ -57204,202 +57371,52 @@ function buildUnkaiTerrace() {
   const wallWoodTex = createWoodDeckTexture(9102, true);
   wallWoodTex.repeat.set(2, 1);
 
-  const darkCladMat  = new THREE.MeshStandardMaterial({ color: 0x353e49, roughness: 0.72, metalness: 0.15 });
-  const darkSteelMat = new THREE.MeshStandardMaterial({ color: 0x28303a, roughness: 0.48, metalness: 0.45 });
-  const whiteSteelMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.38, metalness: 0.25 });
-  const cedarWallMat = new THREE.MeshStandardMaterial({ map: wallWoodTex, roughness: 0.78 });
-  const deckWoodMat  = new THREE.MeshStandardMaterial({ map: deckTex, roughness: 0.76 });
-  const snowMat      = new THREE.MeshStandardMaterial({ color: 0xf0f4fa, roughness: 0.90 });
-  const cafeGlowMat  = new THREE.MeshStandardMaterial({
+  const darkCladMat   = new THREE.MeshStandardMaterial({ color: 0x353e49, roughness: 0.72, metalness: 0.15 });
+  const darkSteelMat  = new THREE.MeshStandardMaterial({ color: 0x28303a, roughness: 0.48, metalness: 0.45 });
+  const whiteSteelMat = new THREE.MeshStandardMaterial({ color: 0xe6edf6, roughness: 0.36, metalness: 0.24 });
+  const cedarWallMat  = new THREE.MeshStandardMaterial({ map: wallWoodTex, roughness: 0.78 });
+  const deckWoodMat   = new THREE.MeshStandardMaterial({ map: deckTex, roughness: 0.76 });
+  const snowMat       = new THREE.MeshStandardMaterial({ color: 0xf0f4fa, roughness: 0.90 });
+  const cafeGlowMat   = new THREE.MeshStandardMaterial({
     color: 0xffe4b8, emissive: new THREE.Color(0xe8a44e), emissiveIntensity: 0.75, roughness: 0.22, metalness: 0.15
   });
-  const glassRailMat = new THREE.MeshStandardMaterial({
+  const glassRailMat  = new THREE.MeshStandardMaterial({
     color: 0xcbe4f5, transparent: true, opacity: 0.36, roughness: 0.12, metalness: 0.18
   });
 
-  // Helper: anchor a vertical/sloped pier cleanly from local yTop down to terrainMeshHeightAt - 3.0m
-  function addGroundedPier(lx, lz, yTop, radius, mat) {
+  // Geometry buckets merged by material at end of buildUnkaiTerrace()
+  const darkCladGeos = [];
+  const darkSteelGeos = [];
+  const whiteSteelGeos = [];
+  const deckWoodGeos = [];
+  const snowGeos = [];
+  const cafeGlowGeos = [];
+  const glassGeos = [];
+
+  function pushBox(arr, w, h, d, x, y, z, rx = 0, ry = 0, rz = 0) {
+    const g = new THREE.BoxGeometry(w, h, d);
+    if (rx) g.rotateX(rx);
+    if (ry) g.rotateY(ry);
+    if (rz) g.rotateZ(rz);
+    g.translate(x, y, z);
+    arr.push(g);
+  }
+
+  // Helper: anchor a vertical pier cleanly from local yTop down to terrainMeshHeightAt - 3.0m
+  function addGroundedPier(lx, lz, yTop, radius, arr, tag = 'unkai_pier') {
     const [wx, wz] = localToWorld(lx, lz);
     const groundHere = terrainMeshHeightAt(wx, wz);
     const topWorldY = uy + yTop;
     const pH = Math.max(2.5, topWorldY - (groundHere - 3.0));
-    const pier = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.88, radius * 1.05, pH, 8), mat);
-    pier.position.set(lx, yTop - pH * 0.5, lz);
-    group.add(pier);
+    const g = new THREE.CylinderGeometry(radius * 0.88, radius * 1.05, pH, 8);
+    g.translate(lx, yTop - pH * 0.5, lz);
+    arr.push(g);
+    m16Cloud9Telemetry.push({ id: tag, x: wx, z: wz, baseY: groundHere - 3.0 });
     return pH;
   }
 
-  // (A) Gondola Summit Station Terminal (x in [-6.5, +5.8], z in [-6.2, +5.6])
-  //     Clean recessed arrival portal at x in [-4.5, +4.5], z = +5.6 so gondola cables (x = ±3.4, y ≈ 6.8) glide cleanly inside!
-  const stPlinth = new THREE.Mesh(new THREE.BoxGeometry(12.4, 8.5, 11.8), darkCladMat);
-  stPlinth.position.set(-0.35, -1.25, -0.3); // base buried -5.5m into mountain ridge, top y = +3.0
-  group.add(stPlinth);
-
-  // Side walls framing the gondola cable portal bay
-  const stLeftWall = new THREE.Mesh(new THREE.BoxGeometry(2.2, 6.2, 11.8), darkCladMat);
-  stLeftWall.position.set(-5.45, 5.9, -0.3);
-  group.add(stLeftWall);
-  const stRightWall = new THREE.Mesh(new THREE.BoxGeometry(1.6, 6.2, 11.8), darkCladMat);
-  stRightWall.position.set(5.0, 5.9, -0.3);
-  group.add(stRightWall);
-  const stBackWall = new THREE.Mesh(new THREE.BoxGeometry(12.4, 6.2, 2.2), darkCladMat);
-  stBackWall.position.set(-0.35, 5.9, -5.1);
-  group.add(stBackWall);
-
-  // Warm illuminated interior boarding bay + visible bullwheel silhouette inside portal
-  const bayInterior = new THREE.Mesh(new THREE.BoxGeometry(8.6, 4.6, 0.4), cafeGlowMat);
-  bayInterior.position.set(-0.2, 5.4, -3.8);
-  group.add(bayInterior);
-  const bullwheel = new THREE.Mesh(
-    new THREE.TorusGeometry(3.35, 0.24, 8, 24),
-    new THREE.MeshStandardMaterial({ color: 0xa6342e, roughness: 0.45, metalness: 0.4 })
-  );
-  bullwheel.rotation.x = Math.PI * 0.5;
-  bullwheel.position.set(0, 6.8, -0.5);
-  group.add(bullwheel);
-
-  // Cantilevered station shed roof + thick alpine snow blanket
-  const stRoof = new THREE.Mesh(new THREE.BoxGeometry(13.8, 0.9, 13.6), darkSteelMat);
-  stRoof.position.set(-0.35, 9.25, 0.1);
-  stRoof.rotation.x = -0.05;
-  group.add(stRoof);
-  const stRoofSnow = new THREE.Mesh(new THREE.BoxGeometry(13.6, 0.85, 13.4), snowMat);
-  stRoofSnow.position.set(-0.35, 9.95, 0.1);
-  stRoofSnow.rotation.x = -0.05;
-  group.add(stRoofSnow);
-
-  // (B) Adjacent Tenbo Cafe Pavilion (てんぼうかふぇ) on cliff-view +X side (x in [+5.8, +16.2], z in [-4.8, +5.8])
-  const cafeBase = new THREE.Mesh(new THREE.BoxGeometry(10.6, 7.5, 10.6), darkCladMat);
-  cafeBase.position.set(11.0, -1.75, 0.5); // deep slope embed, top at deck y = +2.0
-  group.add(cafeBase);
-
-  const cafeBody = new THREE.Mesh(new THREE.BoxGeometry(10.2, 4.8, 9.8), cedarWallMat);
-  cafeBody.position.set(11.0, 4.4, 0.3);
-  group.add(cafeBody);
-
-  // Panoramic warm-lit glass windows facing valley (+Z) and east (+X)
-  const cafeWinFront = new THREE.Mesh(new THREE.BoxGeometry(8.8, 3.4, 0.3), cafeGlowMat);
-  cafeWinFront.position.set(11.0, 4.5, 5.25);
-  group.add(cafeWinFront);
-  const cafeWinSide = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.4, 7.6), cafeGlowMat);
-  cafeWinSide.position.set(16.15, 4.5, 0.5);
-  group.add(cafeWinSide);
-  // Crisp dark vertical window mullions
-  for (const mx of [7.2, 9.7, 12.3, 14.8]) {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(0.18, 3.6, 0.4), darkSteelMat);
-    m.position.set(mx, 4.5, 5.3);
-    group.add(m);
-  }
-
-  // Modern overhanging timber/steel roof + snow cap on Cafe Pavilion
-  const cafeRoof = new THREE.Mesh(new THREE.BoxGeometry(12.4, 0.65, 12.2), darkSteelMat);
-  cafeRoof.position.set(11.3, 7.1, 0.8);
-  cafeRoof.rotation.x = -0.06;
-  group.add(cafeRoof);
-  const cafeRoofSnow = new THREE.Mesh(new THREE.BoxGeometry(12.2, 0.65, 12.0), snowMat);
-  cafeRoofSnow.position.set(11.3, 7.7, 0.8);
-  cafeRoofSnow.rotation.x = -0.06;
-  group.add(cafeRoofSnow);
-
-  // Cafe viewing terrace deck apron (x in [+5.6, +17.5], z in [+5.2, +10.2], y = +2.1)
-  const deckY = 2.1;
-  const cafeDeck = new THREE.Mesh(new THREE.BoxGeometry(12.2, 0.5, 5.6), deckWoodMat);
-  cafeDeck.position.set(11.6, deckY, 7.8);
-  group.add(cafeDeck);
-  const cafeDeckBeam = new THREE.Mesh(new THREE.BoxGeometry(12.4, 0.45, 5.8), whiteSteelMat);
-  cafeDeckBeam.position.set(11.6, deckY - 0.42, 7.8);
-  group.add(cafeDeckBeam);
-  addGroundedPier(6.6, 9.8, deckY - 0.5, 0.28, whiteSteelMat);
-  addGroundedPier(16.6, 9.8, deckY - 0.5, 0.28, whiteSteelMat);
-
-  // (C) ICONIC PROTRUDING CLOUD WALK (クラウドウォーク) — smooth continuous cloud-shaped cantilevered skywalk over the cliff!
-  //     Built with smooth ExtrudeGeometry ribbon + closed hole (zero box notches or overlaps!), clear of cables & ski course
-  const cwOuterCtrl = [
-    new THREE.Vector2(6.2,  9.2),
-    new THREE.Vector2(15.2, 9.6),
-    new THREE.Vector2(21.2, 14.5),
-    new THREE.Vector2(21.6, 21.8),
-    new THREE.Vector2(16.2, 26.2),
-    new THREE.Vector2(9.2,  24.6),
-    new THREE.Vector2(5.6,  18.6),
-    new THREE.Vector2(5.8,  12.4)
-  ];
-  const cwInnerCtrl = [
-    new THREE.Vector2(10.0, 12.6),
-    new THREE.Vector2(14.8, 13.0),
-    new THREE.Vector2(17.7, 15.8),
-    new THREE.Vector2(17.8, 20.4),
-    new THREE.Vector2(14.8, 22.6),
-    new THREE.Vector2(10.8, 21.4),
-    new THREE.Vector2(9.0,  17.6),
-    new THREE.Vector2(9.2,  14.4)
-  ];
-  const cwOuterSpline = new THREE.SplineCurve([...cwOuterCtrl, cwOuterCtrl[0]]);
-  const cwInnerSpline = new THREE.SplineCurve([...cwInnerCtrl, cwInnerCtrl[0]]);
-  const cwSamples = 48;
-  const outerPts2D = cwOuterSpline.getPoints(cwSamples);
-  const innerPts2D = cwInnerSpline.getPoints(cwSamples);
-
-  // Shape coordinates: (x, -z) so rotating mesh by -PI/2 around X maps (x, y_shape) -> (x, 0, -y_shape) = (x, 0, z)!
-  const cwShape = new THREE.Shape(outerPts2D.map(p => new THREE.Vector2(p.x, -p.y)));
-  const cwHole  = new THREE.Path(innerPts2D.slice().reverse().map(p => new THREE.Vector2(p.x, -p.y)));
-  cwShape.holes.push(cwHole);
-
-  const cwDeckTex = createWoodDeckTexture(9105, false);
-  cwDeckTex.repeat.set(0.32, 0.32);
-  const cwDeckMat = new THREE.MeshStandardMaterial({ map: cwDeckTex, roughness: 0.74 });
-
-  // Smooth continuous timber Cloud Walk deck slab
-  const cwDeckGeo = new THREE.ExtrudeGeometry(cwShape, { depth: 0.38, bevelEnabled: false, curveSegments: 2 });
-  cwDeckGeo.rotateX(-Math.PI * 0.5);
-  const cwDeckMesh = new THREE.Mesh(cwDeckGeo, cwDeckMat);
-  cwDeckMesh.position.y = deckY - 0.16;
-  group.add(cwDeckMesh);
-
-  // Signature crisp white structural steel box-beam directly beneath the cloud loop
-  const cwBeamGeo = new THREE.ExtrudeGeometry(cwShape, { depth: 0.56, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.18, bevelSegments: 1 });
-  cwBeamGeo.rotateX(-Math.PI * 0.5);
-  const cwBeamMesh = new THREE.Mesh(cwBeamGeo, whiteSteelMat);
-  cwBeamMesh.position.y = deckY - 0.74;
-  group.add(cwBeamMesh);
-
-  // Continuous smooth white-steel handrails + sleek glass balustrade + slim vertical posts around outer & inner rims
-  const railH = 1.15;
-  function addCurvedRail(pts2D, isOuter) {
-    const pts3D = pts2D.map(p => new THREE.Vector3(p.x, deckY + 0.22 + railH, p.y));
-    const railCurve = new THREE.CatmullRomCurve3(pts3D, true);
-    const topTube = new THREE.Mesh(new THREE.TubeGeometry(railCurve, 64, 0.075, 6, true), whiteSteelMat);
-    group.add(topTube);
-
-    const midPts3D = pts2D.map(p => new THREE.Vector3(p.x, deckY + 0.22 + railH * 0.5, p.y));
-    const midTube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(midPts3D, true), 64, 0.035, 5, true), whiteSteelMat);
-    group.add(midTube);
-
-    for (let i = 0; i < pts2D.length - 1; i++) {
-      const a = pts2D[i], b = pts2D[i + 1];
-      // Leave open walkway entry where Cloud Walk joins the Cafe Terrace Deck (z < 10.6 on outer rim)
-      if (isOuter && a.y < 10.6 && b.y < 10.6) continue;
-      const mx = (a.x + b.x) * 0.5, mz = (a.y + b.y) * 0.5;
-      const segL = Math.hypot(b.x - a.x, b.y - a.y);
-      const segYaw = Math.atan2(b.x - a.x, b.y - a.y);
-      const pane = new THREE.Mesh(new THREE.BoxGeometry(0.05, railH * 0.84, segL), glassRailMat);
-      pane.position.set(mx, deckY + 0.22 + railH * 0.48, mz);
-      pane.rotation.y = segYaw;
-      group.add(pane);
-
-      if (i % 3 === 0) {
-        const post = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, railH, 6), whiteSteelMat);
-        post.position.set(a.x, deckY + 0.22 + railH * 0.5, a.y);
-        group.add(post);
-      }
-    }
-  }
-  addCurvedRail(outerPts2D, true);
-  addCurvedRail(innerPts2D, false);
-
-  // Helper: cleanly oriented structural diagonal strut connecting exact local top point -> buried ground anchor
   const _upY = new THREE.Vector3(0, 1, 0);
-  function addGroundedStrut(topX, topY, topZ, footX, footZ, radius, mat) {
+  function addGroundedStrut(topX, topY, topZ, footX, footZ, radius, arr) {
     const [wx, wz] = localToWorld(footX, footZ);
     const groundHere = terrainMeshHeightAt(wx, wz);
     const footY = (groundHere - uy) - 2.2;
@@ -57408,53 +57425,317 @@ function buildUnkaiTerrace() {
     const dir = pTop.clone().sub(pBot);
     const len = dir.length();
     if (len < 1.0) return;
-    const strut = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.85, radius, len, 7), mat);
-    strut.position.copy(pBot).add(pTop).multiplyScalar(0.5);
-    strut.quaternion.setFromUnitVectors(_upY, dir.normalize());
-    group.add(strut);
+    const g = new THREE.CylinderGeometry(radius * 0.85, radius, len, 7);
+    const q = new THREE.Quaternion().setFromUnitVectors(_upY, dir.normalize());
+    const mid = pBot.clone().add(pTop).multiplyScalar(0.5);
+    const m = new THREE.Matrix4().compose(mid, q, new THREE.Vector3(1, 1, 1));
+    g.applyMatrix4(m);
+    arr.push(g);
   }
 
-  // White-steel cliff-support piers & exact grounded diagonal V-struts under Cloud Walk
+  // (A) Gondola Summit Station Terminal (x in [-6.5, +5.0], z in [-6.2, +5.6])
+  pushBox(darkCladGeos, 11.6, 8.5, 11.8, -0.75, -1.25, -0.3);
+  pushBox(darkCladGeos, 2.2, 6.2, 11.8, -5.45, 5.9, -0.3);
+  pushBox(darkCladGeos, 1.5, 6.2, 11.8, 4.3, 5.9, -0.3);
+  pushBox(darkCladGeos, 11.6, 6.2, 2.2, -0.75, 5.9, -5.1);
+
+  pushBox(cafeGlowGeos, 8.0, 4.6, 0.4, -0.5, 5.4, -3.8);
+  const bullwheel = new THREE.Mesh(
+    new THREE.TorusGeometry(3.35, 0.24, 8, 24),
+    new THREE.MeshStandardMaterial({ color: 0xa6342e, roughness: 0.45, metalness: 0.4 })
+  );
+  bullwheel.rotation.x = Math.PI * 0.5;
+  bullwheel.position.set(0, 6.8, -0.5);
+  group.add(bullwheel);
+
+  pushBox(darkSteelGeos, 12.8, 0.9, 13.6, -0.75, 9.25, 0.1, -0.05, 0, 0);
+  pushBox(snowGeos, 12.6, 0.85, 13.4, -0.75, 9.95, 0.1, -0.05, 0, 0);
+
+  // (B) Adjacent Tenbo / Kumo Cafe Pavilion on cliff-view -X side (x in [-16.8, -6.4], z in [-5.8, +4.4], >=27m from ski corridor)
+  pushBox(darkCladGeos, 10.6, 7.5, 10.4, -11.6, -1.75, -0.6);
+  const cafeBody = new THREE.Mesh(new THREE.BoxGeometry(10.0, 4.8, 9.6), cedarWallMat);
+  cafeBody.position.set(-11.6, 4.4, -0.8);
+  group.add(cafeBody);
+
+  pushBox(cafeGlowGeos, 8.6, 3.4, 0.3, -11.6, 4.5, 4.05);
+  pushBox(cafeGlowGeos, 0.3, 3.4, 7.4, -16.65, 4.5, -0.8);
+  for (const mx of [-15.3, -12.8, -10.4, -7.9]) {
+    pushBox(darkSteelGeos, 0.18, 3.6, 0.4, mx, 4.5, 4.1);
+  }
+  pushBox(darkSteelGeos, 12.0, 0.65, 11.8, -11.7, 7.1, -0.3, -0.06, 0, 0);
+  pushBox(snowGeos, 11.8, 0.65, 11.6, -11.7, 7.7, -0.3, -0.06, 0, 0);
+
+  // Main Terrace Viewing Deck Apron on -X cliffside (x in [-19.4, -6.2], z in [+3.8, +10.8], y = +2.1)
+  const deckY = 2.1;
+  pushBox(deckWoodGeos, 13.2, 0.48, 7.0, -12.8, deckY, 7.3);
+  pushBox(whiteSteelGeos, 13.4, 0.44, 7.2, -12.8, deckY - 0.42, 7.3);
+  addGroundedPier(-18.6, 10.2, deckY - 0.5, 0.27, whiteSteelGeos, 'cafe_deck_pier');
+  addGroundedPier(-6.8,  10.2, deckY - 0.5, 0.27, whiteSteelGeos, 'cafe_deck_pier');
+  addGroundedPier(-18.6,  4.4, deckY - 0.5, 0.25, darkSteelGeos,  'west_deck');
+
+  const railH = 1.15;
+  // Terrace perimeter rails (leaving entry openings for Cloud Walk on x in [-18.4,-6.8] at z=10.8, Sky Wedge at x in [-24.6,-19.2], Cloud Bar at x=-19.4)
+  pushBox(whiteSteelGeos, 0.1, 0.1, 3.8, -6.3, deckY + 0.22 + railH, 5.9);
+  for (const wz of [4.2, 7.4, 10.6]) {
+    const p = new THREE.CylinderGeometry(0.05, 0.05, railH, 5);
+    p.translate(-6.3, deckY + 0.22 + railH * 0.5, wz);
+    whiteSteelGeos.push(p);
+  }
+
+  // (C) CLOUD WALK (クラウドウォーク) — cantilevered cloud-shaped skywalk projecting over the -X basin (clear of cables & >=27m from corridor)
+  const cwOuterCtrl = [
+    new THREE.Vector2(-6.6,  9.6),
+    new THREE.Vector2(-13.8, 9.6),
+    new THREE.Vector2(-18.6, 12.6),
+    new THREE.Vector2(-18.8, 17.4),
+    new THREE.Vector2(-14.6, 19.6),
+    new THREE.Vector2(-9.2,  18.8),
+    new THREE.Vector2(-6.4,  15.0),
+    new THREE.Vector2(-6.4,  11.6)
+  ];
+  const cwInnerCtrl = [
+    new THREE.Vector2(-9.8,  12.2),
+    new THREE.Vector2(-13.6, 12.4),
+    new THREE.Vector2(-15.6, 14.2),
+    new THREE.Vector2(-15.6, 16.4),
+    new THREE.Vector2(-13.4, 17.4),
+    new THREE.Vector2(-10.4, 16.6),
+    new THREE.Vector2(-9.0,  14.6),
+    new THREE.Vector2(-9.2,  12.8)
+  ];
+  const cwOuterSpline = new THREE.SplineCurve([...cwOuterCtrl, cwOuterCtrl[0]]);
+  const cwInnerSpline = new THREE.SplineCurve([...cwInnerCtrl, cwInnerCtrl[0]]);
+  const cwSamples = 44;
+  const outerPts2D = cwOuterSpline.getPoints(cwSamples);
+  const innerPts2D = cwInnerSpline.getPoints(cwSamples);
+
+  const cwShape = new THREE.Shape(outerPts2D.map(p => new THREE.Vector2(p.x, -p.y)));
+  const cwHole  = new THREE.Path(innerPts2D.slice().reverse().map(p => new THREE.Vector2(p.x, -p.y)));
+  cwShape.holes.push(cwHole);
+
+  const cwDeckTex = createWoodDeckTexture(9105, false);
+  cwDeckTex.repeat.set(0.32, 0.32);
+  const cwDeckMat = new THREE.MeshStandardMaterial({ map: cwDeckTex, roughness: 0.74 });
+
+  const cwDeckGeo = new THREE.ExtrudeGeometry(cwShape, { depth: 0.38, bevelEnabled: false, curveSegments: 2 });
+  cwDeckGeo.rotateX(-Math.PI * 0.5);
+  const cwDeckMesh = new THREE.Mesh(cwDeckGeo, cwDeckMat);
+  cwDeckMesh.position.y = deckY - 0.16;
+  group.add(cwDeckMesh);
+
+  const cwBeamGeo = new THREE.ExtrudeGeometry(cwShape, { depth: 0.56, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.18, bevelSegments: 1 });
+  cwBeamGeo.rotateX(-Math.PI * 0.5);
+  cwBeamGeo.translate(0, deckY - 0.74, 0);
+  whiteSteelGeos.push(cwBeamGeo);
+
+  function addCurvedRail(pts2D, isOuter) {
+    const pts3D = pts2D.map(p => new THREE.Vector3(p.x, deckY + 0.22 + railH, p.y));
+    const railCurve = new THREE.CatmullRomCurve3(pts3D, true);
+    whiteSteelGeos.push(new THREE.TubeGeometry(railCurve, 56, 0.075, 6, true));
+
+    const midPts3D = pts2D.map(p => new THREE.Vector3(p.x, deckY + 0.22 + railH * 0.5, p.y));
+    whiteSteelGeos.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(midPts3D, true), 56, 0.035, 5, true));
+
+    for (let i = 0; i < pts2D.length - 1; i++) {
+      const a = pts2D[i], b = pts2D[i + 1];
+      if (isOuter && a.y < 10.8 && b.y < 10.8) continue;
+      const mx = (a.x + b.x) * 0.5, mz = (a.y + b.y) * 0.5;
+      const segL = Math.hypot(b.x - a.x, b.y - a.y);
+      const segYaw = Math.atan2(b.x - a.x, b.y - a.y);
+      pushBox(glassGeos, 0.05, railH * 0.84, segL, mx, deckY + 0.22 + railH * 0.48, mz, 0, segYaw, 0);
+
+      if (i % 3 === 0) {
+        const post = new THREE.CylinderGeometry(0.045, 0.045, railH, 6);
+        post.translate(a.x, deckY + 0.22 + railH * 0.5, a.y);
+        whiteSteelGeos.push(post);
+      }
+    }
+  }
+  addCurvedRail(outerPts2D, true);
+  addCurvedRail(innerPts2D, false);
+
   const cwPierNodes = [
-    { x: 19.2, z: 14.2, fx: 16.2, fz: 10.6 },
-    { x: 19.6, z: 20.6, fx: 15.8, fz: 15.4 },
-    { x: 15.0, z: 24.4, fx: 12.6, fz: 18.8 },
-    { x:  8.8, z: 22.2, fx:  8.2, fz: 16.5 },
-    { x:  7.4, z: 15.8, fx:  7.2, fz: 11.4 }
+    { x: -17.2, z: 12.8, fx: -14.8, fz: 10.2 },
+    { x: -17.4, z: 16.8, fx: -14.6, fz: 13.4 },
+    { x: -14.0, z: 18.8, fx: -11.8, fz: 15.2 },
+    { x:  -8.8, z: 17.6, fx:  -8.4, fz: 13.8 },
+    { x:  -7.2, z: 13.6, fx:  -7.2, fz: 10.8 }
   ];
   for (const pn of cwPierNodes) {
-    addGroundedPier(pn.x, pn.z, deckY - 0.65, 0.28, whiteSteelMat);
-    addGroundedStrut(pn.x, deckY - 0.68, pn.z, pn.fx, pn.fz, 0.16, whiteSteelMat);
+    addGroundedPier(pn.x, pn.z, deckY - 0.65, 0.28, whiteSteelGeos, 'cloud_walk');
+    addGroundedStrut(pn.x, deckY - 0.68, pn.z, pn.fx, pn.fz, 0.16, whiteSteelGeos);
   }
 
-  // (D) Secondary West Observation Balcony on -X side (x in [-14.2, -6.2], z in [-0.5, +11.2]) — clear of cables!
-  const westDeck = new THREE.Mesh(new THREE.BoxGeometry(8.2, 0.45, 11.8), deckWoodMat);
-  westDeck.position.set(-10.2, deckY, 5.4);
-  group.add(westDeck);
-  const westBeam = new THREE.Mesh(new THREE.BoxGeometry(8.4, 0.42, 12.0), darkSteelMat);
-  westBeam.position.set(-10.2, deckY - 0.38, 5.4);
-  group.add(westBeam);
-  addGroundedPier(-13.6, 10.6, deckY - 0.5, 0.25, darkSteelMat);
-  addGroundedPier(-6.8, 10.6, deckY - 0.5, 0.25, darkSteelMat);
-  addGroundedPier(-13.6, 1.5, deckY - 0.5, 0.25, darkSteelMat);
+  // (D) SKY WEDGE (スカイウェッジ) — dramatic cantilevered ship-bow prow deck extending from western terrace out over valley
+  pushBox(deckWoodGeos, 7.2, 0.44, 5.2, -22.2, deckY, 8.4);
+  pushBox(whiteSteelGeos, 7.4, 0.40, 5.4, -22.2, deckY - 0.40, 8.4);
+  addGroundedPier(-25.0, 10.4, deckY - 0.5, 0.25, whiteSteelGeos, 'sky_wedge');
 
-  // West deck railing
-  const wFrontRail = new THREE.Mesh(new THREE.BoxGeometry(8.2, 0.1, 0.1), whiteSteelMat);
-  wFrontRail.position.set(-10.2, deckY + 0.22 + railH, 11.2);
-  group.add(wFrontRail);
-  const wSideRail = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 11.8), whiteSteelMat);
-  wSideRail.position.set(-14.2, deckY + 0.22 + railH, 5.4);
-  group.add(wSideRail);
-  for (let wx = -14.2; wx <= -6.1; wx += 2.7) {
-    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, railH, 5), whiteSteelMat);
-    p.position.set(wx, deckY + 0.22 + railH * 0.5, 11.2);
-    group.add(p);
+  const swPts = [
+    new THREE.Vector2(-25.4, -10.8),
+    new THREE.Vector2(-19.4, -10.8),
+    new THREE.Vector2(-23.0, -24.4)
+  ];
+  const swShape = new THREE.Shape(swPts);
+  const swDeckGeo = new THREE.ExtrudeGeometry(swShape, { depth: 0.36, bevelEnabled: false });
+  swDeckGeo.rotateX(-Math.PI * 0.5);
+  swDeckGeo.translate(0, deckY - 0.16, 0);
+  deckWoodGeos.push(swDeckGeo);
+
+  const swBeamGeo = new THREE.ExtrudeGeometry(swShape, { depth: 0.54, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.14, bevelSegments: 1 });
+  swBeamGeo.rotateX(-Math.PI * 0.5);
+  swBeamGeo.translate(0, deckY - 0.70, 0);
+  whiteSteelGeos.push(swBeamGeo);
+
+  // V-shaped bow handrails & sleek glass side balustrades on Sky Wedge
+  const swSides = [
+    [[-25.3, 10.9], [-23.0, 24.3]],
+    [[-19.5, 10.9], [-23.0, 24.3]]
+  ];
+  for (const [pA, pB] of swSides) {
+    const dx = pB[0] - pA[0], dz = pB[1] - pA[1];
+    const sLen = Math.hypot(dx, dz), sYaw = Math.atan2(dx, dz);
+    const mx = (pA[0] + pB[0]) * 0.5, mz = (pA[1] + pB[1]) * 0.5;
+    pushBox(whiteSteelGeos, 0.11, 0.10, sLen, mx, deckY + 0.22 + railH, mz, 0, sYaw, 0);
+    pushBox(glassGeos, 0.05, railH * 0.85, sLen, mx, deckY + 0.22 + railH * 0.48, mz, 0, sYaw, 0);
+    for (const t of [0.25, 0.55, 0.82, 1.0]) {
+      const px = lerp(pA[0], pB[0], t), pz = lerp(pA[1], pB[1], t);
+      const post = new THREE.CylinderGeometry(0.05, 0.05, railH, 6);
+      post.translate(px, deckY + 0.22 + railH * 0.5, pz);
+      whiteSteelGeos.push(post);
+    }
   }
-  for (let wz = 0.2; wz <= 11.2; wz += 2.75) {
-    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, railH, 5), whiteSteelMat);
-    p.position.set(-14.2, deckY + 0.22 + railH * 0.5, wz);
-    group.add(p);
+  addGroundedPier(-24.0, 17.8, deckY - 0.65, 0.26, whiteSteelGeos, 'sky_wedge');
+  addGroundedPier(-21.0, 17.8, deckY - 0.65, 0.26, whiteSteelGeos, 'sky_wedge');
+  addGroundedStrut(-23.0, deckY - 0.65, 23.2, -22.6, 15.6, 0.17, whiteSteelGeos);
+
+  // (E) CLOUD BAR (クラウドバー) — elevated 3m scenic counter + 6 high stools overlooking the basin (-X ridge)
+  const [cbWx, cbWz] = localToWorld(-25.4, 3.2);
+  const cbGroundLocal = terrainMeshHeightAt(cbWx, cbWz) - uy;
+  const cbDeckY = Math.max(deckY + 0.85, cbGroundLocal + 3.05);
+  pushBox(deckWoodGeos, 8.6, 0.34, 3.8, -25.4, cbDeckY, 3.2);
+  pushBox(whiteSteelGeos, 8.8, 0.38, 4.0, -25.4, cbDeckY - 0.36, 3.2);
+  // Elevated counter beam + 6 bar stools facing valley (+Z)
+  pushBox(deckWoodGeos, 7.8, 0.16, 0.92, -25.4, cbDeckY + 1.15, 4.45);
+  pushBox(whiteSteelGeos, 7.7, 0.10, 0.14, -25.4, cbDeckY + 0.65, 4.55);
+  for (const sx of [-28.8, -27.2, -25.4, -23.6, -22.0]) {
+    const leg = new THREE.CylinderGeometry(0.055, 0.06, 1.02, 6);
+    leg.translate(sx, cbDeckY + 0.62, 4.55);
+    whiteSteelGeos.push(leg);
   }
+  for (let si = 0; si < 6; si++) {
+    const sx = -28.4 + si * 1.2;
+    const stem = new THREE.CylinderGeometry(0.045, 0.07, 0.82, 6);
+    stem.translate(sx, cbDeckY + 0.42, 3.45);
+    whiteSteelGeos.push(stem);
+    const seat = new THREE.CylinderGeometry(0.24, 0.22, 0.08, 10);
+    seat.translate(sx, cbDeckY + 0.84, 3.45);
+    deckWoodGeos.push(seat);
+    pushBox(whiteSteelGeos, 0.34, 0.24, 0.06, sx, cbDeckY + 1.02, 3.24);
+  }
+  for (const px of [-29.2, -21.6]) {
+    for (const pz of [1.6, 4.8]) {
+      addGroundedPier(px, pz, cbDeckY - 0.45, 0.22, whiteSteelGeos, 'cloud_bar');
+    }
+  }
+  // Access stair bridge linking Terrace Deck (-19.2) to Cloud Bar (-21.2)
+  const stairSteps = 4;
+  for (let k = 0; k < stairSteps; k++) {
+    const u = (k + 0.5) / stairSteps;
+    pushBox(deckWoodGeos, 0.65, 0.14, 2.2, lerp(-19.2, -21.3, u), lerp(deckY + 0.1, cbDeckY, u), 4.0);
+  }
+
+  // (F) CLOUD POOL (クラウドプール) — iconic ~10m cantilevered circular hammock-mesh lookout disc
+  const cpCx = -32.2, cpCz = 15.2, cpR = 4.9;
+  const [cpWx, cpWz] = localToWorld(cpCx, cpCz);
+  const cpGroundLocal = terrainMeshHeightAt(cpWx, cpWz) - uy;
+  const cpY = Math.max(deckY + 0.35, cpGroundLocal + 3.15);
+
+  // White steel circular perimeter ring + outer guardrail
+  const cpRing = new THREE.TorusGeometry(cpR, 0.28, 10, 36);
+  cpRing.rotateX(Math.PI * 0.5);
+  cpRing.translate(cpCx, cpY, cpCz);
+  whiteSteelGeos.push(cpRing);
+
+  const cpRailPts = [];
+  for (let k = 0; k < 32; k++) {
+    const a = (k / 32) * Math.PI * 2;
+    cpRailPts.push(new THREE.Vector3(cpCx + Math.cos(a) * (cpR + 0.14), cpY + 1.08, cpCz + Math.sin(a) * (cpR + 0.14)));
+  }
+  whiteSteelGeos.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(cpRailPts, true), 40, 0.065, 6, true));
+  for (let k = 0; k < 12; k++) {
+    const a = (k / 12) * Math.PI * 2;
+    const px = cpCx + Math.cos(a) * (cpR + 0.14), pz = cpCz + Math.sin(a) * (cpR + 0.14);
+    const post = new THREE.CylinderGeometry(0.045, 0.045, 1.08, 6);
+    post.translate(px, cpY + 0.54, pz);
+    whiteSteelGeos.push(post);
+  }
+  for (let k = 0; k < 6; k++) {
+    const a = (k / 6) * Math.PI * 2 + 0.3;
+    const px = cpCx + Math.cos(a) * (cpR - 0.18), pz = cpCz + Math.sin(a) * (cpR - 0.18);
+    addGroundedPier(px, pz, cpY - 0.15, 0.24, whiteSteelGeos, 'cloud_pool');
+    addGroundedStrut(px, cpY - 0.20, pz, cpCx + Math.cos(a) * (cpR * 0.55), cpCz + Math.sin(a) * (cpR * 0.55), 0.14, whiteSteelGeos);
+  }
+  // Access gangway connecting Sky Wedge apron (-25.2, 9.6) radially to Cloud Pool outer ring (never pokes inside hammock)
+  const gwStartX = -25.2, gwStartZ = 9.6;
+  const radX = gwStartX - cpCx, radZ = gwStartZ - cpCz;
+  const radDist = Math.hypot(radX, radZ) || 1;
+  const rux = radX / radDist, ruz = radZ / radDist;
+  const gwEndX = cpCx + rux * (cpR - 0.02), gwEndZ = cpCz + ruz * (cpR - 0.02);
+  const gwDx = gwEndX - gwStartX, gwDz = gwEndZ - gwStartZ;
+  const gwLen = Math.hypot(gwDx, gwDz), gwYaw = Math.atan2(gwDx, gwDz);
+  const gwYEnd = cpY - 0.02;
+  const gwPitch = -Math.atan2(gwYEnd - deckY, gwLen);
+  pushBox(deckWoodGeos, 1.85, 0.24, gwLen, (gwStartX + gwEndX) * 0.5, (deckY + gwYEnd) * 0.5, (gwStartZ + gwEndZ) * 0.5, gwPitch, gwYaw, 0);
+  const gwStEndX = cpCx + rux * (cpR + 0.08), gwStEndZ = cpCz + ruz * (cpR + 0.08);
+  const gwStLen = Math.hypot(gwStEndX - gwStartX, gwStEndZ - gwStartZ);
+  pushBox(whiteSteelGeos, 1.98, 0.22, gwStLen, (gwStartX + gwStEndX) * 0.5, (deckY + gwYEnd) * 0.5 - 0.23, (gwStartZ + gwStEndZ) * 0.5, gwPitch, gwYaw, 0);
+
+  // Open-weave sagging white hammock disc for Cloud Pool
+  const hmCan = document.createElement('canvas');
+  hmCan.width = 128; hmCan.height = 128;
+  const hmCtx = hmCan.getContext('2d');
+  hmCtx.clearRect(0, 0, 128, 128);
+  hmCtx.strokeStyle = '#f2f6fb';
+  hmCtx.lineWidth = 4.5;
+  for (let k = -128; k <= 256; k += 16) {
+    hmCtx.beginPath(); hmCtx.moveTo(k, 0); hmCtx.lineTo(k + 128, 128); hmCtx.stroke();
+    hmCtx.beginPath(); hmCtx.moveTo(k + 128, 0); hmCtx.lineTo(k, 128); hmCtx.stroke();
+  }
+  const hmTex = new THREE.CanvasTexture(hmCan);
+  hmTex.colorSpace = THREE.SRGBColorSpace;
+  hmTex.wrapS = THREE.RepeatWrapping;
+  hmTex.wrapT = THREE.RepeatWrapping;
+  hmTex.repeat.set(6, 6);
+  const cpMeshGeo = new THREE.CircleGeometry(cpR - 0.15, 28);
+  cpMeshGeo.rotateX(-Math.PI * 0.5);
+  const cpPos = cpMeshGeo.attributes.position;
+  for (let i = 0; i < cpPos.count; i++) {
+    const px = cpPos.getX(i), pz = cpPos.getZ(i);
+    const rN = clamp(Math.hypot(px, pz) / (cpR - 0.15), 0, 1);
+    cpPos.setY(i, -0.58 * (1.0 - rN * rN)); // Gentle hammock sag at center
+  }
+  cpMeshGeo.computeVertexNormals();
+  const cpHammock = new THREE.Mesh(
+    cpMeshGeo,
+    new THREE.MeshStandardMaterial({ map: hmTex, alphaTest: 0.22, side: THREE.DoubleSide, roughness: 0.72 })
+  );
+  cpHammock.position.set(cpCx, cpY + 0.04, cpCz);
+  group.add(cpHammock);
+
+  // Merge static geometry batches into 1 mesh per material (cuts ~130 draw calls!)
+  function addMerged(geos, mat) {
+    if (!geos.length) return;
+    const m = new THREE.Mesh(mergeTexturedGeos(geos), mat);
+    group.add(m);
+  }
+  addMerged(darkCladGeos, darkCladMat);
+  addMerged(darkSteelGeos, darkSteelMat);
+  addMerged(whiteSteelGeos, whiteSteelMat);
+  addMerged(deckWoodGeos, deckWoodMat);
+  addMerged(snowGeos, snowMat);
+  addMerged(cafeGlowGeos, cafeGlowMat);
+  addMerged(glassGeos, glassRailMat);
 
   enableOpaqueShadows(group);
   scene.add(group);
@@ -58910,114 +59191,989 @@ function updateNpcSkiers(t) {
   npcSkierInst.instanceMatrix.needsUpdate = true;
 }
 
-// Red course-edge boundary poles (1 InstancedMesh, count <= 160 so M5 tree audit ignores it) + safety B-nets at key bends
+// M15 Course Guidance Pack:
+//   1. 7 resort-style bilingual course guide boards (1 merged frame mesh + 7 crisp canvas sign faces)
+//   2. Centerline floating semi-transparent chevron guide arrows (1 InstancedMesh, count < 500)
+//   3. Bamboo-style orange/red course-edge boundary poles (1 InstancedMesh, count < 500)
+//   4. Open diamond-mesh safety netting with catenary sag (1 merged net mesh + 1 InstancedMesh posts)
+let courseGuideArrowUniforms = null;
+let nipoAnimState = null;
+function updateCourseGuidance(t) {
+  if (courseGuideArrowUniforms) courseGuideArrowUniforms.uTime.value = t;
+  if (nipoAnimState) {
+    nipoAnimState.body.position.y = (nipoAnimState.baseY || 0) + 0.10 * Math.abs(Math.sin(t * 3.4));
+    nipoAnimState.body.rotation.z = Math.sin(t * 2.2) * 0.05;
+    nipoAnimState.head.rotation.z = Math.sin(t * 2.6) * 0.08;
+    nipoAnimState.waveArm.rotation.z = -0.25 + Math.sin(t * 5.2) * 0.56;
+    nipoAnimState.waveArm.rotation.x = 0.25 + Math.sin(t * 2.6) * 0.14;
+  }
+}
+
+function sampleCourseAtS(targetS) {
+  const n = courseSamples.length;
+  if (n === 0) return { x: 0, z: 0, y: 0, tx: 0, tz: 1, rx: -1, rz: 0, s: 0, slope: 0.2 };
+  const sClamped = clamp(targetS, courseSamples[0].s, courseSamples[n - 1].s);
+  let lo = 0, hi = n - 1;
+  while (lo + 1 < hi) {
+    const mid = (lo + hi) >> 1;
+    if (courseSamples[mid].s <= sClamped) lo = mid; else hi = mid;
+  }
+  const a = courseSamples[lo], b = courseSamples[Math.min(lo + 1, n - 1)];
+  const span = Math.max(1e-4, b.s - a.s);
+  const u = clamp((sClamped - a.s) / span, 0, 1);
+  const x = lerp(a.x, b.x, u);
+  const z = lerp(a.z, b.z, u);
+  let tx = lerp(a.tx, b.tx, u), tz = lerp(a.tz, b.tz, u);
+  const tl = Math.hypot(tx, tz) || 1;
+  tx /= tl; tz /= tl;
+  // rx = -tz, rz = tx is right-of-travel when looking downhill along (tx, tz)
+  return {
+    x, z, y: terrainMeshHeightAt(x, z),
+    tx, tz, rx: -tz, rz: tx,
+    s: sClamped, slope: lerp(a.slope, b.slope, u)
+  };
+}
+
+function makeCourseSignTexture(spec) {
+  const c = document.createElement('canvas');
+  c.width = 640; c.height = 440;
+  const ctx = c.getContext('2d');
+
+  // Pure snow-white signboard panel + crisp alpine navy outer frame
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.strokeStyle = '#102038';
+  ctx.lineWidth = 14;
+  ctx.strokeRect(7, 7, c.width - 14, c.height - 14);
+
+  // Header band: Hoshino Resorts Tomamu + elevation / junction tag
+  ctx.fillStyle = '#102038';
+  ctx.fillRect(10, 10, c.width - 20, 88);
+  ctx.fillStyle = '#e2b458';
+  ctx.fillRect(10, 94, c.width - 20, 5);
+
+  ctx.fillStyle = '#dce8f8';
+  ctx.font = '700 18px "Helvetica Neue", Arial, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('HOSHINO RESORTS TOMAMU', 28, 34);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 30px "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif';
+  ctx.fillText(spec.header, 28, 68);
+
+  if (spec.elev) {
+    ctx.fillStyle = '#f6cf70';
+    ctx.font = '800 24px "Helvetica Neue", Arial, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(spec.elev, c.width - 28, 56);
+  }
+
+  const rows = spec.rows;
+  const topY = 108;
+  const rowH = Math.floor((c.height - topY - 18) / rows.length);
+  const diffStyles = {
+    beginner:     { col: '#169b50', label: '初級', shape: 'circle' },
+    intermediate: { col: '#dc2822', label: '中級', shape: 'circle' },
+    advanced:     { col: '#12161e', label: '上級', shape: 'circle' },
+    info:         { col: '#175596', label: '案内', shape: 'circle' }
+  };
+
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    const y0 = topY + i * rowH;
+    const cy = y0 + rowH * 0.5;
+    if (i > 0) {
+      ctx.fillStyle = '#c5d1e0';
+      ctx.fillRect(26, y0, c.width - 52, 2);
+    }
+
+    const ds = diffStyles[r.level] || diffStyles.beginner;
+    // Japanese colored-circle difficulty mark
+    const badgeX = 62;
+    ctx.beginPath();
+    ctx.arc(badgeX, cy, 28, 0, Math.PI * 2);
+    ctx.fillStyle = ds.col;
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#ffffff';
+    ctx.stroke();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 18px "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(ds.label, badgeX, cy + 1);
+
+    // Course / destination JP + EN title (crisp near-black over snow-white)
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#0b111a';
+    ctx.font = '900 34px "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif';
+    ctx.fillText(r.jp, 108, cy - 13);
+
+    ctx.fillStyle = '#2a394c';
+    ctx.font = '700 20px "Helvetica Neue", Arial, sans-serif';
+    ctx.fillText(r.en, 108, cy + 20);
+
+    // Bold high-contrast directional arrow pill on the right
+    ctx.fillStyle = '#102038';
+    ctx.fillRect(c.width - 118, cy - 28, 86, 56);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '900 38px "Helvetica Neue", Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(r.arrow, c.width - 75, cy + 2);
+  }
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  return tex;
+}
+
+function mergeTexturedGeos(geos) {
+  const list = geos.map(g => g.index ? g.toNonIndexed() : g);
+  let totalVerts = 0;
+  for (const g of list) totalVerts += g.attributes.position.count;
+  const pos = new Float32Array(totalVerts * 3);
+  const norm = new Float32Array(totalVerts * 3);
+  const uv = new Float32Array(totalVerts * 2);
+  let offset = 0;
+  for (const g of list) {
+    pos.set(g.attributes.position.array, offset * 3);
+    norm.set(g.attributes.normal.array, offset * 3);
+    uv.set(g.attributes.uv.array, offset * 2);
+    offset += g.attributes.position.count;
+  }
+  const merged = new THREE.BufferGeometry();
+  merged.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  merged.setAttribute('normal', new THREE.BufferAttribute(norm, 3));
+  merged.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  return merged;
+}
+
 function buildCourseMarkersAndNets() {
-  // Striped alpine marker pole (red/orange top + white band + dark base)
+  const propTelemetry = {
+    signboards: [],
+    edgePoles: [],
+    netPosts: [],
+    towerNetPosts: [],
+    guideArrows: [],
+    cloud9Structures: m16Cloud9Telemetry.slice(),
+    nipo: [],
+    liberationGate: []
+  };
+
+  // --- 1. Resort-style Course Guide Boards (top + every course junction/merge) ---
+  const boardSpecs = [
+    {
+      id: 'summit_start', s: 28, side: -1, off: 21.0,
+      header: 'トマム山頂 / SKI SUMMIT', elev: '1,172m',
+      rows: [
+        { level: 'beginner',     jp: 'シルバーベル',     en: 'Silver Bell (3,900m)', arrow: '↑' },
+        { level: 'intermediate', jp: 'ドラゴンリッジ',   en: 'Dragon Ridge',         arrow: '↖' },
+        { level: 'advanced',     jp: 'ノーグラビティ',   en: 'No Gravity (Max 35°)', arrow: '↗' }
+      ]
+    },
+    {
+      id: 'unkai_terrace_jct', s: 205, side: -1, off: 23.0,
+      header: '霧氷テラス分岐 / TERRACE', elev: '1,088m',
+      rows: [
+        { level: 'beginner', jp: 'シルバーベル',           en: 'Silver Bell → Base',    arrow: '→' },
+        { level: 'info',     jp: '霧氷テラス・雲海ゴンドラ', en: 'Muhyo Terrace / Gondola', arrow: '←' }
+      ]
+    },
+    {
+      id: 'no_gravity_merge', s: 515, side: -1, off: 23.0,
+      header: '合流注意 / COURSE MERGE', elev: '975m',
+      rows: [
+        { level: 'beginner', jp: 'シルバーベル',   en: 'Silver Bell Main',   arrow: '↑' },
+        { level: 'advanced', jp: 'ノーグラビティ合流', en: 'No Gravity Merge', arrow: '↘' }
+      ]
+    },
+    {
+      id: 'dragon_ridge_merge', s: 875, side: -1, off: 23.0,
+      header: '合流注意 / COURSE MERGE', elev: '842m',
+      rows: [
+        { level: 'beginner',     jp: 'シルバーベル',     en: 'Silver Bell Main',    arrow: '↑' },
+        { level: 'intermediate', jp: 'ドラゴンリッジ合流', en: 'Dragon Ridge Merge',  arrow: '↙' }
+      ]
+    },
+    {
+      id: 'kunekune_merge', s: 2845, side: 1, off: 22.5,
+      header: '分岐・合流 / JUNCTION', elev: '628m',
+      rows: [
+        { level: 'beginner', jp: 'シルバーベル',       en: 'Silver Bell',           arrow: '↑' },
+        { level: 'beginner', jp: 'クネクネフォレスト', en: 'Kunekune Forest Merge', arrow: '↘' },
+        { level: 'info',     jp: 'リゾートセンター',   en: 'Resort Center Base',    arrow: '↑' }
+      ]
+    },
+    {
+      id: 'exhibition_jct', s: 3025, side: -1, off: 21.5,
+      header: 'コース合流 / JUNCTION', elev: '616m',
+      rows: [
+        { level: 'beginner',     jp: 'ビギナーズチョイス', en: "Beginner's Choice", arrow: '↑' },
+        { level: 'intermediate', jp: 'エキシビジョン合流', en: 'Exhibition Merge',  arrow: '↗' },
+        { level: 'info',         jp: 'リゾートセンター',   en: 'Resort Center',     arrow: '↑' }
+      ]
+    },
+    {
+      id: 'highway_coaster_jct', s: 3115, side: 1, off: 21.5,
+      header: 'コース合流 / MERGE', elev: '611m',
+      rows: [
+        { level: 'beginner',     jp: 'ビギナーズチョイス',     en: "Beginner's Choice",     arrow: '↑' },
+        { level: 'intermediate', jp: 'ハイウェイコースター合流', en: 'Highway Coaster Merge', arrow: '↙' },
+        { level: 'info',         jp: '雲海ゴンドラ山麓駅',     en: 'Unkai Gondola Base',    arrow: '↑' }
+      ]
+    }
+  ];
+
+  const signFrameGeos = [];
+  const signW = 3.7, signH = 2.55;
+  const dummyObj = new THREE.Object3D();
+  for (const spc of boardSpecs) {
+    const pt = sampleCourseAtS(spc.s);
+    const wx = pt.x + pt.rx * spc.side * spc.off;
+    const wz = pt.z + pt.rz * spc.side * spc.off;
+    const wy = terrainMeshHeightAt(wx, wz);
+
+    // Angle signboard slightly inward toward approaching downhill skiers (-pt.tx, -pt.tz)
+    const faceX = -pt.tx - pt.rx * spc.side * 0.36;
+    const faceZ = -pt.tz - pt.rz * spc.side * 0.36;
+    const yaw = Math.atan2(faceX, faceZ);
+
+    // Front textured face (+Z local normal points toward approaching skier) with diffuse snow-bounce illumination
+    const tex = makeCourseSignTexture(spc);
+    const faceMat = registerEmissive(new THREE.MeshStandardMaterial({
+      map: tex,
+      emissive: new THREE.Color(0xffffff),
+      emissiveMap: tex,
+      emissiveIntensity: 0.56,
+      roughness: 0.52,
+      metalness: 0.02
+    }), 0.56, 0.34);
+    const faceMesh = new THREE.Mesh(new THREE.PlaneGeometry(signW, signH), faceMat);
+    faceMesh.position.set(wx + Math.sin(yaw) * 0.06, wy + 2.85, wz + Math.cos(yaw) * 0.06);
+    faceMesh.rotation.y = yaw;
+    faceMesh.castShadow = false;
+    faceMesh.receiveShadow = false;
+    scene.add(faceMesh);
+
+    // Merged timber/steel frame: two embedded posts, backing board, and snow-shedding pitched roof cap
+    const mBoard = new THREE.Matrix4().makeRotationY(yaw);
+    mBoard.setPosition(wx, wy, wz);
+
+    for (const px of [-signW * 0.36, signW * 0.36]) {
+      const post = new THREE.CylinderGeometry(0.085, 0.095, 5.1, 7);
+      post.translate(px, 1.75, -0.05);
+      post.applyMatrix4(mBoard);
+      fillVertexColor(post, 0x262e38);
+      signFrameGeos.push(post);
+    }
+    const backBox = new THREE.BoxGeometry(signW + 0.14, signH + 0.14, 0.09);
+    backBox.translate(0, 2.85, 0.0);
+    backBox.applyMatrix4(mBoard);
+    fillVertexColor(backBox, 0x1a2636);
+    signFrameGeos.push(backBox);
+
+    const roof = new THREE.BoxGeometry(signW + 0.34, 0.12, 0.26);
+    roof.rotateX(-0.22);
+    roof.translate(0, 2.85 + signH * 0.5 + 0.11, -0.07);
+    roof.applyMatrix4(mBoard);
+    fillVertexColor(roof, 0x2c3746);
+    signFrameGeos.push(roof);
+
+    propTelemetry.signboards.push({
+      id: spc.id, s: spc.s, x: wx, z: wz,
+      baseY: wy - 0.80, topY: wy + 4.30
+    });
+  }
+  const signFramesMesh = new THREE.Mesh(
+    mergeGeometries(signFrameGeos),
+    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.65 })
+  );
+  signFramesMesh.castShadow = true;
+  signFramesMesh.receiveShadow = true;
+  scene.add(signFramesMesh);
+
+  // --- 1B. Winter Mountain Liberation Gate (冬山解放ゲート) near summit / No Gravity entry (s ≈ 40m, off-corridor) ---
+  {
+    const lgS = 40, lgSide = -1, lgOff = 24.5;
+    const pt = sampleCourseAtS(lgS);
+    const gx = pt.x + pt.rx * lgSide * lgOff;
+    const gz = pt.z + pt.rz * lgSide * lgOff;
+    const gy = terrainMeshHeightAt(gx, gz);
+    const faceX = -pt.tx - pt.rx * lgSide * 0.42;
+    const faceZ = -pt.tz - pt.rz * lgSide * 0.42;
+    const yaw = Math.atan2(faceX, faceZ);
+
+    const gateGeos = [];
+    const mGate = new THREE.Matrix4().makeRotationY(yaw);
+    mGate.setPosition(gx, gy, gz);
+    const gateSpan = 4.2, gateH = 3.75;
+    for (const px of [-gateSpan * 0.5, gateSpan * 0.5]) {
+      const wx = gx + Math.cos(yaw) * px;
+      const wz = gz - Math.sin(yaw) * px;
+      const postGy = terrainMeshHeightAt(wx, wz);
+      const botLocal = (postGy - gy) - 1.25;
+      const topLocal = gateH + 0.45;
+      const postH = Math.max(4.0, topLocal - botLocal);
+      const post = new THREE.CylinderGeometry(0.11, 0.13, postH, 8);
+      post.translate(px, botLocal + postH * 0.5, 0);
+      post.applyMatrix4(mGate);
+      fillVertexColor(post, 0x1e2836);
+      gateGeos.push(post);
+
+      const warnBand = new THREE.CylinderGeometry(0.125, 0.125, 0.55, 8);
+      warnBand.translate(px, 2.25, 0);
+      warnBand.applyMatrix4(mGate);
+      fillVertexColor(warnBand, 0xe03224);
+      gateGeos.push(warnBand);
+
+      const brace = new THREE.BoxGeometry(0.95, 0.12, 0.12);
+      brace.rotateZ(px < 0 ? 0.72 : -0.72);
+      brace.translate(px * 0.80, gateH - 0.55, 0);
+      brace.applyMatrix4(mGate);
+      fillVertexColor(brace, 0x263446);
+      gateGeos.push(brace);
+    }
+    const headerBox = new THREE.BoxGeometry(gateSpan + 0.55, 0.96, 0.22);
+    headerBox.translate(0, gateH, 0);
+    headerBox.applyMatrix4(mGate);
+    fillVertexColor(headerBox, 0x102038);
+    gateGeos.push(headerBox);
+
+    const gateRoof = new THREE.BoxGeometry(gateSpan + 0.75, 0.14, 0.42);
+    gateRoof.rotateX(-0.18);
+    gateRoof.translate(0, gateH + 0.52, -0.04);
+    gateRoof.applyMatrix4(mGate);
+    fillVertexColor(gateRoof, 0x2b394c);
+    gateGeos.push(gateRoof);
+
+    // Side safety notice board post (placed behind board backing so it never pokes through text) & backing
+    const nbX = gateSpan * 0.5 + 1.15;
+    const nbWx = gx + Math.cos(yaw) * nbX;
+    const nbWz = gz - Math.sin(yaw) * nbX;
+    const nbGy = terrainMeshHeightAt(nbWx, nbWz);
+    const nbBotLocal = (nbGy - gy) - 1.25;
+    const nbTopLocal = 2.85;
+    const nbPostH = Math.max(3.2, nbTopLocal - nbBotLocal);
+    const nbPost = new THREE.CylinderGeometry(0.075, 0.085, nbPostH, 7);
+    nbPost.translate(nbX, nbBotLocal + nbPostH * 0.5, -0.105);
+    nbPost.applyMatrix4(mGate);
+    fillVertexColor(nbPost, 0x1e2836);
+    gateGeos.push(nbPost);
+
+    const nbBack = new THREE.BoxGeometry(1.85, 1.50, 0.09);
+    nbBack.translate(nbX, 2.15, 0);
+    nbBack.applyMatrix4(mGate);
+    fillVertexColor(nbBack, 0x102038);
+    gateGeos.push(nbBack);
+
+    const gateFrameMesh = new THREE.Mesh(
+      mergeGeometries(gateGeos),
+      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.62 })
+    );
+    gateFrameMesh.castShadow = true;
+    gateFrameMesh.receiveShadow = true;
+    scene.add(gateFrameMesh);
+
+    // Top banner texture
+    const bCan = document.createElement('canvas');
+    bCan.width = 768; bCan.height = 160;
+    const bCtx = bCan.getContext('2d');
+    bCtx.fillStyle = '#102038';
+    bCtx.fillRect(0, 0, 768, 160);
+    bCtx.fillStyle = '#d93025';
+    bCtx.fillRect(0, 0, 768, 14);
+    bCtx.fillRect(0, 146, 768, 14);
+    bCtx.fillStyle = '#f2c14e';
+    bCtx.fillRect(14, 22, 18, 116);
+    bCtx.fillRect(736, 22, 18, 116);
+    bCtx.fillStyle = '#ffffff';
+    bCtx.font = '900 54px "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif';
+    bCtx.textAlign = 'center';
+    bCtx.textBaseline = 'middle';
+    bCtx.fillText('冬山解放ゲート', 384, 64);
+    bCtx.fillStyle = '#f4d17a';
+    bCtx.font = '800 22px "Helvetica Neue", Arial, sans-serif';
+    bCtx.fillText('WINTER MOUNTAIN LIBERATION GATE', 384, 118);
+    const bannerTex = new THREE.CanvasTexture(bCan);
+    bannerTex.colorSpace = THREE.SRGBColorSpace;
+    bannerTex.anisotropy = 8;
+    const bannerMat = registerEmissive(new THREE.MeshStandardMaterial({
+      map: bannerTex, emissive: new THREE.Color(0xffffff), emissiveMap: bannerTex,
+      emissiveIntensity: 0.52, roughness: 0.48
+    }), 0.52, 0.34);
+    const bannerMesh = new THREE.Mesh(new THREE.PlaneGeometry(gateSpan + 0.35, 0.86), bannerMat);
+    bannerMesh.position.set(gx + Math.sin(yaw) * 0.125, gy + gateH, gz + Math.cos(yaw) * 0.125);
+    bannerMesh.rotation.y = yaw;
+    scene.add(bannerMesh);
+
+    // Side safety notice board (dark navy header + crisp white body)
+    const nCan = document.createElement('canvas');
+    nCan.width = 440; nCan.height = 360;
+    const nCtx = nCan.getContext('2d');
+    nCtx.fillStyle = '#ffffff';
+    nCtx.fillRect(0, 0, 440, 360);
+    nCtx.strokeStyle = '#102038';
+    nCtx.lineWidth = 10;
+    nCtx.strokeRect(5, 5, 430, 350);
+    nCtx.fillStyle = '#102038';
+    nCtx.fillRect(8, 8, 424, 82);
+    nCtx.fillStyle = '#d93025';
+    nCtx.fillRect(8, 84, 424, 6);
+    nCtx.fillStyle = '#ffffff';
+    nCtx.font = '900 28px "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif';
+    nCtx.textAlign = 'center';
+    nCtx.textBaseline = 'middle';
+    nCtx.fillText('冬山解放宣言 / BOUNDARY', 220, 48);
+    nCtx.fillStyle = '#0b111a';
+    nCtx.font = '900 27px "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif';
+    nCtx.fillText('管理区域外・自己責任滑走', 220, 146);
+    nCtx.fillStyle = '#d93025';
+    nCtx.font = '800 24px "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif';
+    nCtx.fillText('ビーコン・ヘルメット必携', 220, 210);
+    nCtx.fillStyle = '#2a394c';
+    nCtx.font = '700 21px "Helvetica Neue", Arial, sans-serif';
+    nCtx.fillText('OFF-PISTE / NO GRAVITY', 220, 272);
+    nCtx.fillText('HOSHINO RESORTS TOMAMU', 220, 312);
+    const noticeTex = new THREE.CanvasTexture(nCan);
+    noticeTex.colorSpace = THREE.SRGBColorSpace;
+    noticeTex.anisotropy = 8;
+    const noticeMat = registerEmissive(new THREE.MeshStandardMaterial({
+      map: noticeTex, emissive: new THREE.Color(0xffffff), emissiveMap: noticeTex,
+      emissiveIntensity: 0.56, roughness: 0.50
+    }), 0.56, 0.34);
+    const noticeMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.75, 1.42), noticeMat);
+    noticeMesh.position.set(
+      gx + Math.cos(yaw) * nbX + Math.sin(yaw) * 0.06,
+      gy + 2.15,
+      gz - Math.sin(yaw) * nbX + Math.cos(yaw) * 0.06
+    );
+    noticeMesh.rotation.y = yaw;
+    scene.add(noticeMesh);
+
+    for (const px of [-gateSpan * 0.5, gateSpan * 0.5, nbX]) {
+      const wx = gx + Math.cos(yaw) * px;
+      const wz = gz - Math.sin(yaw) * px;
+      propTelemetry.liberationGate.push({
+        id: 'winter_liberation_gate', s: lgS, x: wx, z: wz,
+        baseY: terrainMeshHeightAt(wx, wz) - 1.25
+      });
+    }
+  }
+
+  // --- 1C. Official Character Moment: ニポ (Nipo) beside unkai_terrace_jct (s ≈ 207.5m) ---
+  {
+    const nS = 207.5, nSide = -1, nOff = 20.6;
+    const pt = sampleCourseAtS(nS);
+    const nx = pt.x + pt.rx * nSide * nOff;
+    const nz = pt.z + pt.rz * nSide * nOff;
+    const ny = terrainMeshHeightAt(nx, nz);
+    const faceX = -pt.tx - pt.rx * nSide * 0.52;
+    const faceZ = -pt.tz - pt.rz * nSide * 0.52;
+    const yaw = Math.atan2(faceX, faceZ);
+
+    const nipoRoot = new THREE.Group();
+    nipoRoot.position.set(nx, ny, nz);
+    nipoRoot.rotation.y = yaw;
+
+    // Grounded high-contrast pedestal (snow skirt + deep alpine-navy plinth + cedar stage + gold rim) & 「ニポ」 name-board frame
+    const baseGeos = [];
+    function pushNipoBase(geo, hex, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) {
+      if (rx) geo.rotateX(rx);
+      if (ry) geo.rotateY(ry);
+      if (rz) geo.rotateZ(rz);
+      geo.translate(x, y, z);
+      fillVertexColor(geo, hex);
+      baseGeos.push(geo);
+    }
+    pushNipoBase(new THREE.CylinderGeometry(0.98, 1.24, 0.58, 14), 0xe8f0fa, 0, -0.16, 0);
+    pushNipoBase(new THREE.CylinderGeometry(0.84, 0.88, 0.28, 14), 0x12294c, 0, 0.18, 0);
+    pushNipoBase(new THREE.CylinderGeometry(0.68, 0.74, 0.30, 12), 0x7c441e, 0, 0.40, 0);
+    pushNipoBase(new THREE.TorusGeometry(0.68, 0.055, 8, 20), 0xf7c948, 0, 0.55, 0, Math.PI * 0.5, 0, 0);
+    // Ground-buried name-board posts & backing box in front of pedestal (posts sit behind tilted board)
+    for (const px of [-0.52, 0.52]) {
+      pushNipoBase(new THREE.CylinderGeometry(0.05, 0.055, 0.90, 6), 0x12294c, px, 0.05, 0.80);
+    }
+    pushNipoBase(new THREE.BoxGeometry(1.56, 0.70, 0.08), 0x14532d, 0, 0.52, 0.90, -0.14, 0, 0);
+
+    const baseMesh = new THREE.Mesh(
+      mergeGeometries(baseGeos),
+      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.68 })
+    );
+    baseMesh.castShadow = true;
+    baseMesh.receiveShadow = true;
+    nipoRoot.add(baseMesh);
+
+    // Crisp self-illuminated 「ニポ」 name board facing oncoming skiers
+    const nCan = document.createElement('canvas');
+    nCan.width = 256; nCan.height = 128;
+    const nCtx = nCan.getContext('2d');
+    nCtx.fillStyle = '#14532d';
+    nCtx.fillRect(0, 0, 256, 128);
+    nCtx.fillStyle = '#ffffff';
+    nCtx.fillRect(8, 8, 240, 112);
+    nCtx.fillStyle = '#2b8a3e';
+    nCtx.beginPath();
+    nCtx.ellipse(42, 52, 16, 26, -0.35, 0, Math.PI * 2);
+    nCtx.fill();
+    nCtx.fillStyle = '#0b192e';
+    nCtx.font = '900 72px "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif';
+    nCtx.textAlign = 'center';
+    nCtx.textBaseline = 'middle';
+    nCtx.fillText('ニポ', 148, 52);
+    nCtx.fillStyle = '#1e3a5f';
+    nCtx.font = '800 18px "Helvetica Neue", Arial, sans-serif';
+    nCtx.fillText('TOMAMU FAIRY', 128, 102);
+    const nTex = new THREE.CanvasTexture(nCan);
+    nTex.colorSpace = THREE.SRGBColorSpace;
+    const nSignMat = registerEmissive(new THREE.MeshStandardMaterial({
+      map: nTex,
+      emissive: new THREE.Color(0xffffff),
+      emissiveMap: nTex,
+      emissiveIntensity: 0.54,
+      roughness: 0.45
+    }), 0.54, 0.34);
+    const nSignMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.48, 0.62), nSignMat);
+    nSignMesh.position.set(0, 0.52, 0.945);
+    nSignMesh.rotation.x = -0.14;
+    nSignMesh.castShadow = false;
+    nSignMesh.receiveShadow = false;
+    nipoRoot.add(nSignMesh);
+
+    const nipoBody = new THREE.Group();
+    nipoBody.scale.setScalar(1.32);
+    nipoBody.position.y = 0.10;
+    const bodyGeos = [];
+    function addNipoPart(geo, hex, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = 1, sz = 1) {
+      if (sx !== 1 || sy !== 1 || sz !== 1) geo.scale(sx, sy, sz);
+      if (rx) geo.rotateX(rx);
+      if (ry) geo.rotateY(ry);
+      if (rz) geo.rotateZ(rz);
+      geo.translate(x, y, z);
+      fillVertexColor(geo, hex);
+      bodyGeos.push(geo);
+    }
+
+    // Boots & plump forest-fairy torso + scalloped leaf tunic + winter red scarf
+    for (const bx of [-0.19, 0.19]) {
+      addNipoPart(new THREE.SphereGeometry(0.16, 10, 8), 0x4b301f, bx, 0.38, 0.04, 0, 0, 0, 0.9, 0.75, 1.25);
+    }
+    addNipoPart(new THREE.SphereGeometry(0.46, 14, 12), 0x2f9e44, 0, 0.82, 0, 0, 0, 0, 1.0, 1.05, 0.94);
+    addNipoPart(new THREE.SphereGeometry(0.32, 12, 10), 0xffe066, 0, 0.78, 0.18, 0, 0, 0, 0.95, 0.95, 0.65);
+    // Scalloped leaf-skirt rim
+    for (let k = 0; k < 6; k++) {
+      const a = (k / 6) * Math.PI * 2;
+      addNipoPart(new THREE.ConeGeometry(0.18, 0.34, 5), 0x52b788, Math.cos(a) * 0.34, 0.62, Math.sin(a) * 0.30, 0, 0, 0.35 * -Math.cos(a));
+    }
+    // Cozy winter red scarf + trailing scarf tail
+    addNipoPart(new THREE.TorusGeometry(0.30, 0.085, 8, 16), 0xe03131, 0, 1.18, 0.02, Math.PI * 0.5, 0, 0);
+    addNipoPart(new THREE.BoxGeometry(0.13, 0.34, 0.06), 0xe03131, 0.20, 1.02, 0.25, -0.22, 0, -0.18);
+    // Left arm holding tiny forest-leaf staff
+    addNipoPart(new THREE.CapsuleGeometry(0.09, 0.30, 5, 8), 0x37b24d, -0.46, 0.88, 0.06, 0.2, 0, 0.42);
+    addNipoPart(new THREE.SphereGeometry(0.095, 8, 8), 0xfff0db, -0.58, 0.70, 0.14);
+    addNipoPart(new THREE.CylinderGeometry(0.028, 0.032, 1.18, 6), 0x7c4f2b, -0.60, 0.84, 0.16);
+    addNipoPart(new THREE.ConeGeometry(0.13, 0.28, 5), 0x40c057, -0.60, 1.50, 0.16, 0, 0, -0.15);
+
+    const bodyMesh = new THREE.Mesh(
+      mergeGeometries(bodyGeos),
+      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.60 })
+    );
+    bodyMesh.castShadow = true;
+    nipoBody.add(bodyMesh);
+
+    // Head group with big cheerful face + forest-leaf crown & twin leaf ears
+    const nipoHead = new THREE.Group();
+    nipoHead.position.set(0, 1.52, 0.02);
+    const headGeos = [];
+    function addHeadPart(geo, hex, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = 1, sz = 1) {
+      if (sx !== 1 || sy !== 1 || sz !== 1) geo.scale(sx, sy, sz);
+      if (rx) geo.rotateX(rx);
+      if (ry) geo.rotateY(ry);
+      if (rz) geo.rotateZ(rz);
+      geo.translate(x, y, z);
+      fillVertexColor(geo, hex);
+      headGeos.push(geo);
+    }
+    addHeadPart(new THREE.SphereGeometry(0.35, 16, 12), 0xfff0db, 0, 0, 0, 0, 0, 0, 1.05, 0.96, 0.98);
+    // Rosy cheeks + expressive eyes + cheerful smile
+    for (const ex of [-0.13, 0.13]) {
+      addHeadPart(new THREE.SphereGeometry(0.048, 8, 8), 0x141820, ex, 0.04, 0.31);
+      addHeadPart(new THREE.SphereGeometry(0.018, 6, 6), 0xffffff, ex + 0.015, 0.06, 0.345);
+      addHeadPart(new THREE.SphereGeometry(0.062, 8, 6), 0xff8fa3, ex * 1.45, -0.05, 0.285, 0, 0, 0, 1.1, 0.7, 0.5);
+    }
+    addHeadPart(new THREE.BoxGeometry(0.11, 0.032, 0.03), 0xc92a2a, 0, -0.10, 0.32);
+    // Signature forest-leaf cap + twin upright leaf blades + acorn berry finial
+    addHeadPart(new THREE.ConeGeometry(0.41, 0.35, 8), 0x2b8a3e, 0, 0.31, -0.02, -0.10, 0, 0);
+    addHeadPart(new THREE.ConeGeometry(0.14, 0.44, 5), 0x52b788, -0.22, 0.49, -0.02, 0, 0, 0.42, 0.65, 1.0, 1.0);
+    addHeadPart(new THREE.ConeGeometry(0.14, 0.44, 5), 0x74c69d,  0.22, 0.49, -0.02, 0, 0, -0.42, 0.65, 1.0, 1.0);
+    addHeadPart(new THREE.SphereGeometry(0.09, 8, 8), 0xff7b29, 0, 0.51, 0.02);
+
+    const headMesh = new THREE.Mesh(
+      mergeGeometries(headGeos),
+      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.58 })
+    );
+    headMesh.castShadow = true;
+    nipoHead.add(headMesh);
+    nipoBody.add(nipoHead);
+
+    // Waving right arm pivoted at shoulder + bright waving flag
+    const waveArm = new THREE.Group();
+    waveArm.position.set(0.38, 1.06, 0.04);
+    const armGeos = [];
+    const armCyl = new THREE.CapsuleGeometry(0.09, 0.32, 5, 8);
+    armCyl.rotateZ(-1.15);
+    armCyl.translate(0.18, 0.08, 0);
+    fillVertexColor(armCyl, 0x37b24d);
+    armGeos.push(armCyl);
+    const handSph = new THREE.SphereGeometry(0.10, 8, 8);
+    handSph.translate(0.36, 0.16, 0);
+    fillVertexColor(handSph, 0xfff0db);
+    armGeos.push(handSph);
+    // Flagstaff & high-contrast waving pennant held in waving hand
+    const flagPole = new THREE.CylinderGeometry(0.028, 0.032, 1.15, 6);
+    flagPole.rotateZ(-0.22);
+    flagPole.translate(0.49, 0.68, 0.02);
+    fillVertexColor(flagPole, 0x4a2c16);
+    armGeos.push(flagPole);
+    const flagTip = new THREE.SphereGeometry(0.06, 8, 8);
+    flagTip.translate(0.62, 1.25, 0.02);
+    fillVertexColor(flagTip, 0xffd166);
+    armGeos.push(flagTip);
+    const flagRed = new THREE.BoxGeometry(0.58, 0.38, 0.035);
+    flagRed.rotateZ(-0.22);
+    flagRed.translate(0.84, 0.96, 0.02);
+    fillVertexColor(flagRed, 0xe63946);
+    armGeos.push(flagRed);
+    const flagStripe = new THREE.BoxGeometry(0.54, 0.12, 0.042);
+    flagStripe.rotateZ(-0.22);
+    flagStripe.translate(0.84, 0.96, 0.02);
+    fillVertexColor(flagStripe, 0xffffff);
+    armGeos.push(flagStripe);
+    const flagTrim = new THREE.BoxGeometry(0.58, 0.06, 0.040);
+    flagTrim.rotateZ(-0.22);
+    flagTrim.translate(0.87, 1.13, 0.02);
+    fillVertexColor(flagTrim, 0xffd166);
+    armGeos.push(flagTrim);
+
+    const armMesh = new THREE.Mesh(
+      mergeGeometries(armGeos),
+      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.58 })
+    );
+    armMesh.castShadow = true;
+    waveArm.add(armMesh);
+    nipoBody.add(waveArm);
+
+    nipoRoot.add(nipoBody);
+    scene.add(nipoRoot);
+
+    nipoAnimState = { body: nipoBody, head: nipoHead, waveArm, baseY: 0.10 };
+    propTelemetry.nipo.push({ id: 'nipo_terrace_jct', s: nS, x: nx, z: nz, baseY: ny - 0.35 });
+  }
+
+  // --- 2. Floating Guide Arrows (high-contrast 3D centerline chevron affordance) ---
+  const arrowShape = new THREE.Shape();
+  arrowShape.moveTo(0, 1.05);
+  arrowShape.lineTo(1.38, -0.42);
+  arrowShape.lineTo(0.86, -0.92);
+  arrowShape.lineTo(0, -0.06);
+  arrowShape.lineTo(-0.86, -0.92);
+  arrowShape.lineTo(-1.38, -0.42);
+  arrowShape.closePath();
+
+  const arrowGeo = new THREE.ExtrudeGeometry(arrowShape, { depth: 0.11, bevelEnabled: false });
+  arrowGeo.translate(0, 0, -0.055);
+  arrowGeo.rotateX(Math.PI * 0.5); // Tip points toward +Z (downhill), 3D slab in XZ
+
+  const arrowCoords = [];
+  for (let s = 35; s <= courseTotalLen - 35; s += 24) {
+    const pt = sampleCourseAtS(s);
+    const ptA = sampleCourseAtS(Math.max(0, s - 2.0));
+    const ptB = sampleCourseAtS(Math.min(courseTotalLen, s + 2.0));
+    const pitch = Math.atan2(ptA.y - ptB.y, Math.max(0.5, ptB.s - ptA.s));
+    arrowCoords.push({ x: pt.x, y: pt.y + 0.52, z: pt.z, s, yaw: Math.atan2(pt.tx, pt.tz), pitch });
+  }
+
+  const arrowSAttr = new Float32Array(arrowCoords.length);
+  for (let i = 0; i < arrowCoords.length; i++) arrowSAttr[i] = arrowCoords[i].s;
+  arrowGeo.setAttribute('aArcS', new THREE.InstancedBufferAttribute(arrowSAttr, 1));
+
+  const arrowMat = new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+    uniforms: { uTime: { value: 0 } },
+    vertexShader: `
+      attribute float aArcS;
+      varying float vArcS;
+      varying float vCamDist;
+      varying vec3 vLocalPos;
+      varying vec3 vLocalNorm;
+      void main() {
+        vArcS = aArcS;
+        vLocalPos = position;
+        vLocalNorm = normal;
+        vec4 wp = instanceMatrix * vec4(position, 1.0);
+        vCamDist = length(cameraPosition - wp.xyz);
+        gl_Position = projectionMatrix * viewMatrix * wp;
+      }
+    `,
+    fragmentShader: `
+      uniform float uTime;
+      varying float vArcS;
+      varying float vCamDist;
+      varying vec3 vLocalPos;
+      varying vec3 vLocalNorm;
+      void main() {
+        float distFade = smoothstep(9.0, 14.5, vCamDist) * (1.0 - smoothstep(95.0, 185.0, vCamDist));
+        if (distFade <= 0.005) discard;
+        // Downhill travelling pulse + deep cobalt outline/sidewall vs vivid alpine sky-cyan face
+        float wave = 0.78 + 0.22 * sin(vArcS * 0.10 - uTime * 3.6);
+        float tipHi = smoothstep(-0.55, 0.80, vLocalPos.z);
+        float isTopFace = step(0.45, abs(vLocalNorm.y));
+        float rimDist = abs(abs(vLocalPos.x) * 0.65 + (vLocalPos.z + 0.15) * 0.45);
+        float coreMask = smoothstep(0.76, 0.58, rimDist) * isTopFace;
+        vec3 rimCol = vec3(0.03, 0.22, 0.60);
+        vec3 coreCol = mix(vec3(0.04, 0.56, 0.98), vec3(0.52, 0.90, 1.0), tipHi * 0.50);
+        vec3 col = mix(rimCol, coreCol, coreMask);
+        float alpha = distFade * wave * 0.90;
+        gl_FragColor = vec4(col, alpha);
+      }
+    `
+  });
+  courseGuideArrowUniforms = arrowMat.uniforms;
+
+  const arrowInst = new THREE.InstancedMesh(arrowGeo, arrowMat, arrowCoords.length);
+  arrowInst.frustumCulled = false;
+  arrowInst.renderOrder = 2;
+  for (let i = 0; i < arrowCoords.length; i++) {
+    const a = arrowCoords[i];
+    dummyObj.position.set(a.x, a.y, a.z);
+    dummyObj.rotation.order = 'YXZ';
+    dummyObj.rotation.set(a.pitch - 0.10, a.yaw, 0);
+    dummyObj.scale.set(1, 1, 1);
+    dummyObj.updateMatrix();
+    arrowInst.setMatrixAt(i, dummyObj.matrix);
+    propTelemetry.guideArrows.push({ x: a.x, y: a.y, z: a.z, s: a.s, snowY: a.y - 0.52 });
+  }
+  arrowInst.instanceMatrix.needsUpdate = true;
+  scene.add(arrowInst);
+
+  // --- 3. Bamboo-style Orange/Red Course-Edge Boundary Poles (1 InstancedMesh, count < 500) ---
   const poleParts = [];
-  const pBot = new THREE.CylinderGeometry(0.055, 0.065, 1.25, 6); pBot.translate(0, 0.25, 0); fillVertexColor(pBot, 0xe8edf4); poleParts.push(pBot);
-  const pMid = new THREE.CylinderGeometry(0.055, 0.055, 0.65, 6); pMid.translate(0, 1.20, 0); fillVertexColor(pMid, 0xe03228); poleParts.push(pMid);
-  const pTop = new THREE.CylinderGeometry(0.058, 0.055, 0.65, 6); pTop.translate(0, 1.85, 0); fillVertexColor(pTop, 0xff4c24); poleParts.push(pTop);
+  const pShaftLow = new THREE.CylinderGeometry(0.048, 0.060, 1.45, 7); pShaftLow.translate(0, 0.12, 0); fillVertexColor(pShaftLow, 0xf2e7cf); poleParts.push(pShaftLow);
+  const pBandWht  = new THREE.CylinderGeometry(0.050, 0.050, 0.42, 7); pBandWht.translate(0, 1.05, 0);  fillVertexColor(pBandWht, 0xf6f9fc);  poleParts.push(pBandWht);
+  const pShaftTop = new THREE.CylinderGeometry(0.042, 0.050, 1.25, 7); pShaftTop.translate(0, 1.88, 0); fillVertexColor(pShaftTop, 0xff4618); poleParts.push(pShaftTop);
+  for (const ny of [0.84, 1.42, 2.04]) {
+    const nodeRing = new THREE.CylinderGeometry(0.056, 0.056, 0.045, 7);
+    nodeRing.translate(0, ny, 0);
+    fillVertexColor(nodeRing, 0xc82a16);
+    poleParts.push(nodeRing);
+  }
   const poleGeo = mergeGeometries(poleParts);
-  const poleMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55 });
+  const poleMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.52 });
 
   const poleCoords = [];
-  const stepS = 52; // every ~52 m along outer edges of Silver Bell -> Beginner's Choice -> Resort Center
-  let nextS = 35;
-  for (let i = 0; i < courseSamples.length; i++) {
-    const sp = courseSamples[i];
-    if (sp.s < nextS) continue;
-    nextS = sp.s + stepS;
-    if (sp.s > courseTotalLen - 30) break;
-    const rx = -sp.tz, rz = sp.tx;
-    // Place strictly on outer course edge (±27 m) so zero collision with skiing corridor
+  for (let s = 26; s <= courseTotalLen - 26; s += 32) {
+    const sp = sampleCourseAtS(s);
     for (const side of [-1, 1]) {
-      if (poleCoords.length >= 152) break;
-      const wx = sp.x + rx * side * 27.5;
-      const wz = sp.z + rz * side * 27.5;
-      poleCoords.push({ x: wx, z: wz });
+      if (poleCoords.length >= 236) break;
+      const wx = sp.x + sp.rx * side * 25.5;
+      const wz = sp.z + sp.rz * side * 25.5;
+      // Keep merge throats & signboard faces uncluttered
+      let skip = false;
+      for (const sb of propTelemetry.signboards) {
+        if (Math.hypot(wx - sb.x, wz - sb.z) < 4.5) { skip = true; break; }
+      }
+      if (!skip) {
+        for (const sc of secondaryCourseData) {
+          for (let j = 0; j < sc.samples.length - 2; j += 2) {
+            const a = sc.samples[j], b = sc.samples[Math.min(j + 2, sc.samples.length - 1)];
+            if (distToSegmentSq(wx, wz, a.x, a.z, b.x, b.z) < 17.5 * 17.5) { skip = true; break; }
+          }
+          if (skip) break;
+        }
+      }
+      if (!skip) poleCoords.push({ x: wx, z: wz, s, side });
     }
-    if (poleCoords.length >= 152) break;
+    if (poleCoords.length >= 236) break;
   }
 
   const poleInst = new THREE.InstancedMesh(poleGeo, poleMat, poleCoords.length);
   poleInst.castShadow = true;
   poleInst.receiveShadow = true;
-  const dummy = new THREE.Object3D();
   for (let i = 0; i < poleCoords.length; i++) {
     const p = poleCoords[i];
     const py = terrainMeshHeightAt(p.x, p.z);
-    dummy.position.set(p.x, py, p.z);
-    dummy.rotation.set(0, (i * 0.7) % (Math.PI * 2), 0);
-    dummy.scale.set(1, 1, 1);
-    dummy.updateMatrix();
-    poleInst.setMatrixAt(i, dummy.matrix);
+    dummyObj.position.set(p.x, py, p.z);
+    dummyObj.rotation.order = 'YXZ';
+    dummyObj.rotation.set(0.02 * ((i % 3) - 1), (i * 0.7) % (Math.PI * 2), 0.02 * (((i + 1) % 3) - 1));
+    dummyObj.scale.set(1, 1, 1);
+    dummyObj.updateMatrix();
+    poleInst.setMatrixAt(i, dummyObj.matrix);
+    propTelemetry.edgePoles.push({ x: p.x, z: p.z, s: p.s, side: p.side, baseY: py - 0.60, topY: py + 2.50 });
   }
   poleInst.instanceMatrix.needsUpdate = true;
   scene.add(poleInst);
 
-  // Lightweight alpine safety B-net texture (bright orange-red mesh diamond grid)
+  // --- 4. Open Orange Diamond-Mesh Safety Netting (catenary sag, double-sided, merged + instanced posts) ---
   const nc = document.createElement('canvas');
-  nc.width = 64; nc.height = 64;
+  nc.width = 128; nc.height = 128;
   const nctx = nc.getContext('2d');
-  nctx.clearRect(0, 0, 64, 64);
-  nctx.fillStyle = '#e63a1e';
-  nctx.fillRect(0, 0, 64, 5);
-  nctx.fillRect(0, 58, 64, 6);
-  nctx.strokeStyle = 'rgba(236, 68, 34, 0.90)';
-  nctx.lineWidth = 2.2;
-  for (let k = -64; k <= 128; k += 12) {
-    nctx.beginPath(); nctx.moveTo(k, 4); nctx.lineTo(k + 56, 60); nctx.stroke();
-    nctx.beginPath(); nctx.moveTo(k + 56, 4); nctx.lineTo(k, 60); nctx.stroke();
+  nctx.clearRect(0, 0, 128, 128);
+  nctx.fillStyle = '#ff4b18';
+  nctx.fillRect(0, 0, 128, 7);
+  nctx.fillRect(0, 118, 128, 10);
+  nctx.strokeStyle = '#ff541f';
+  nctx.lineWidth = 3.2;
+  for (let k = -128; k <= 256; k += 20) {
+    nctx.beginPath(); nctx.moveTo(k, 6); nctx.lineTo(k + 114, 120); nctx.stroke();
+    nctx.beginPath(); nctx.moveTo(k + 114, 6); nctx.lineTo(k, 120); nctx.stroke();
   }
   const netTex = new THREE.CanvasTexture(nc);
   netTex.colorSpace = THREE.SRGBColorSpace;
   netTex.wrapS = THREE.RepeatWrapping;
   netTex.wrapT = THREE.ClampToEdgeWrapping;
-  netTex.repeat.set(7, 1);
+  netTex.anisotropy = 4;
+
   const netMat = new THREE.MeshBasicMaterial({
     map: netTex,
     transparent: true,
     side: THREE.DoubleSide,
-    alphaTest: 0.15
+    alphaTest: 0.25
   });
-  const netPostMat = new THREE.MeshStandardMaterial({ color: 0xd93022, roughness: 0.55 });
 
-  // 6 key outer-corner / base-area safety net runs (~32 m each)
-  const netSpots = [
-    { s: 170,  side: -1 }, // Unkai Terrace cliff bend
-    { s: 540,  side: -1 }, // Upper Silver Bell crest
-    { s: 1480, side: -1 }, // Outer NE panoramic hairpin
-    { s: 2250, side:  1 }, // Mid-bowl sweep
-    { s: 3320, side: -1 }, // Beginner's Choice approach
-    { s: 3680, side:  1 }  // Resort Center base finish chute
+  const netGeos = [];
+  const allNetPosts = [];
+
+  function addSaggedNetPanel(ax, az, bx, bz, repeatU = 6.0) {
+    const ay = terrainMeshHeightAt(ax, az);
+    const by = terrainMeshHeightAt(bx, bz);
+    const hLen = Math.hypot(bx - ax, bz - az);
+    if (hLen < 0.8) return;
+    const nxSub = 6, nySub = 2;
+    const positions = [];
+    const normals = [];
+    const uvs = [];
+    const indices = [];
+    const dx = bx - ax, dz = bz - az;
+    const nrmX = -dz / hLen, nrmZ = dx / hLen;
+    for (let ix = 0; ix <= nxSub; ix++) {
+      const u = ix / nxSub;
+      const px = lerp(ax, bx, u);
+      const pz = lerp(az, bz, u);
+      const gy = terrainMeshHeightAt(px, pz);
+      const sag = Math.sin(Math.PI * u);
+      const yBot = gy + 0.08;
+      const yTop = gy + 1.56 - sag * 0.13;
+      const yMid = lerp(yBot, yTop, 0.5) - sag * 0.04;
+      const ys = [yBot, yMid, yTop];
+      for (let iy = 0; iy <= nySub; iy++) {
+        const v = iy / nySub;
+        positions.push(px, ys[iy], pz);
+        normals.push(nrmX, 0, nrmZ);
+        uvs.push(u * repeatU, v);
+      }
+    }
+    for (let ix = 0; ix < nxSub; ix++) {
+      for (let iy = 0; iy < nySub; iy++) {
+        const a = ix * 3 + iy;
+        const b = (ix + 1) * 3 + iy;
+        const c = a + 1;
+        const d = b + 1;
+        indices.push(a, b, c, b, d, c);
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    g.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    g.setIndex(indices);
+    netGeos.push(g);
+  }
+
+  // Course-edge nets: 5 course merges + 7 sharp turns / steep drop edges
+  const netRuns = [
+    { kind: 'merge', s0: 490,  s1: 565,  side:  1, off: 28.5 },
+    { kind: 'merge', s0: 855,  s1: 930,  side:  1, off: 28.5 },
+    { kind: 'merge', s0: 2820, s1: 2895, side: -1, off: 28.5 },
+    { kind: 'merge', s0: 3005, s1: 3085, side:  1, off: 28.5 },
+    { kind: 'merge', s0: 3095, s1: 3165, side: -1, off: 28.5 },
+    { kind: 'curve', s0: 165,  s1: 285,  side: -1, off: 29.0 },
+    { kind: 'curve', s0: 480,  s1: 590,  side: -1, off: 29.0 },
+    { kind: 'curve', s0: 975,  s1: 1065, side: -1, off: 29.0 },
+    { kind: 'curve', s0: 1900, s1: 1995, side: -1, off: 29.0 },
+    { kind: 'curve', s0: 2145, s1: 2265, side: -1, off: 29.0 },
+    { kind: 'curve', s0: 3300, s1: 3380, side: -1, off: 29.0 },
+    { kind: 'curve', s0: 3655, s1: 3735, side:  1, off: 29.0 }
   ];
-  const netGroup = new THREE.Group();
-  for (const ns of netSpots) {
-    let idx = 0;
-    while (idx < courseSamples.length - 6 && courseSamples[idx].s < ns.s) idx++;
-    const segCount = 5;
-    for (let k = 0; k < segCount; k++) {
-      const a = courseSamples[Math.min(idx + k * 2, courseSamples.length - 1)];
-      const b = courseSamples[Math.min(idx + (k + 1) * 2, courseSamples.length - 1)];
-      const ax = a.x + (-a.tz) * ns.side * 29.0, az = a.z + (a.tx) * ns.side * 29.0;
-      const bx = b.x + (-b.tz) * ns.side * 29.0, bz = b.z + (b.tx) * ns.side * 29.0;
-      const ay = terrainMeshHeightAt(ax, az), by = terrainMeshHeightAt(bx, bz);
-      const dx = bx - ax, dz = bz - az, dy = by - ay;
-      const hLen = Math.hypot(dx, dz);
-      if (hLen < 1.0) continue;
-      const panel = new THREE.Mesh(new THREE.PlaneGeometry(hLen, 1.45), netMat);
-      panel.position.set((ax + bx) * 0.5, (ay + by) * 0.5 + 0.85, (az + bz) * 0.5);
-      panel.rotation.order = 'YXZ';
-      panel.rotation.y = Math.atan2(dx, dz) + Math.PI * 0.5;
-      panel.rotation.z = Math.atan2(dy, hLen);
-      netGroup.add(panel);
-      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 1.8, 5), netPostMat);
-      post.position.set(ax, ay + 0.75, az);
-      post.castShadow = true;
-      netGroup.add(post);
+
+  for (const nr of netRuns) {
+    const nSpans = Math.max(4, Math.round((nr.s1 - nr.s0) / 7.5));
+    const pts = [];
+    for (let k = 0; k <= nSpans; k++) {
+      const s = lerp(nr.s0, nr.s1, k / nSpans);
+      const sp = sampleCourseAtS(s);
+      const wx = sp.x + sp.rx * nr.side * nr.off;
+      const wz = sp.z + sp.rz * nr.side * nr.off;
+      pts.push({ x: wx, z: wz, y: terrainMeshHeightAt(wx, wz), s });
+      allNetPosts.push({ x: wx, z: wz, y: terrainMeshHeightAt(wx, wz), kind: nr.kind });
+      propTelemetry.netPosts.push({ x: wx, z: wz, s, kind: nr.kind, baseY: terrainMeshHeightAt(wx, wz) - 0.65 });
+    }
+    for (let k = 0; k < pts.length - 1; k++) {
+      addSaggedNetPanel(pts[k].x, pts[k].z, pts[k + 1].x, pts[k + 1].z, 6.0);
     }
   }
-  scene.add(netGroup);
+
+  // Lift-tower hexagonal protective safety net wraps for every tower within 45 m of main course
+  if (typeof builtLiftsTelemetry !== 'undefined') {
+    for (const lf of builtLiftsTelemetry) {
+      for (let ti = 0; ti < lf.towers.length; ti++) {
+        const tw = lf.towers[ti];
+        const minD = distToCourse(tw.x, tw.z, 2);
+        if (minD > 45.0) continue;
+        const wrapR = minD < 20.0 ? 3.0 : 4.2;
+        const ring = [];
+        for (let k = 0; k < 6; k++) {
+          const ang = (k / 6) * Math.PI * 2;
+          const px = tw.x + Math.cos(ang) * wrapR;
+          const pz = tw.z + Math.sin(ang) * wrapR;
+          const py = terrainMeshHeightAt(px, pz);
+          ring.push({ x: px, z: pz, y: py });
+          allNetPosts.push({ x: px, z: pz, y: py, kind: 'tower' });
+          propTelemetry.towerNetPosts.push({ lift: lf.id, towerIdx: ti, x: px, z: pz, baseY: py - 0.65 });
+        }
+        for (let k = 0; k < 6; k++) {
+          const a = ring[k], b = ring[(k + 1) % 6];
+          addSaggedNetPanel(a.x, a.z, b.x, b.z, 3.5);
+        }
+      }
+    }
+  }
+
+  if (netGeos.length > 0) {
+    const mergedNet = new THREE.Mesh(mergeTexturedGeos(netGeos), netMat);
+    scene.add(mergedNet);
+  }
+
+  const netPostGeo = new THREE.CylinderGeometry(0.052, 0.062, 2.30, 6);
+  netPostGeo.translate(0, 0.50, 0); // -0.65m embedded .. +1.65m above snow
+  const netPostMat = new THREE.MeshStandardMaterial({ color: 0xd93022, roughness: 0.52 });
+  const netPostInst = new THREE.InstancedMesh(netPostGeo, netPostMat, allNetPosts.length);
+  netPostInst.castShadow = true;
+  for (let i = 0; i < allNetPosts.length; i++) {
+    const np = allNetPosts[i];
+    dummyObj.position.set(np.x, np.y, np.z);
+    dummyObj.rotation.set(0, 0, 0);
+    dummyObj.scale.set(1, 1, 1);
+    dummyObj.updateMatrix();
+    netPostInst.setMatrixAt(i, dummyObj.matrix);
+  }
+  netPostInst.instanceMatrix.needsUpdate = true;
+  scene.add(netPostInst);
+
+  window.__m15CourseProps = propTelemetry;
 }
 
 // Stretch: Delicate high-altitude Tomamu Cloud-Sea (雲海) layer around ~935m altitude over the eastern valley
@@ -59165,24 +60321,34 @@ function makeAlpineEnvMap() {
   return tex;
 }
 
-function drawDescenteChevron(ctx, cx, cy, w, h, color = '#f7f9fc') {
-  // Iconic 3-bar descending alpine chevron emblem
+function drawSalomonSLogo(ctx, cx, cy, w, h, color = '#ffffff') {
+  // Geometric angular Salomon S-slab emblem with crisp diagonal cut
   ctx.save();
+  ctx.translate(cx, cy);
   ctx.fillStyle = color;
-  const bars = [
-    { xOff: -w * 0.34, bw: w * 0.17, topY: cy - h * 0.45, botY: cy + h * 0.45, slant: -w * 0.10 },
-    { xOff:  0,        bw: w * 0.22, topY: cy - h * 0.50, botY: cy + h * 0.50, slant:  0 },
-    { xOff:  w * 0.34, bw: w * 0.17, topY: cy - h * 0.45, botY: cy + h * 0.45, slant:  w * 0.10 }
-  ];
-  for (const b of bars) {
-    ctx.beginPath();
-    ctx.moveTo(cx + b.xOff - b.bw * 0.5 + b.slant, b.topY);
-    ctx.lineTo(cx + b.xOff + b.bw * 0.5 + b.slant, b.topY);
-    ctx.lineTo(cx + b.xOff + b.bw * 0.38, b.botY);
-    ctx.lineTo(cx + b.xOff - b.bw * 0.38, b.botY);
-    ctx.closePath();
-    ctx.fill();
-  }
+  const hw = w * 0.5, hh = h * 0.5;
+  // Upper sweeping S-bar
+  ctx.beginPath();
+  ctx.moveTo(-hw * 0.65, -hh);
+  ctx.lineTo(hw, -hh);
+  ctx.lineTo(hw * 0.72, -hh * 0.44);
+  ctx.lineTo(-hw * 0.16, -hh * 0.44);
+  ctx.lineTo(hw * 0.68, hh * 0.12);
+  ctx.lineTo(-hw * 0.08, hh * 0.12);
+  ctx.lineTo(-hw * 0.92, -hh * 0.42);
+  ctx.closePath();
+  ctx.fill();
+  // Lower sweeping S-bar
+  ctx.beginPath();
+  ctx.moveTo(hw * 0.08, -hh * 0.12);
+  ctx.lineTo(hw * 0.92, hh * 0.42);
+  ctx.lineTo(hw * 0.65, hh);
+  ctx.lineTo(-hw, hh);
+  ctx.lineTo(-hw * 0.72, hh * 0.44);
+  ctx.lineTo(hw * 0.16, hh * 0.44);
+  ctx.lineTo(-hw * 0.68, -hh * 0.12);
+  ctx.closePath();
+  ctx.fill();
   ctx.restore();
 }
 
@@ -59482,10 +60648,11 @@ function buildSkis() {
     return g;
   }
 
+  const SKI_STANCE_HALF = 0.14; // Hip-width carving stance (28.0 cm boot center-to-center)
   leftSkiMesh = makeOneSki();
-  leftSkiMesh.position.set(0.24, 0, 0);
+  leftSkiMesh.position.set(SKI_STANCE_HALF, 0, 0);
   rightSkiMesh = makeOneSki();
-  rightSkiMesh.position.set(-0.24, 0, 0);
+  rightSkiMesh.position.set(-SKI_STANCE_HALF, 0, 0);
 
   skisGroup.add(leftSkiMesh, rightSkiMesh);
   scene.add(skisGroup);
@@ -59531,16 +60698,17 @@ function drawWeldedSeam(ctx, x1, y1, x2, y2, w = 2.5) {
 function makeJacketChestTexture() {
   return makeGearCanvasTex(1024, 512, (ctx, w, h) => {
     // u=0.0/1.0: left side (+X), u=0.25 (x=256): BACK (-Z), u=0.50 (x=512): right side (-X), u=0.75 (x=768): FRONT (+Z)
-    ctx.fillStyle = '#e8361c';
+    // Authentic Tomamu rental SALOMON alpine cobalt & deep ink color-blocking
+    ctx.fillStyle = '#1254c4';
     ctx.fillRect(0, 0, w, h);
 
-    // Matte technical carbon-black side panels wrapping ribs
-    ctx.fillStyle = '#161a21';
+    // Matte deep-ink side panels wrapping ribs
+    ctx.fillStyle = '#111722';
     ctx.fillRect(0, 0, 88, h);
     ctx.fillRect(424, 0, 176, h);
     ctx.fillRect(936, 0, 88, h);
 
-    // Matte black shoulder yoke (covers upper shoulders front & sweeps down across upper back)
+    // Deep-ink technical shoulder yoke (covers upper shoulders front & sweeps down across upper back)
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(w, 0);
@@ -59553,18 +60721,24 @@ function makeJacketChestTexture() {
     ctx.lineTo(72, 248);
     ctx.lineTo(0, 185);
     ctx.closePath();
-    ctx.fillStyle = '#161a21';
+    ctx.fillStyle = '#111722';
     ctx.fill();
 
     // Subtle matte ripstop weave across jacket shell
     drawFabricGrain(ctx, w, h, 0.025);
 
-    // Crisp white technical piping along yoke & side panel borders
-    ctx.strokeStyle = 'rgba(247,249,252,0.92)';
+    // Crisp white technical piping along yoke & side panel borders + subtle race-red accent stripe
+    ctx.strokeStyle = 'rgba(255,255,255,0.95)';
     ctx.lineWidth = 4.5;
     ctx.beginPath();
     ctx.moveTo(0, 185); ctx.lineTo(72, 248); ctx.lineTo(440, 248); ctx.lineTo(540, 146);
     ctx.lineTo(676, 146); ctx.lineTo(768, 128); ctx.lineTo(860, 146); ctx.lineTo(w, 146);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#e22c29';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(86, 255); ctx.lineTo(426, 255);
     ctx.stroke();
 
     // Vertical welded side-panel seams
@@ -59574,67 +60748,66 @@ function makeJacketChestTexture() {
     drawWeldedSeam(ctx, 936, 146, 936, h, 3);
 
     // --- BACK (x = 256, chase camera primary view!) ---
-    // Upper-back large white DESCENTE chevron + bold wordmark inside black yoke
-    drawDescenteChevron(ctx, 256, 144, 62, 42, '#ffffff');
+    // Upper-back large white SALOMON S-slab emblem + bold wordmark inside deep-ink yoke
+    drawSalomonSLogo(ctx, 256, 142, 62, 40, '#ffffff');
     ctx.fillStyle = '#ffffff';
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 2;
-    ctx.font = '900 50px "Arial Black", "Helvetica Neue", Arial, sans-serif';
+    ctx.font = '900 52px "Arial Black", "Helvetica Neue", Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.strokeText('DESCENTE', 256, 206);
-    ctx.fillText('DESCENTE', 256, 206);
+    ctx.strokeText('SALOMON', 256, 206);
+    ctx.fillText('SALOMON', 256, 206);
 
-    // Lower back technical contour seams & dark laser-cut vent bar
+    // Lower back technical contour seams & laser-cut vent bar
     drawWeldedSeam(ctx, 130, 315, 256, 338, 2.5);
     drawWeldedSeam(ctx, 382, 315, 256, 338, 2.5);
     drawWeldedSeam(ctx, 155, 395, 357, 395, 2);
-    ctx.fillStyle = '#14181f';
+    ctx.fillStyle = '#111722';
     ctx.fillRect(194, 344, 124, 10);
-    ctx.fillStyle = 'rgba(247,249,252,0.55)';
+    ctx.fillStyle = 'rgba(255,255,255,0.68)';
     ctx.fillRect(230, 347, 52, 3);
 
     // --- FRONT (x = 768) ---
-    // Waterproof matte black center front zipper + white storm pull tab
-    ctx.fillStyle = '#12151b';
+    // Waterproof matte black center front zipper + race-red storm pull tab
+    ctx.fillStyle = '#0e131b';
     ctx.fillRect(760, 118, 16, h - 118);
-    ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)';
     ctx.lineWidth = 1.5;
     ctx.strokeRect(760, 118, 16, h - 118);
-    ctx.fillStyle = '#f7f9fc';
+    ctx.fillStyle = '#e22c29';
     ctx.fillRect(764, 142, 8, 18);
 
-    // Left chest (x ~ 856): white DESCENTE wordmark + chevron + welded pocket zip
-    drawDescenteChevron(ctx, 816, 184, 24, 18, '#f7f9fc');
-    ctx.fillStyle = '#f7f9fc';
+    // Left chest (x ~ 856): white SALOMON S-slab + wordmark + welded pocket zip
+    drawSalomonSLogo(ctx, 814, 184, 24, 18, '#ffffff');
+    ctx.fillStyle = '#ffffff';
     ctx.font = '900 18px "Arial Black", Arial, sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText('DESCENTE', 834, 185);
+    ctx.fillText('SALOMON', 832, 185);
     // Welded chest pocket zip (left)
-    ctx.fillStyle = '#14181f';
+    ctx.fillStyle = '#0e131b';
     ctx.fillRect(808, 218, 96, 8);
+    ctx.fillStyle = '#e22c29';
+    ctx.fillRect(890, 219, 10, 6);
     drawWeldedSeam(ctx, 795, 290, 916, 340, 2);
 
-    // Right chest (x ~ 674): alpine team / sponsor-style crest patch + pocket zip
-    ctx.fillStyle = '#14181f';
+    // Right chest (x ~ 674): Salomon Tomamu alpine rental crest patch + pocket zip
+    ctx.fillStyle = '#111722';
     ctx.fillRect(634, 168, 86, 54);
-    ctx.strokeStyle = '#f7f9fc';
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 2.5;
     ctx.strokeRect(634, 168, 86, 54);
-    // Red mountain triangle emblem inside patch
-    ctx.fillStyle = '#e8361c';
-    ctx.beginPath();
-    ctx.moveTo(646, 200); ctx.lineTo(662, 178); ctx.lineTo(678, 200); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#f7f9fc';
-    ctx.font = '800 11px Arial, sans-serif';
+    drawSalomonSLogo(ctx, 654, 189, 22, 16, '#ffffff');
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '800 10px Arial, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('ALPINE', 682, 186);
-    ctx.fillStyle = '#dfe6f0';
+    ctx.fillText('RENTAL', 672, 189);
+    ctx.fillStyle = '#9ec4ff';
     ctx.font = '700 9px Arial, sans-serif';
-    ctx.fillText('TOMAMU PRO', 642, 212);
+    ctx.fillText('TOMAMU PRO', 642, 211);
     // Welded chest pocket zip (right)
-    ctx.fillStyle = '#14181f';
+    ctx.fillStyle = '#0e131b';
     ctx.fillRect(628, 238, 96, 8);
     drawWeldedSeam(ctx, 740, 290, 620, 340, 2);
   }, 8);
@@ -59642,23 +60815,23 @@ function makeJacketChestTexture() {
 
 function makeJacketWaistTexture() {
   return makeGearCanvasTex(512, 256, (ctx, w, h) => {
-    ctx.fillStyle = '#e8361c';
+    ctx.fillStyle = '#1254c4';
     ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = '#161a21';
+    ctx.fillStyle = '#111722';
     ctx.fillRect(0, 0, 44, h);
     ctx.fillRect(212, 0, 88, h);
     ctx.fillRect(468, 0, 44, h);
     drawFabricGrain(ctx, w, h, 0.025);
     // Center front zipper continuation (u = 0.75 -> x = 384)
-    ctx.fillStyle = '#12151b';
+    ctx.fillStyle = '#0e131b';
     ctx.fillRect(380, 0, 8, h);
     // Angled hand-pocket welded zips on front-sides
-    ctx.strokeStyle = '#12151b';
+    ctx.strokeStyle = '#0e131b';
     ctx.lineWidth = 6;
     ctx.beginPath(); ctx.moveTo(320, 95); ctx.lineTo(352, 205); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(448, 95); ctx.lineTo(416, 205); ctx.stroke();
-    // Bottom black hem trim strip
-    ctx.fillStyle = '#14181f';
+    // Bottom deep-ink hem trim strip
+    ctx.fillStyle = '#111722';
     ctx.fillRect(0, h - 28, w, 28);
     drawWeldedSeam(ctx, 44, 0, 44, h, 2);
     drawWeldedSeam(ctx, 212, 0, 212, h, 2);
@@ -59669,44 +60842,44 @@ function makeJacketWaistTexture() {
 
 function makeUpperSleeveTexture() {
   return makeGearCanvasTex(512, 256, (ctx, w, h) => {
-    ctx.fillStyle = '#e8361c';
+    ctx.fillStyle = '#1254c4';
     ctx.fillRect(0, 0, w, h);
-    // Black shoulder cap transitioning into orange-red arm
-    ctx.fillStyle = '#161a21';
+    // Deep-ink shoulder cap transitioning into cobalt alpine arm
+    ctx.fillStyle = '#111722';
     ctx.fillRect(0, 0, w, 108);
-    // Underarm black gusset
+    // Underarm deep-ink gusset
     ctx.fillRect(340, 0, 95, h);
     drawFabricGrain(ctx, w, h, 0.025);
-    ctx.strokeStyle = '#f7f9fc';
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 3;
     ctx.beginPath(); ctx.moveTo(0, 108); ctx.lineTo(w, 108); ctx.stroke();
-    // Outer arm (u = 0.25 -> x = 128) upper-arm brand shield + chevron
-    ctx.fillStyle = '#14181f';
+    // Outer arm (u = 0.25 -> x = 128) upper-arm Salomon S-slab shield
+    ctx.fillStyle = '#111722';
     ctx.fillRect(88, 126, 80, 74);
-    ctx.strokeStyle = '#f7f9fc';
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 3;
     ctx.strokeRect(88, 126, 80, 74);
-    drawDescenteChevron(ctx, 128, 152, 34, 24, '#f7f9fc');
-    ctx.fillStyle = '#f7f9fc';
+    drawSalomonSLogo(ctx, 128, 152, 34, 24, '#ffffff');
+    ctx.fillStyle = '#ffffff';
     ctx.font = '900 13px "Arial Black", Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('DESCENTE', 128, 184);
+    ctx.fillText('SALOMON', 128, 184);
   }, 8);
 }
 
 function makeForeSleeveTexture(withLiftPass) {
   return makeGearCanvasTex(256, 256, (ctx, w, h) => {
-    ctx.fillStyle = '#e8361c';
+    ctx.fillStyle = '#1254c4';
     ctx.fillRect(0, 0, w, h);
-    // Black technical cuff band & articulated elbow gusset
-    ctx.fillStyle = '#161a21';
+    // Deep-ink technical cuff band & articulated elbow gusset
+    ctx.fillStyle = '#111722';
     ctx.fillRect(0, 186, w, 70);
     ctx.fillRect(160, 0, 56, h);
     drawFabricGrain(ctx, w, h, 0.025);
     drawWeldedSeam(ctx, 0, 186, w, 186, 2.5);
     if (withLiftPass) {
-      // RFID lift-pass zip pocket + crisp white/red lift pass badge on outer left forearm (u=0.25 -> x=64)
+      // RFID lift-pass zip pocket + crisp white/red TOMAMU PASS badge on outer left forearm (u=0.25 -> x=64)
       ctx.fillStyle = '#14181f';
       ctx.fillRect(34, 90, 60, 68);
       ctx.fillStyle = '#f7f9fc';
@@ -59727,36 +60900,36 @@ function makeForeSleeveTexture(withLiftPass) {
 
 function makePantsThighTexture(withLogo) {
   return makeGearCanvasTex(withLogo ? 512 : 256, 256, (ctx, w, h) => {
-    ctx.fillStyle = '#191d24';
+    ctx.fillStyle = '#151b26';
     ctx.fillRect(0, 0, w, h);
     drawFabricGrain(ctx, w, h, 0.022);
-    // Technical articulated thigh seam lines & tonal thigh vent zip
+    // Technical articulated thigh seam lines & cobalt thigh vent zip
     drawWeldedSeam(ctx, w * 0.25, 0, w * 0.25, h, 2);
     drawWeldedSeam(ctx, w * 0.75, 0, w * 0.75, h, 2.5);
-    ctx.fillStyle = '#101318';
+    ctx.fillStyle = '#1254c4';
     ctx.fillRect(w * 0.72, 68, 6, 108);
     if (withLogo) {
-      // Small crisp white logo on front-outer thigh (phiStart=PI -> u=0.62 -> x~318)
+      // Crisp white SALOMON S-slab + wordmark on front-outer thigh (phiStart=PI -> u=0.62 -> x~318)
       const cx = Math.round(w * 0.62);
-      drawDescenteChevron(ctx, cx - 44, 134, 24, 18, '#f7f9fc');
-      ctx.fillStyle = '#f7f9fc';
+      drawSalomonSLogo(ctx, cx - 44, 134, 24, 18, '#ffffff');
+      ctx.fillStyle = '#ffffff';
       ctx.font = '900 18px "Arial Black", Arial, sans-serif';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'middle';
-      ctx.fillText('DESCENTE', cx - 26, 136);
+      ctx.fillText('SALOMON', cx - 26, 136);
     }
   }, 8);
 }
 
 function makePantsShinTexture() {
   return makeGearCanvasTex(256, 256, (ctx, w, h) => {
-    ctx.fillStyle = '#191d24';
+    ctx.fillStyle = '#151b26';
     ctx.fillRect(0, 0, w, h);
     drawFabricGrain(ctx, w, h, 0.022);
     drawWeldedSeam(ctx, w * 0.25, 0, w * 0.25, h, 2);
     drawWeldedSeam(ctx, w * 0.75, 0, w * 0.75, h, 2);
     // Subtle dark cordura cuff edge guard at bottom
-    ctx.fillStyle = '#12151a';
+    ctx.fillStyle = '#0f131b';
     ctx.fillRect(0, h - 52, w, 52);
   }, 4);
 }
@@ -59847,15 +61020,15 @@ function makeGoggleStrapTexture() {
 
 function makeGloveCuffTexture() {
   return makeGearCanvasTex(128, 64, (ctx, w, h) => {
-    ctx.fillStyle = '#14181f';
+    ctx.fillStyle = '#111722';
     ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = '#e8361c';
+    ctx.fillStyle = '#1254c4';
     ctx.fillRect(0, 6, w, 6);
-    ctx.fillStyle = '#f7f9fc';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '900 12px Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('DESCENTE', w * 0.5, 36);
+    ctx.fillText('SALOMON', w * 0.5, 36);
   }, 4);
 }
 
@@ -59920,18 +61093,18 @@ function buildSkierFigure() {
   const poleShaftTex   = makePoleShaftTexture();
   const basketTex      = makeBasketTexture();
 
-  const pantsMat       = new THREE.MeshStandardMaterial({ color: 0x191d24, roughness: 0.78, metalness: 0.04 });
+  const pantsMat       = new THREE.MeshStandardMaterial({ color: 0x151b26, roughness: 0.78, metalness: 0.04 });
   const thighLMat      = new THREE.MeshStandardMaterial({ color: 0xffffff, map: thighLTex, roughness: 0.78, metalness: 0.04 });
   const thighRMat      = new THREE.MeshStandardMaterial({ color: 0xffffff, map: thighRTex, roughness: 0.78, metalness: 0.04 });
   const shinMat        = new THREE.MeshStandardMaterial({ color: 0xffffff, map: shinTex, roughness: 0.78, metalness: 0.04 });
-  const kneePadMat     = new THREE.MeshStandardMaterial({ color: 0x13171d, roughness: 0.72, metalness: 0.06 });
+  const kneePadMat     = new THREE.MeshStandardMaterial({ color: 0x10141c, roughness: 0.72, metalness: 0.06 });
 
   const jacketChestMat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: chestTex, roughness: 0.74, metalness: 0.03 });
   const jacketWaistMat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: waistTex, roughness: 0.74, metalness: 0.03 });
   const jacketArmUpMat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: upperSleeveTex, roughness: 0.74, metalness: 0.03 });
   const jacketForeLMat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: foreSleeveLTex, roughness: 0.74, metalness: 0.03 });
   const jacketForeRMat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: foreSleeveRTex, roughness: 0.74, metalness: 0.03 });
-  const jacketBlackMat = new THREE.MeshStandardMaterial({ color: 0x161a21, roughness: 0.72, metalness: 0.05 });
+  const jacketBlackMat = new THREE.MeshStandardMaterial({ color: 0x111722, roughness: 0.72, metalness: 0.05 });
 
   const bootShell      = new THREE.MeshStandardMaterial({ color: 0x151920, roughness: 0.34, metalness: 0.22 });
   const bootBuckle     = new THREE.MeshStandardMaterial({ color: 0xc8d2de, roughness: 0.24, metalness: 0.78 });
@@ -60047,9 +61220,9 @@ function buildSkierFigure() {
     return g;
   }
 
-  // --- Sculpted lower leg (shin, length L_SHIN = 0.45 along +Y from ankle to knee) ---
-  const L_SHIN = 0.45;
-  const L_THIGH = 0.46;
+  // --- Sculpted lower leg (shin, length L_SHIN = 0.47 along +Y from ankle to knee) ---
+  const L_SHIN = 0.47;
+  const L_THIGH = 0.48;
 
   function makeShin() {
     const g = new THREE.Group();
@@ -60312,6 +61485,8 @@ function buildSkierFigure() {
 
   skierRig = {
     L_SHIN, L_THIGH, L_UPPER, L_FORE,
+    MAX_REACH: L_SHIN + L_THIGH - 0.014,
+    STANCE_HALF: 0.14,
     bootL, bootR, bootCuffL: bootL.userData.cuffPivot, bootCuffR: bootR.userData.cuffPivot,
     shinL, shinR, kneeL, kneeR, thighL, thighR,
     pelvisG, lumbarG, chestG, neckG, headG,
@@ -60414,18 +61589,19 @@ const skierPose = {
   cuffRollR: makeSpring(0),     // boot cuff lateral flex spring R (Fix 3)
   prevFlexL: -1,
   prevFlexR: -1,
-  hipWorldY: makeSpring(0),     // world-space hip suspension
+  lastUpperClampY: 1.07,
+  hipWorldY: makeSpring(1.07),  // world-space hip suspension
   pelvisX: makeSpring(0),
-  pelvisY: makeSpring(0.84),
-  pelvisZ: makeSpring(-0.14),
+  pelvisY: makeSpring(1.06),
+  pelvisZ: makeSpring(-0.018),
   pelvisRoll: makeSpring(0),
-  pelvisPitch: makeSpring(0.14),
+  pelvisPitch: makeSpring(0.24),
   pelvisYaw: makeSpring(0),
   kneeAng: makeSpring(0),       // knee lateral angulation linked to carve + ski edge roll
-  lumbarPitch: makeSpring(0.16),
+  lumbarPitch: makeSpring(0.06),
   lumbarRoll: makeSpring(0),
   lumbarYaw: makeSpring(0),
-  chestPitch: makeSpring(0.11),
+  chestPitch: makeSpring(0.05),
   chestRoll: makeSpring(0),
   chestYaw: makeSpring(0),
   headPitch: makeSpring(-0.30),
@@ -60440,6 +61616,9 @@ const skierPose = {
   elbowR: makeSpring(-0.92),
   wristFlexL: makeSpring(0),
   wristFlexR: makeSpring(0),
+  // Shallow-section continuous cruising rhythm overlay (pose-only, ~0.39 Hz)
+  shallowOv: makeSpring(0),
+  shallowOvRate: makeSpring(0),
   // Independent spring-lagged pole carry vectors (poles trail with pendulum inertia, not welded)
   poleDirLX: makeSpring(0.14),
   poleDirLY: makeSpring(-0.46),
@@ -60460,7 +61639,11 @@ const skierPose = {
   lastPoleTipClrR: 0,
   lastTorsoPitchLocal: 0,
   lastTorsoPitchWorld: 0,
-  lastHeadPitchWorld: 0
+  lastHeadPitchWorld: 0,
+  lastShallowMask: 0,
+  lastOverlayVal: 0,
+  lastEffectiveEdge: 0,
+  lastOverlaySpray: 0
 };
 
 function resetSkierPose() {
@@ -60487,13 +61670,24 @@ function resetSkierPose() {
   skierPose.lastTorsoPitchLocal = 0;
   skierPose.lastTorsoPitchWorld = 0;
   skierPose.lastHeadPitchWorld = 0;
+  skierPose.lastShallowMask = 0;
+  skierPose.lastOverlayVal = 0;
+  skierPose.lastEffectiveEdge = 0;
+  skierPose.lastOverlaySpray = 0;
   skierPose.prevFlexL = -1;
   skierPose.prevFlexR = -1;
+  skierPose.lastUpperClampY = 1.07;
   for (const k of Object.keys(skierPose)) {
     const v = skierPose[k];
     if (v && typeof v === 'object' && 'v' in v) v.v = 0;
   }
   skierPose.groundDelta.x = 0;
+  skierPose.hipWorldY.x = 1.07;
+  skierPose.pelvisY.x = 1.06;
+  skierPose.pelvisZ.x = -0.018;
+  skierPose.pelvisPitch.x = 0.24;
+  skierPose.lumbarPitch.x = 0.06;
+  skierPose.chestPitch.x = 0.05;
   skierPose.cuffPitchL.x = 0.24; skierPose.cuffPitchR.x = 0.24;
   skierPose.cuffRollL.x = 0;     skierPose.cuffRollR.x = 0;
   skierPose.poleDirLX.x = 0.14;  skierPose.poleDirLY.x = -0.46; skierPose.poleDirLZ.x = -0.87;
@@ -60503,20 +61697,49 @@ function resetSkierPose() {
 function evalPolePlant(timer, speedScale = 1.0) {
   if (timer < 0) return { reach: 0, plant: 0, trail: 0 };
   const t = timer * speedScale;
-  if (t < 0.20) {
-    return { reach: smoothstep(0, 0.17, t), plant: smoothstep(0.11, 0.20, t), trail: 0 };
+  if (t < 0.13) {
+    return { reach: smoothstep(0, 0.11, t), plant: smoothstep(0.05, 0.13, t), trail: 0 };
   }
   if (t < 0.36) {
     return {
-      reach: 1 - smoothstep(0.22, 0.34, t),
-      plant: 1 - smoothstep(0.25, 0.36, t),
-      trail: smoothstep(0.24, 0.40, t)
+      reach: 1 - smoothstep(0.14, 0.30, t),
+      plant: 1 - smoothstep(0.18, 0.36, t),
+      trail: smoothstep(0.20, 0.42, t)
     };
   }
-  if (t <= 0.78) {
-    return { reach: 0, plant: 0, trail: 1 - smoothstep(0.42, 0.78, t) };
+  if (t <= 0.86) {
+    return { reach: 0, plant: 0, trail: 1 - smoothstep(0.42, 0.86, t) };
   }
   return { reach: 0, plant: 0, trail: 0 };
+}
+
+function evalShallowOverlay(t, rawC, ac, acS, speed, tuckF, brakeF) {
+  const moveM = smoothstep(1.5, 7.0, speed);
+  const spdM = smoothstep(5.5, 14.0, speed);
+  const mask = (1 - smoothstep(0.24, 0.52, acS))
+             * (1 - smoothstep(0.26, 0.52, ac))
+             * moveM * spdM * (1 - tuckF) * (1 - brakeF);
+  // Natural cruising S-rhythm (~0.39 Hz, ~2.55 s full L-R cycle — well below M13 1.2–1.65 Hz bobbing band)
+  const phase = t * 2.45 + smoothNoise1D(t * 0.16, 89.3) * 1.15;
+  const wave = Math.tanh(Math.sin(phase) * 1.35) / Math.tanh(1.35);
+  const rate = Math.cos(phase);
+  // Slow phrasing modulation mixes linked edge checks with brief quiet flat-ski passages
+  const phraseNoise = smoothNoise1D(t * 0.21, 61.7);
+  const mod = clamp(0.76 + phraseNoise * 0.36, 0.42, 1.0);
+  return { mask, phase, wave, rate, mod, val: wave * mod * mask, rateVal: rate * mod * mask };
+}
+
+function evalOverlayPoleSwing(phase, sideSign, amp) {
+  if (amp <= 0.002) return { reach: 0, plant: 0, trail: 0 };
+  const TWO_PI = Math.PI * 2;
+  const shift = sideSign > 0 ? 0.0 : Math.PI;
+  const p = (((phase - shift) % TWO_PI) + TWO_PI) % TWO_PI;
+  // Plant peaks near edge-switch zero-crossings (p ≈ 0 / 2π), then trails smoothly through the mini-arc
+  const dPlant = Math.min(p, TWO_PI - p);
+  const reach = smoothstep(0.95, 0.18, dPlant) * (p > Math.PI ? 1.0 : 0.45);
+  const plant = smoothstep(0.55, 0.04, dPlant);
+  const trail = smoothstep(0.22, 0.85, p) * (1 - smoothstep(1.45, 2.35, p));
+  return { reach: reach * amp, plant: plant * amp, trail: trail * amp };
 }
 
 // Analytical 2-bone IK helper: aligns a +Y limb segment from pA to pB with front (+Z) facing bendHint
@@ -60544,8 +61767,8 @@ function solveAndPoseLeg(sideSign, anklePos, hipPos, kneeAng, insideFactor, shin
   const L2 = rig.L_THIGH;
   const D = rig._vD.subVectors(hipPos, anklePos);
   const rawLen = D.length();
-  // Keep >= ~28 deg athletic knee bend at tallest extension (never robotic hyperextension)
-  const maxReach = L1 + L2 - 0.028;
+  // Keep >= ~20 deg athletic knee bend at tallest extension (never robotic hyperextension)
+  const maxReach = L1 + L2 - 0.014;
   const minReach = Math.abs(L1 - L2) + 0.16;
   const d = clamp(rawLen, minReach, maxReach);
   const dir = rig._vDir.copy(D).multiplyScalar(1 / Math.max(rawLen, 1e-5));
@@ -60554,10 +61777,9 @@ function solveAndPoseLeg(sideSign, anklePos, hipPos, kneeAng, insideFactor, shin
   const a = (L1 * L1 - L2 * L2 + d * d) / (2 * d);
   const h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
 
-  // Equalized inside/outside horizontal knee yaw, hard-capped to plausible <= 14.3 deg band.
-  // Edging/angulation reads via hip lateral shift, hip roll, and parallel shin inclination.
-  const MAX_KNEE_YAW = 0.25; // ~14.32 deg hard cap (target p95 <= 15 deg, hard max <= 20 deg)
-  const yawRad = clamp(kneeAng * 0.24, -MAX_KNEE_YAW, MAX_KNEE_YAW);
+  // Drive residual knee bend-plane yaw to 0 (knees track directly over toes, parallel shins); M13 cap kept as hard limit.
+  const MAX_KNEE_YAW = 0.25;
+  const yawRad = clamp(0.0, -MAX_KNEE_YAW, MAX_KNEE_YAW);
   const tx = Math.sin(yawRad);
   const tz = Math.cos(yawRad);
   const by = -(tx * dir.x + tz * dir.z) / Math.max(0.25, dir.y);
@@ -60603,6 +61825,14 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const acS = Math.abs(cS);
   const cRateS = driveSpring(skierPose.carveRate, rawR, 11.0, dt, snap);
 
+  // Shallow-section pose-only cruising rhythm overlay (zero in full carves, active in shallow/glide stretches)
+  const ov = evalShallowOverlay(simTime, rawC, ac, acS, skier.speed, tuckF, brakeF);
+  const ovS = driveSpring(skierPose.shallowOv, ov.val, 6.2, dt, snap);
+  const ovRateS = driveSpring(skierPose.shallowOvRate, ov.rateVal, 6.8, dt, snap);
+  skierPose.lastShallowMask = ov.mask;
+  skierPose.lastOverlayVal = ovS;
+  skierPose.lastEffectiveEdge = clamp(rawC + ovS * 0.54, -1.0, 1.0);
+
   // Read-only slope & course look-ahead (drives gaze, anticipation, & cadence modulation)
   const surf = terrainMeshSurfaceAt(skier.x, skier.z);
   const terrainRoll = Math.atan(surf.dhdx * rx + surf.dhdz * rz);
@@ -60621,23 +61851,25 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     gazeAheadYaw = clamp(wrapAngle(Math.atan2(aheadPt.x - skier.x, aheadPt.z - skier.z) - skier.heading), -0.45, 0.45);
   }
 
-  // 1. Humanized turn-phase asymmetric knee flexion, transition unweighting & pre-turn anticipation
+  // 1. Modern carved turn cycle: glide-free carve envelope, flexion-release transition & pre-turn anticipation
   const cadenceMod = smoothNoise1D(simTime * 0.19, 137.5);
-  const unweightTgt = clamp(
-    (clamp(Math.abs(rawR) * 1.18, 0, 1) * (1 - smoothstep(0.12, 0.58, ac)) +
-     clamp(-rawC * rawR * 0.90, 0, 0.48) * (1 - smoothstep(0.16, 0.50, ac))) *
+  const carveEnv = smoothstep(0.16, 0.78, acS);
+  const cShaped = (cS >= 0 ? 1 : -1) * carveEnv;
+  const transPulse = clamp(
+    (smoothstep(0.20, 0.65, Math.abs(rawR)) * (1 - smoothstep(0.15, 0.55, ac)) +
+     clamp(-rawC * rawR * 1.05, 0, 0.55) * (1 - smoothstep(0.18, 0.52, ac))) *
      moveMask * (1 - tuckF * 0.65),
     0, 1
   );
-  const finishBoost = (rawC * rawR <= 0 && ac > 0.22)
-    ? clamp(-rawC * rawR * 0.70 + 0.20, 0, 0.55) * smoothstep(0.22, 0.72, ac) * 0.065
+  const carveLoadEnv = smoothstep(0.22, 0.76, ac);
+  const finishBoost = (rawC * rawR <= 0 && ac > 0.28)
+    ? clamp(-rawC * rawR * 0.60 + 0.15, 0, 0.45) * smoothstep(0.28, 0.72, ac) * 0.020
     : 0;
-  const turnFlexScale = 1.0 + slopeNorm * 0.12 + cadenceMod * 0.09;
-  const turnFlexTgt = (Math.pow(ac, 1.35) * 0.128 + finishBoost) * turnFlexScale;
-  const turnOmega = (turnFlexTgt < skierPose.turnFlex.x ? 9.4 : 6.4) * (1.0 + cadenceMod * 0.14 + (speedNorm - 0.5) * 0.12);
-  const unweightOmega = 9.5 * (1.0 + cadenceMod * 0.12 + slopeNorm * 0.10);
+  const turnFlexTgt = (carveLoadEnv * 0.205 + finishBoost) * (1.0 + slopeNorm * 0.05 + cadenceMod * 0.05);
+  const turnOmega = (turnFlexTgt < skierPose.turnFlex.x ? 6.0 : 5.2) * (1.0 + cadenceMod * 0.10);
+  const unweightOmega = 5.0;
   const turnFlexS = driveSpring(skierPose.turnFlex, turnFlexTgt, turnOmega, dt, snap);
-  const unweightS = driveSpring(skierPose.unweight, unweightTgt, unweightOmega, dt, snap);
+  const unweightS = driveSpring(skierPose.unweight, transPulse, unweightOmega, dt, snap);
 
   // Subtle upper-body anticipation just before turn initiation
   const unwindMag = (rawC * rawR < 0)
@@ -60661,8 +61893,8 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   // convexity > 0: convex crest/roller -> fold knees; < 0: concave dip -> extend legs
   const convexity = 0.65 * (sBack - sFwd) + 0.35 * (sFwd - sFar);
   skierPose.lastConvexity = convexity;
-  const curveOffset = clamp(-convexity * 1.90, -0.24, 0.08) * smoothstep(2.5, 11.0, skier.speed);
-  const absorbS = driveSpring(skierPose.absorb, curveOffset, 6.2, dt, snap);
+  const curveOffset = clamp(-convexity * 1.45, -0.24, 0.08) * smoothstep(2.5, 11.0, skier.speed);
+  const absorbS = driveSpring(skierPose.absorb, curveOffset, 4.5, dt, snap);
   const crestS = driveSpring(skierPose.crestSmooth, clamp(convexity, -0.15, 0.20), 3.6, dt, snap);
   const crestFold = clamp(crestS * 0.85, 0, 0.14) * moveMask;
 
@@ -60678,7 +61910,7 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const microAnkleLS = driveSpring(skierPose.microAnkleL, clamp(-microCompS * 0.35 + groomDiffLR * 0.6 + crestFold * 0.08, -0.014, 0.018), 10.5, dt, snap);
   const microAnkleRS = driveSpring(skierPose.microAnkleR, clamp(-microCompS * 0.35 - groomDiffLR * 0.6 + crestFold * 0.08, -0.014, 0.018), 10.5, dt, snap);
 
-  // 1b. Continuous non-periodic micro-life layer (fixes glide statue without mechanical sine bobs)
+  // 1b. Continuous non-periodic + subtle low-frequency rhythm micro-life layer (fixes glide statue without mechanical sine bobs)
   const straightMask = (1 - smoothstep(0.18, 0.55, acS)) * moveMask * (1 - tuckF * 0.65);
   // Breathing-scale torso rhythm (~0.23-0.28 Hz, phase-independent of turns)
   const breathRate = 1.42 + speedNorm * 0.34;
@@ -60687,21 +61919,26 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const torsoNoiseP = fbm1D(simTime, 0.34, 51.3) * 0.016;
   const torsoNoiseR = fbm1D(simTime, 0.29, 63.1) * 0.018;
   const torsoNoiseY = fbm1D(simTime, 0.26, 57.9) * 0.024;
-  // Occasional slow lateral weight shift on long glides
-  const rawShift = smoothNoise1D(simTime * 0.23, 97.1) * 0.72 + smoothNoise1D(simTime * 0.49, 103.7) * 0.28;
-  const shiftEnv = Math.sign(rawShift) * Math.pow(Math.abs(rawShift), 1.25);
-  const glideLatX = shiftEnv * 0.052 * straightMask;
-  const glideRoll = -shiftEnv * 0.055 * straightMask;
-  const glideSettleY = -Math.abs(shiftEnv) * 0.010 * straightMask;
+  // Continuous low-frequency (< 0.35 Hz) weight-shift & breathing-scale pitch rhythm on gliding stretches
+  const glideRhythm = Math.sin(simTime * 2.10 + smoothNoise1D(simTime * 0.17, 89.3) * 1.35) * 0.55
+                    + Math.sin(simTime * 1.18 + 0.75) * 0.45;
+  const rawShift = smoothNoise1D(simTime * 0.23, 97.1) * 0.48
+                 + smoothNoise1D(simTime * 0.49, 103.7) * 0.20
+                 + glideRhythm * 0.46;
+  const shiftEnv = Math.sign(rawShift) * Math.pow(Math.min(1.25, Math.abs(rawShift)), 1.15);
+  const glideLatX = shiftEnv * 0.042 * straightMask;
+  const glideRoll = -shiftEnv * 0.072 * straightMask;
+  const glideSettleY = -Math.abs(shiftEnv) * 0.002 * straightMask;
+  const glideBreathPitch = (breathWave * 0.028 + smoothNoise1D(simTime * 0.42, 77.3) * 0.024) * straightMask;
   // Slow organic gaze scanning (yaw toward fall line / upcoming curve + small pitch/roll wander)
   const scanY1 = smoothNoise1D(simTime * 0.35, 3.1);
   const scanY2 = smoothNoise1D(simTime * 0.74, 7.4);
   const scanY3 = Math.sin(simTime * 0.85 + smoothNoise1D(simTime * 0.21, 11.3) * 1.5);
-  const gazeScanYaw = (scanY1 * 0.25 + scanY2 * 0.12 + scanY3 * 0.14) * (0.35 + 0.65 * straightMask);
+  const gazeScanYaw = (scanY1 * 0.34 + scanY2 * 0.17 + scanY3 * 0.18) * (0.35 + 0.65 * straightMask);
   const scanP1 = smoothNoise1D(simTime * 0.37, 13.7);
   const scanP2 = smoothNoise1D(simTime * 0.81, 19.2);
-  const gazeScanPitch = (scanP1 * 0.085 + scanP2 * 0.040) * (0.45 + 0.55 * straightMask);
-  const gazeScanRoll = smoothNoise1D(simTime * 0.34, 23.5) * 0.048;
+  const gazeScanPitch = (scanP1 * 0.115 + scanP2 * 0.052) * (0.45 + 0.55 * straightMask);
+  const gazeScanRoll = smoothNoise1D(simTime * 0.34, 23.5) * 0.072 + glideRoll * 0.25;
 
   // 3. Ski-edge angulation signal (carve-only; strip passive terrain cross-slope)
   const avgSkiRoll = 0.5 * (leftSkiMesh.rotation.z + rightSkiMesh.rotation.z);
@@ -60720,10 +61957,10 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const skiYR = rightSkiMesh.position.y;
   const skiZL = leftSkiMesh.position.z;
   const skiZR = rightSkiMesh.position.z;
-  rig.bootL.position.set(0.24, skiYL + 0.036, skiZL);
+  rig.bootL.position.set(rig.STANCE_HALF, skiYL + 0.036, skiZL);
   rig.bootL.rotation.order = 'XYZ';
   rig.bootL.rotation.copy(leftSkiMesh.rotation);
-  rig.bootR.position.set(-0.24, skiYR + 0.036, skiZR);
+  rig.bootR.position.set(-rig.STANCE_HALF, skiYR + 0.036, skiZR);
   rig.bootR.rotation.order = 'XYZ';
   rig.bootR.rotation.copy(rightSkiMesh.rotation);
 
@@ -60741,11 +61978,10 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     -0.070 + 0.084 * Math.sin(cuffAngR) + microAnkleRS
   ).applyEuler(rig.bootR.rotation).add(rig.bootR.position);
 
-  // Pelvis targets: knees drive inside, inside hip dips lower -> asymmetric inside/outside knee bend
+  // Athletic stance baseline, centered fore-aft, strong lateral inclination, hip-socket separation & hip hinge
   const midSkiY = 0.5 * (skiYL + skiYR);
-  const maxReachPelvisY = Math.min(ankleL.y, ankleR.y) + 0.835;
   const minClearPelvisY = Math.max(ankleL.y, ankleR.y) + 0.25;
-  const baseHeight = 0.925 - speedNorm * 0.055 - tuckF * 0.075 - brakeF * 0.070;
+  const baseHeight = 1.102 - speedNorm * 0.016 - tuckF * 0.14 - brakeF * 0.08;
   // Symmetric spatial terrain smoothing along heading
   const sL1 = 4.0, sL2 = 8.0;
   const yM2 = terrainMeshHeightAt(skier.x - hx * sL2, skier.z - hz * sL2);
@@ -60765,30 +62001,9 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const localPitchExcess = clamp(skisPitch - smoothPitch, -0.24, 0.24);
   // Smooth crest compensation (no raw DEM facet jitter injected into torso pitch)
   const pitchCompS = driveSpring(skierPose.pitchComp, clamp(localPitchExcess * 0.50 + crestFold * 0.75, -0.14, 0.18) * moveMask, 4.2, dt, snap);
-  const upperClampY = Math.max(minClearPelvisY, Math.min(midSkiY + 0.985, maxReachPelvisY));
-  const absorbY = absorbS < 0 ? absorbS * 0.80 : absorbS * 0.42;
-  const postureYTgt = baseHeight - turnFlexS + unweightS * 0.140 + absorbY + microCompS * 0.55 + breathWave * 0.005 + glideSettleY;
-  const tRollComp = clamp(terrainRoll * 0.62, -0.36, 0.36);
-  const pelvisXTgt = cS * 0.275 + glideLatX;
-  const pelvisZTgt = -0.145 + unweightS * 0.095 - acS * 0.032 - tuckF * 0.035 - brakeF * 0.055 - Math.max(0, -absorbS) * 0.16 + microCompS * 0.45;
-  const pelvisRollTgt = -cS * 0.55 + tRollComp + glideRoll;
-  const pelvisPitchTgt = 0.11 + speedNorm * 0.07 + tuckF * 0.12 - brakeF * 0.08 + crestFold * 0.16 - pitchCompS * 0.25 + torsoNoiseP * 0.35;
-  const pelvisYawTgt = cS * 0.08 + anticipateS * 0.04;
 
-  const pelvisXS = driveSpring(skierPose.pelvisX, pelvisXTgt, 9.5, dt, snap);
-  const pelvisZS = driveSpring(skierPose.pelvisZ, pelvisZTgt, 9.5, dt, snap);
-  const pelvisRollS = driveSpring(skierPose.pelvisRoll, pelvisRollTgt, 9.5, dt, snap);
-  const pelvisPitchS = driveSpring(skierPose.pelvisPitch, pelvisPitchTgt, 5.0, dt, snap);
-  const pelvisYawS = driveSpring(skierPose.pelvisYaw, pelvisYawTgt, 9.5, dt, snap);
-
-  rig._ePelvis.set(pelvisPitchS, pelvisYawS, pelvisRollS, 'YXZ');
-  rig._qPelvis.setFromEuler(rig._ePelvis);
-  const hipOffL = rig._vHipOffL.set(0.118, -0.020, 0.005).applyQuaternion(rig._qPelvis);
-  const hipOffR = rig._vHipOffR.set(-0.118, -0.020, 0.005).applyQuaternion(rig._qPelvis);
-
-  const prevPelvisY = skierPose.pelvisY.x;
-  const postureYS = driveSpring(skierPose.hipWorldY, postureYTgt, 6.0, dt, snap);
-  // Fix 1: Predictive 1-frame look-ahead + C1 soft-threshold deadband + critically-damped spring for groundDelta
+  // Predictive 1-frame look-ahead + C1 soft-threshold deadband + critically-damped spring for groundDelta
+  // Relax deadband on crests (convexity > 0.025) while keeping flat DEM facets strongly damped
   const dLead = clamp(skier.speed * Math.min(dt, 1 / 30), 0, 1.0);
   const lx = skier.x + hx * dLead;
   const lz = skier.z + hz * dLead;
@@ -60800,19 +62015,59 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const smoothGroundYLead = (yLM2 + yLM1 * 2.0 + yLead * 2.0 + yLP1 * 2.0 + yLP2) * 0.125;
   const rawGroundDiff = smoothGroundYLead - yLead;
   const crestRelax = smoothstep(0.025, 0.055, Math.max(0, convexity));
-  const gdDz = lerp(0.062, 0.015, crestRelax);
-  const gdSmall = lerp(0.15, 0.85, crestRelax);
+  const gdDz = lerp(0.068, 0.015, crestRelax);
+  const gdSmall = lerp(0.10, 0.85, crestRelax);
   const gdShrunk = gdSmall * rawGroundDiff + (1.0 - gdSmall) * (rawGroundDiff - gdDz * Math.tanh(rawGroundDiff / gdDz));
   const groundDeltaRaw = 0.28 * Math.tanh(gdShrunk / 0.28);
   const groundDeltaS = driveSpring(skierPose.groundDelta, groundDeltaRaw, 48.0, dt, snap);
+
+  const troughMask = smoothstep(0.08, 0.22, Math.max(0, groundDeltaS));
+  const tRollComp = clamp(terrainRoll * 0.65, -0.26, 0.26);
+  const carvePelvisX = cShaped * 0.46 * (1.0 - troughMask * 0.72);
+  const pelvisXTgt = carvePelvisX + glideLatX + ovS * 0.165;
+  const initFwd = clamp(rawC * rawR * 0.9, 0, 1) * (1 - smoothstep(0.25, 0.70, ac)) + unweightS * 0.65;
+  const compAft = clamp(-rawC * rawR * 0.9, 0, 1) * smoothstep(0.30, 0.78, ac);
+  const pelvisZTgt = -0.018 + initFwd * 0.030 - compAft * 0.026 - tuckF * 0.025 - brakeF * 0.040 + microCompS * 0.20;
+  const pelvisRollTgt = -cShaped * 0.65 + tRollComp + glideRoll - ovS * 0.255 - cRateS * 0.055 * (1 - carveEnv) * moveMask;
+  const pelvisPitchTgt = 0.255 + speedNorm * 0.08 + acS * 0.07 + unweightS * 0.135 + tuckF * 0.28 - brakeF * 0.08 + crestFold * 0.14 - pitchCompS * 0.25 + torsoNoiseP * 0.35 + glideBreathPitch * 0.65 + Math.abs(ovS) * 0.048 + ovRateS * 0.018;
+  // Counter-signed pelvis yaw (hip-socket separation / 外向)
+  const pelvisYawTgt = -cShaped * 0.22 - anticipateS * 0.045 + fallAngle * 0.03 - ovS * 0.070;
+
+  const pelvisXS = driveSpring(skierPose.pelvisX, pelvisXTgt, 7.5, dt, snap);
+  const pelvisZS = driveSpring(skierPose.pelvisZ, pelvisZTgt, 9.5, dt, snap);
+  const pelvisRollS = driveSpring(skierPose.pelvisRoll, pelvisRollTgt, 10.5, dt, snap);
+  const pelvisPitchS = driveSpring(skierPose.pelvisPitch, pelvisPitchTgt, 5.0, dt, snap);
+  const pelvisYawS = driveSpring(skierPose.pelvisYaw, pelvisYawTgt, 9.0, dt, snap);
+
+  rig._ePelvis.set(pelvisPitchS, pelvisYawS, pelvisRollS, 'YXZ');
+  rig._qPelvis.setFromEuler(rig._ePelvis);
+  const hipOffL = rig._vHipOffL.set(0.118, -0.020, 0.005).applyQuaternion(rig._qPelvis);
+  const hipOffR = rig._vHipOffR.set(-0.118, -0.020, 0.005).applyQuaternion(rig._qPelvis);
+
+  const prevPelvisY = skierPose.pelvisY.x;
+  const legNom = 0.88;
+  const incDrop = legNom * (1.0 - Math.sqrt(Math.max(0.38, 1.0 - (carvePelvisX / legNom) ** 2)));
+  const absorbY = absorbS < 0 ? absorbS * 0.65 : absorbS * 0.05;
+  const ovDipY = -Math.abs(ovS) * 0.010 + ov.mask * 0.005;
+  // Modern low-COM flexion-release transition (-0.054 * unweightS) with concave-dip upward pop damped
+  const postureYTgt = Math.min(
+    baseHeight + 0.004,
+    baseHeight - incDrop - turnFlexS - unweightS * 0.054 + absorbY + microCompS * 0.18 + breathWave * 0.003 + glideSettleY + ovDipY
+  );
+  const postureYS = driveSpring(skierPose.hipWorldY, postureYTgt, 5.0, dt, snap);
   const desiredWorldY = (skier.y + groundDeltaS) + 0.016 + (postureYS + 0.015) * cosSmoothP - pelvisZS * sinSmoothP;
   let py = (desiredWorldY - y0 - pelvisXS * ex - pelvisZS * ez) / ey;
 
-  // Fix 1 & 3: Smooth anatomical soft floor (caps crest knee flex <= ~120.5 deg) & soft ceiling (prevents reach-lock)
+  // Dynamic 3D reach ceiling & smooth anatomical floor
   const L1 = rig.L_SHIN, L2 = rig.L_THIGH;
-  const dMinTarget = 0.452;
+  const dMinTarget = 0.472;
   const h2L = (pelvisXS + hipOffL.x - ankleL.x) ** 2 + (pelvisZS + hipOffL.z - ankleL.z) ** 2;
   const h2R = (pelvisXS + hipOffR.x - ankleR.x) ** 2 + (pelvisZS + hipOffR.z - ankleR.z) ** 2;
+  const rCap = (L1 + L2 - 0.014) - 0.002;
+  const maxY_L = ankleL.y - hipOffL.y + Math.sqrt(Math.max(0, rCap * rCap - h2L));
+  const maxY_R = ankleR.y - hipOffR.y + Math.sqrt(Math.max(0, rCap * rCap - h2R));
+  const upperClampY = Math.max(minClearPelvisY, Math.min(maxY_L, maxY_R));
+  skierPose.lastUpperClampY = upperClampY;
   const reqMinY = Math.max(
     minClearPelvisY,
     ankleL.y - hipOffL.y + Math.sqrt(Math.max(0, dMinTarget * dMinTarget - h2L)),
@@ -60824,9 +62079,11 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   if (py < reqMinY + softBand)  py = (reqMinY + softBand)  - softBand * Math.tanh(((reqMinY + softBand) - py) / softBand);
   py = clamp(py, reqMinY, upperClampY - 0.001);
 
-  // Fix 1: Exact 2-leg feasible-interval knee angular-rate clamp (<= 138 deg/s; handles skisPitch jumps)
+  // Feasible-interval knee angular-rate clamp (<= 147 deg/s < 150 deg/s)
+  const minFlexDeg = Math.acos(clamp((L1 * L1 + L2 * L2 - rCap * rCap) / (2 * L1 * L2), -1, 1));
+  const minFlexLimitDeg = 180 - minFlexDeg * 180 / Math.PI;
   if (!snap && dt > 1e-4 && skierPose.prevFlexL >= 0 && skierPose.prevFlexR >= 0) {
-    const maxDegStep = 4.6 * (dt * 30.0);
+    const maxDegStep = 4.90 * (dt * 30.0);
     let loY = reqMinY;
     let hiY = upperClampY - 0.001;
     const legs = [
@@ -60836,7 +62093,7 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     for (let li = 0; li < 2; li++) {
       const [pfDeg, ank, hOff, h2] = legs[li];
       const fHi = Math.min(121.5, pfDeg + maxDegStep) * Math.PI / 180;
-      const fLo = Math.max(29.0,  pfDeg - maxDegStep) * Math.PI / 180;
+      const fLo = Math.max(minFlexLimitDeg, pfDeg - maxDegStep) * Math.PI / 180;
       const dLoSq = Math.max(0, L1 * L1 + L2 * L2 + 2 * L1 * L2 * Math.cos(fHi));
       const dHiSq = Math.max(0, L1 * L1 + L2 * L2 + 2 * L1 * L2 * Math.cos(fLo));
       loY = Math.max(loY, ank.y - hOff.y + Math.sqrt(Math.max(0, dLoSq - h2)));
@@ -60862,36 +62119,53 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   skierPose.prevFlexL = skierPose.lastKneeFlexL * 180 / Math.PI;
   skierPose.prevFlexR = skierPose.lastKneeFlexR * 180 / Math.PI;
 
-  // Fix 3: Boot cuff flex tracks forward & subtle lateral shin inclination through damped spring
+  // Boot cuff flex tracks forward & subtle lateral shin inclination through damped spring
   function updateBootCuff(bootG, cuffPivot, anklePos, kneePos, pitchSp, rollSp) {
     rig._qBootInv.copy(bootG.quaternion).invert();
     rig._vShinInBoot.subVectors(kneePos, anklePos).applyQuaternion(rig._qBootInv);
     const shinPitchBoot = Math.atan2(rig._vShinInBoot.z, Math.max(0.05, rig._vShinInBoot.y));
     const shinRollBoot = -Math.atan2(rig._vShinInBoot.x, Math.max(0.05, rig._vShinInBoot.y));
-    const cuffPitchTgt = clamp(0.24 + (shinPitchBoot - 0.24) * 0.90, 0.16, 0.92);
+    const cuffPitchTgt = clamp(0.24 + (shinPitchBoot - 0.24) * 0.94, 0.16, 0.96);
     const cuffRollTgt = clamp(shinRollBoot * 0.35, -0.10, 0.10);
-    cuffPivot.rotation.x = driveSpring(pitchSp, cuffPitchTgt, 32.0, dt, snap);
+    cuffPivot.rotation.x = driveSpring(pitchSp, cuffPitchTgt, 40.0, dt, snap);
     cuffPivot.rotation.z = driveSpring(rollSp, cuffRollTgt, 24.0, dt, snap);
   }
   updateBootCuff(rig.bootL, rig.bootCuffL, ankleL, rig.kneeL.position, skierPose.cuffPitchL, skierPose.cuffRollL);
   updateBootCuff(rig.bootR, rig.bootCuffR, ankleR, rig.kneeR.position, skierPose.cuffPitchR, skierPose.cuffRollR);
 
-  // Upper-body hip counter-angulation ("C-shape"), fall-line counter-rotation, breathing & crest poise
-  const lumbarPitchTgt = 0.12 + speedNorm * 0.11 + acS * 0.06 + tuckF * 0.18 - brakeF * 0.10 - pitchCompS * 0.25 + breathWave * 0.010 + torsoNoiseP * 0.5;
-  const lumbarRollTgt  = cS * 0.38 - tRollComp * 0.62 - glideRoll * 0.65 + torsoNoiseR * 0.5;
-  const lumbarYawTgt   = -cS * 0.19 - anticipateS * 0.08 + fallAngle * 0.05 + torsoNoiseY * 0.5;
+  // Neutral-spine pitch (<=40% of total torso pitch), capped lateral bend (<=14.6 deg, net torso roll <=0 inside turn), capped axial torsion (<=10 deg)
+  const spineRollClamped = clamp(cShaped * 0.245 - tRollComp * 0.26 - glideRoll * 0.58 + ovS * 0.135 + anticipateS * 0.045 * (1 - carveEnv) + torsoNoiseR * 0.6, -0.250, 0.250);
+  let lumbarRollS = driveSpring(skierPose.lumbarRoll, spineRollClamped * 0.60, 8.2, dt, snap);
+  let chestRollS  = driveSpring(skierPose.chestRoll,  spineRollClamped * 0.40, 7.8, dt, snap);
+  const spRollSum = lumbarRollS + chestRollS;
+  if (Math.abs(spRollSum) > 0.255) {
+    const sc = 0.255 / Math.abs(spRollSum);
+    lumbarRollS *= sc; skierPose.lumbarRoll.x = lumbarRollS;
+    chestRollS  *= sc; skierPose.chestRoll.x  = chestRollS;
+  }
+  if ((acS > 0.35 && carveEnv > 0.15) || ac > 0.45) {
+    const sgn = ((acS > 0.20) ? cS : rawC) >= 0 ? 1 : -1;
+    const netR = pelvisRollS + lumbarRollS + chestRollS;
+    if (sgn * netR > -0.02) {
+      const excess = netR + sgn * 0.02;
+      const newLum = lumbarRollS - excess * 0.60;
+      const newCh  = chestRollS  - excess * 0.40;
+      if (Math.abs(newLum + newCh) <= 0.255) {
+        lumbarRollS = newLum; skierPose.lumbarRoll.x = lumbarRollS;
+        chestRollS  = newCh;  skierPose.chestRoll.x  = chestRollS;
+      }
+    }
+  }
+  const spineYawClamped = clamp(-cShaped * 0.145 - anticipateS * 0.040 + torsoNoiseY * 0.45, -0.165, 0.165);
+  const lumbarPitchTgt = 0.045 + speedNorm * 0.030 + acS * 0.025 + unweightS * 0.022 + tuckF * 0.11 - brakeF * 0.04 - pitchCompS * 0.15 + breathWave * 0.010 + torsoNoiseP * 0.5 + glideBreathPitch * 0.16;
   const lumbarPitchS = driveSpring(skierPose.lumbarPitch, lumbarPitchTgt, 4.4, dt, snap);
-  const lumbarRollS  = driveSpring(skierPose.lumbarRoll,  lumbarRollTgt,  9.0, dt, snap);
-  const lumbarYawS   = driveSpring(skierPose.lumbarYaw,   lumbarYawTgt,   8.2, dt, snap);
+  const lumbarYawS   = driveSpring(skierPose.lumbarYaw,   spineYawClamped * 0.48, 8.2, dt, snap);
   rig.lumbarG.rotation.order = 'YXZ';
   rig.lumbarG.rotation.set(lumbarPitchS, lumbarYawS, lumbarRollS);
 
-  const chestPitchTgt = 0.09 + speedNorm * 0.09 + tuckF * 0.16 - brakeF * 0.06 - crestFold * 0.39 - pitchCompS * 0.30 + breathWave * 0.018 + torsoNoiseP;
-  const chestRollTgt  = cS * 0.25 - tRollComp * 0.38 - glideRoll * 0.35 + torsoNoiseR;
-  const chestYawTgt   = -cS * 0.21 - anticipateS * 0.12 + fallAngle * 0.06 + torsoNoiseY;
+  const chestPitchTgt = 0.035 + speedNorm * 0.025 + tuckF * 0.10 - brakeF * 0.03 - crestFold * 0.28 - pitchCompS * 0.20 + breathWave * 0.018 + torsoNoiseP + glideBreathPitch * 0.19;
   const chestPitchS = driveSpring(skierPose.chestPitch, chestPitchTgt, 4.0, dt, snap);
-  const chestRollS  = driveSpring(skierPose.chestRoll,  chestRollTgt,  8.5, dt, snap);
-  const chestYawS   = driveSpring(skierPose.chestYaw,   chestYawTgt,   7.8, dt, snap);
+  const chestYawS   = driveSpring(skierPose.chestYaw,   spineYawClamped * 0.52, 7.8, dt, snap);
   rig.chestG.rotation.order = 'YXZ';
   rig.chestG.rotation.set(chestPitchS, chestYawS, chestRollS);
 
@@ -60901,7 +62175,7 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   skierPose.lastTorsoPitchLocal = totalTorsoPitch;
   const crestGazeCalm = 1 - clamp(crestFold * 4.5, 0, 0.75);
   const headPitchTgt = -totalTorsoPitch * 0.92 - localPitchExcess * 0.92 * moveMask - 0.02 + gazeScanPitch * crestGazeCalm;
-  const headYawTgt   = cS * 0.20 + cRateS * 0.14 + anticipateS * 0.16 - (lumbarYawS + chestYawS) * 0.30 + gazeAheadYaw * 0.22 * (0.4 + 0.6 * straightMask) + fallAngle * 0.12 * straightMask + gazeScanYaw;
+  const headYawTgt   = cS * 0.20 + cRateS * 0.14 + anticipateS * 0.16 - (lumbarYawS + chestYawS) * 0.30 + gazeAheadYaw * 0.22 * (0.4 + 0.6 * straightMask) + fallAngle * 0.12 * straightMask + gazeScanYaw + ovS * 0.12 + ovRateS * 0.06;
   const headRollTgt  = -netTorsoRoll * 0.82 + gazeScanRoll;
   const headYawOmega = lerp(7.8, 6.4, straightMask);
   rig.headG.rotation.order = 'YXZ';
@@ -60923,19 +62197,19 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     }
 
     const plantJitter = smoothNoise1D(simTime * 0.39 + skierPose.plantCount * 1.73, 131.0);
-    const trigL = rawR > (0.28 + plantJitter * 0.05) &&
-      rawC > -0.60 && rawC < (0.06 + plantJitter * 0.07) &&
-      (skierPose.lastCarvePeak < -0.22 || rawR > 0.55) &&
-      (skierPose.lastPlantSide !== 1 || skierPose.timeSincePlant > 2.6);
-    const trigR = rawR < -(0.28 + plantJitter * 0.05) &&
-      rawC < 0.60 && rawC > -(0.06 + plantJitter * 0.07) &&
-      (skierPose.lastCarvePeak > 0.22 || rawR < -0.55) &&
-      (skierPose.lastPlantSide !== -1 || skierPose.timeSincePlant > 2.6);
+    const trigL = rawR > (0.18 + plantJitter * 0.03) &&
+      rawC > -0.82 && rawC < (-0.04 + plantJitter * 0.03) &&
+      (skierPose.lastCarvePeak < -0.22 || rawR > 0.45) &&
+      (skierPose.lastPlantSide !== 1 || skierPose.timeSincePlant > 2.2);
+    const trigR = rawR < -(0.18 + plantJitter * 0.03) &&
+      rawC < 0.82 && rawC > (0.04 - plantJitter * 0.03) &&
+      (skierPose.lastCarvePeak > 0.22 || rawR < -0.45) &&
+      (skierPose.lastPlantSide !== -1 || skierPose.timeSincePlant > 2.2);
 
     if (trigL && skier.speed > 4.5 && !skier.tuck && skierPose.plantCooldownL <= 0 && skierPose.plantTimerL < 0) {
       skierPose.plantTimerL = 0;
-      skierPose.plantSpeedL = clamp(1.0 + plantJitter * 0.14 + (speedNorm - 0.5) * 0.12, 0.84, 1.20);
-      skierPose.plantCooldownL = 1.55 + (0.5 - plantJitter * 0.5) * 0.45;
+      skierPose.plantSpeedL = clamp(1.0 + plantJitter * 0.12 + (speedNorm - 0.5) * 0.10, 0.88, 1.18);
+      skierPose.plantCooldownL = 1.45 + (0.5 - plantJitter * 0.5) * 0.35;
       skierPose.lastPlantSide = 1;
       skierPose.plantCount++;
       skierPose.timeSincePlant = 0;
@@ -60943,8 +62217,8 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     }
     if (trigR && skier.speed > 4.5 && !skier.tuck && skierPose.plantCooldownR <= 0 && skierPose.plantTimerR < 0) {
       skierPose.plantTimerR = 0;
-      skierPose.plantSpeedR = clamp(1.0 - plantJitter * 0.14 + (speedNorm - 0.5) * 0.12, 0.84, 1.20);
-      skierPose.plantCooldownR = 1.55 + (0.5 + plantJitter * 0.5) * 0.45;
+      skierPose.plantSpeedR = clamp(1.0 - plantJitter * 0.12 + (speedNorm - 0.5) * 0.10, 0.88, 1.18);
+      skierPose.plantCooldownR = 1.45 + (0.5 + plantJitter * 0.5) * 0.35;
       skierPose.lastPlantSide = -1;
       skierPose.plantCount++;
       skierPose.timeSincePlant = 0;
@@ -60952,11 +62226,11 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     }
     if (skierPose.plantTimerL >= 0) {
       skierPose.plantTimerL += dt;
-      if (skierPose.plantTimerL * skierPose.plantSpeedL > 0.78) skierPose.plantTimerL = -1;
+      if (skierPose.plantTimerL * skierPose.plantSpeedL > 0.86) skierPose.plantTimerL = -1;
     }
     if (skierPose.plantTimerR >= 0) {
       skierPose.plantTimerR += dt;
-      if (skierPose.plantTimerR * skierPose.plantSpeedR > 0.78) skierPose.plantTimerR = -1;
+      if (skierPose.plantTimerR * skierPose.plantSpeedR > 0.86) skierPose.plantTimerR = -1;
     }
     skierPose.prevPoseC = rawC;
   } else if (snap) {
@@ -60966,6 +62240,19 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
 
   const ppL = evalPolePlant(skierPose.plantTimerL, skierPose.plantSpeedL);
   const ppR = evalPolePlant(skierPose.plantTimerR, skierPose.plantSpeedR);
+  const ovSwingAmp = ov.mask * smoothstep(0.45, 0.82, ov.mod) * (1 - tuckF) * (1 - brakeF);
+  const ovSwingL = evalOverlayPoleSwing(ov.phase, 1, ovSwingAmp);
+  const ovSwingR = evalOverlayPoleSwing(ov.phase, -1, ovSwingAmp);
+  const combPoleL = {
+    reach: Math.max(ppL.reach, ovSwingL.reach * 0.88),
+    plant: Math.max(ppL.plant, ovSwingL.plant * 0.85),
+    trail: Math.max(ppL.trail, ovSwingL.trail * 0.90)
+  };
+  const combPoleR = {
+    reach: Math.max(ppR.reach, ovSwingR.reach * 0.88),
+    plant: Math.max(ppR.plant, ovSwingR.plant * 0.85),
+    trail: Math.max(ppR.trail, ovSwingR.trail * 0.90)
+  };
   const hipLag = clamp(skierPose.pelvisY.v * 0.28, -0.18, 0.18);
 
   function poseArmJoints(arm, sideSign, pp, flexSp, abdSp, elbSp, wristSp) {
@@ -60973,24 +62260,28 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     const outsideAmt = clamp(-cS * sideSign, 0, 1);
     const seed = sideSign > 0 ? 151.1 : 173.9;
     const armScale = 0.35 + 0.65 * straightMask;
-    const armSwayFlex = fbm1D(simTime, 0.42, seed) * 0.055 * armScale;
-    const armSwayAbd  = fbm1D(simTime, 0.36, seed + 5.2) * 0.042 * armScale;
-    const armSwayElb  = fbm1D(simTime, 0.48, seed + 9.7) * 0.060 * armScale;
+    const armSwayFlex = fbm1D(simTime, 0.42, seed) * 0.085 * armScale;
+    const armSwayAbd  = fbm1D(simTime, 0.36, seed + 5.2) * 0.068 * armScale;
+    const armSwayElb  = fbm1D(simTime, 0.48, seed + 9.7) * 0.082 * armScale;
     const regripGate  = (pp.plant < 0.05 && pp.reach < 0.05) ? 1 : 0;
     const regripPulse = smoothstep(0.36, 0.74, smoothNoise1D(simTime * 0.34, sideSign > 0 ? 71.2 : 83.7)) * straightMask * regripGate;
+    const glideArmCounter = sideSign * shiftEnv * 0.052 * straightMask + sideSign * ovS * 0.095;
 
-    const abductTgt = sideSign * (0.38 - tuckF * 0.18 + brakeF * 0.24 + insideAmt * 0.12 + outsideAmt * 0.08 + pp.reach * 0.08 + pp.plant * 0.05 + armSwayAbd + breathWave * 0.008);
-    const flexXTgt = -(totalTorsoPitch * 0.92 + 0.34 + tuckF * 0.26 + outsideAmt * 0.18 - insideAmt * 0.06 + pp.reach * 0.26 + pp.plant * 0.16 - pp.trail * 0.16 + hipLag + armSwayFlex + regripPulse * 0.09 + breathWave * 0.012);
-    const yawY = -sideSign * (0.10 + tuckF * 0.18 - brakeF * 0.10 - pp.reach * 0.06 + regripPulse * 0.04);
-    const elbowXTgt = -(0.92 + tuckF * 0.42 - brakeF * 0.26 + outsideAmt * 0.14 - pp.plant * 0.24 + pp.trail * 0.10 - hipLag * 0.35 + armSwayElb + regripPulse * 0.14);
+    const abductTgt = sideSign * (0.36 - tuckF * 0.18 + brakeF * 0.24 + insideAmt * 0.15 + outsideAmt * 0.10 + pp.reach * 0.22 + pp.plant * 0.16 - pp.trail * 0.08 + unweightS * 0.06 + armSwayAbd + breathWave * 0.008) + glideArmCounter;
+    const flexXTgt = -(totalTorsoPitch * 0.92 + 0.34 + tuckF * 0.26 + outsideAmt * 0.16 - insideAmt * 0.08 + pp.reach * 0.56 + pp.plant * 0.38 - pp.trail * 0.34 + unweightS * 0.14 + sideSign * anticipateS * 0.14 + hipLag + armSwayFlex + regripPulse * 0.09 + breathWave * 0.012 + glideArmCounter * 0.65);
+    const yawY = -sideSign * (0.10 + tuckF * 0.18 - brakeF * 0.10 - pp.reach * 0.12 + pp.trail * 0.08 + regripPulse * 0.04);
+    const elbowXTgt = -(0.90 + tuckF * 0.42 - brakeF * 0.26 + outsideAmt * 0.18 - insideAmt * 0.08 - pp.reach * 0.22 - pp.plant * 0.42 + pp.trail * 0.22 + unweightS * 0.08 - hipLag * 0.35 + armSwayElb + regripPulse * 0.14);
     const elbowZ = -sideSign * (0.10 + tuckF * 0.14);
-    const wristXTgt = pp.plant * 0.18 - pp.trail * 0.14 + regripPulse * 0.18 + fbm1D(simTime, 0.55, seed + 14.1) * 0.06 * armScale;
+    const wristXTgt = pp.reach * 0.22 + pp.plant * 0.52 - pp.trail * 0.36 + regripPulse * 0.18 + fbm1D(simTime, 0.55, seed + 14.1) * 0.06 * armScale;
 
-    // Softer omega (6.2-6.5) so arms lag naturally behind hip/torso inertia
-    const abductS = driveSpring(abdSp, abductTgt, 6.2, dt, snap);
-    const flexXS  = driveSpring(flexSp, flexXTgt, 6.2, dt, snap);
-    const elbowXS = driveSpring(elbSp, elbowXTgt, 6.6, dt, snap);
-    const wristXS = driveSpring(wristSp, wristXTgt, 7.5, dt, snap);
+    // Responsive spring during pole plant swing; softer lag during carry/glide
+    const plantAct = Math.max(pp.reach, pp.plant);
+    const armOmega = lerp(6.4, 14.0, plantAct);
+    const wristOmega = lerp(7.5, 16.0, plantAct);
+    const abductS = driveSpring(abdSp, abductTgt, armOmega, dt, snap);
+    const flexXS  = driveSpring(flexSp, flexXTgt, armOmega, dt, snap);
+    const elbowXS = driveSpring(elbSp, elbowXTgt, lerp(6.6, 13.5, plantAct), dt, snap);
+    const wristXS = driveSpring(wristSp, wristXTgt, wristOmega, dt, snap);
 
     arm.shoulderG.rotation.order = 'XYZ';
     arm.shoulderG.rotation.set(flexXS, yawY, abductS);
@@ -60998,8 +62289,8 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     arm.wristG.rotation.set(wristXS, 0, regripPulse * sideSign * 0.06);
   }
 
-  poseArmJoints(rig.armL, 1, ppL, skierPose.armFlexL, skierPose.armAbductL, skierPose.elbowL, skierPose.wristFlexL);
-  poseArmJoints(rig.armR, -1, ppR, skierPose.armFlexR, skierPose.armAbductR, skierPose.elbowR, skierPose.wristFlexR);
+  poseArmJoints(rig.armL, 1, combPoleL, skierPose.armFlexL, skierPose.armAbductL, skierPose.elbowL, skierPose.wristFlexL);
+  poseArmJoints(rig.armR, -1, combPoleR, skierPose.armFlexR, skierPose.armAbductR, skierPose.elbowR, skierPose.wristFlexR);
 
   // Exact world-in-figure pole orientation with independent pendulum lag & snow clearance!
   skisGroup.updateMatrixWorld(true);
@@ -61013,27 +62304,29 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
 
   function alignPole(arm, sideSign, pp, spX, spY, spZ) {
     const insideAmt = clamp(cS * sideSign, 0, 1);
-    const readyX = sideSign * (0.14 + insideAmt * 0.08 - tuckF * 0.08);
-    const readyY = -0.46 + tuckF * 0.26 - insideAmt * 0.06;
-    const readyZ = -0.87 - tuckF * 0.10;
+    const outsideAmt = clamp(-cS * sideSign, 0, 1);
+    const readyX = sideSign * (0.16 + insideAmt * 0.10 + outsideAmt * 0.14 - tuckF * 0.08);
+    const readyY = -0.44 + tuckF * 0.26 - insideAmt * 0.14 + outsideAmt * 0.16;
+    const readyZ = -0.85 - tuckF * 0.10 + insideAmt * 0.18 - outsideAmt * 0.12;
 
-    let dirX = lerp(readyX, sideSign * 0.25, pp.plant);
-    let dirY = lerp(readyY, -0.94, pp.plant);
-    let dirZ = lerp(readyZ, 0.12, pp.plant);
+    const plantBlend = Math.max(pp.plant, pp.reach * 0.65);
+    let dirX = lerp(readyX, sideSign * 0.38, plantBlend);
+    let dirY = lerp(readyY, -0.86, plantBlend);
+    let dirZ = lerp(readyZ, 0.46, plantBlend);
     if (pp.trail > 0) {
-      dirX = lerp(dirX, sideSign * 0.18, pp.trail);
-      dirY = lerp(dirY, -0.34, pp.trail);
-      dirZ = lerp(dirZ, -0.92, pp.trail);
+      dirX = lerp(dirX, sideSign * 0.34, pp.trail);
+      dirY = lerp(dirY, -0.24, pp.trail);
+      dirZ = lerp(dirZ, -0.95, pp.trail);
     }
 
     // Independent carry sway & inertial pendulum lag (poles feel suspended in hand, not welded)
     const carryMask = (1 - pp.plant) * (1 - pp.reach * 0.6);
-    const poleSwayX = fbm1D(simTime, 0.52, sideSign > 0 ? 191.3 : 207.7) * 0.065 * carryMask - cRateS * 0.045 * carryMask;
-    const poleSwayY = fbm1D(simTime, 0.44, sideSign > 0 ? 199.1 : 215.3) * 0.055 * carryMask + clamp(skierPose.pelvisY.v * 0.12, -0.09, 0.09) * carryMask;
+    const poleSwayX = fbm1D(simTime, 0.52, sideSign > 0 ? 191.3 : 207.7) * 0.135 * carryMask - cRateS * 0.14 * carryMask - ovRateS * 0.12 * carryMask;
+    const poleSwayY = fbm1D(simTime, 0.44, sideSign > 0 ? 199.1 : 215.3) * 0.095 * carryMask + clamp(skierPose.pelvisY.v * 0.14, -0.11, 0.11) * carryMask;
     dirX += poleSwayX;
     dirY += poleSwayY;
 
-    const poleOmega = lerp(5.4, 13.5, Math.max(pp.plant, pp.reach * 0.8));
+    const poleOmega = lerp(5.8, 16.0, Math.max(pp.plant, pp.reach * 0.85));
     const filtX = driveSpring(spX, dirX, poleOmega, dt, snap);
     const filtY = driveSpring(spY, dirY, poleOmega, dt, snap);
     const filtZ = driveSpring(spZ, dirZ, poleOmega, dt, snap);
@@ -61043,7 +62336,7 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     arm.poleG.getWorldPosition(rig._vHandWorld);
     rig._vHandInFig.copy(rig._vHandWorld).applyMatrix4(rig._mFigInv);
     const poleLen = 1.14;
-    const minOff = lerp(0.08, 0.04, pp.plant);
+    const minOff = lerp(0.08, 0.048, pp.plant);
     for (let iter = 0; iter < 5; iter++) {
       rig._vTipInFig.copy(rig._vHandInFig).addScaledVector(rig._vPoleTarget, poleLen);
       rig._vTipWorld.copy(rig._vTipInFig).applyMatrix4(skierFigure.matrixWorld);
@@ -61070,8 +62363,8 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     arm.poleG.quaternion.setFromUnitVectors(rig._vNegY, rig._vPoleLocal);
   }
 
-  alignPole(rig.armL, 1, ppL, skierPose.poleDirLX, skierPose.poleDirLY, skierPose.poleDirLZ);
-  alignPole(rig.armR, -1, ppR, skierPose.poleDirRX, skierPose.poleDirRY, skierPose.poleDirRZ);
+  alignPole(rig.armL, 1, combPoleL, skierPose.poleDirLX, skierPose.poleDirLY, skierPose.poleDirLZ);
+  alignPole(rig.armR, -1, combPoleR, skierPose.poleDirRX, skierPose.poleDirRY, skierPose.poleDirRZ);
   skierPose.initialized = true;
 }
 
@@ -61162,7 +62455,7 @@ function updateTrackGeometry() {
   const pR = trackRightGeo.attributes.position.array;
   const aR = trackRightGeo.attributes.aAlpha.array;
 
-  const skiSep = 0.24;
+  const skiSep = (typeof skierRig !== 'undefined' && skierRig && skierRig.STANCE_HALF) ? skierRig.STANCE_HALF : 0.14;
   // ~55% of v11's 0.065 -> 0.036 half-width (total ~7.2cm, narrower than 10cm ski width per reference!)
   const baseHalfRibbon = 0.036;
 
@@ -61201,7 +62494,7 @@ function updateTrackGeometry() {
 }
 
 // Snow spray particle system (strictly speed- and edge-angle-gated carve spray; straight glide stays clean)
-const MAX_SPRAY = 320;
+const MAX_SPRAY = 960;
 const sprayPool = [];
 let sprayGeo, sprayRng = makeRng(90125);
 let sprayActiveCount = 0;
@@ -61238,7 +62531,7 @@ function buildSpray() {
         vAlpha = aAlpha;
         vSeed = aSeed;
         vec4 mv = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = clamp(aSize * (310.0 / max(-mv.z, 1.0)), 1.0, 42.0);
+        gl_PointSize = clamp(aSize * (520.0 / max(-mv.z, 1.0)), 2.5, 84.0);
         gl_Position = projectionMatrix * mv;
       }
     `,
@@ -61265,9 +62558,19 @@ function buildSpray() {
         if (r > 0.5) discard;
         float n = spNoise(gl_PointCoord * 4.5 + vec2(vSeed * 19.3, vSeed * 7.1)) * 0.65
                 + spNoise(gl_PointCoord * 9.5 + vec2(vSeed * 3.7, vSeed * 13.9)) * 0.35;
-        float edge = smoothstep(0.50, 0.14, r + (n - 0.5) * 0.22);
-        vec3 col = mix(uSkyCol * 0.72 + vec3(0.32), uSunCol * 0.96, 0.68);
-        gl_FragColor = vec4(col, edge * vAlpha * 0.52);
+        float isClump = step(0.72, vSeed);
+        float edge = mix(
+          smoothstep(0.50, 0.11, r + (n - 0.5) * 0.24),
+          smoothstep(0.42, 0.08, r + (n - 0.5) * 0.16),
+          isClump
+        );
+        // Vertical self-shading so sunlit mist & shadowed plume core read cleanly over sunlit snow at 854x480
+        float topLit = smoothstep(-0.32, 0.36, -d.y);
+        vec3 litSnow = mix(uSunCol, vec3(1.0), 0.55);
+        vec3 shadSnow = mix(uSkyCol * 0.55 + vec3(0.24, 0.31, 0.40), vec3(0.76, 0.84, 0.93), 0.42);
+        vec3 col = mix(shadSnow, litSnow, topLit * 0.78 + 0.16);
+        float op = mix(0.84, 0.96, isClump);
+        gl_FragColor = vec4(col, clamp(edge * vAlpha * op, 0.0, 0.95));
       }
     `
   });
@@ -61278,19 +62581,19 @@ function buildSpray() {
 }
 
 let sprayCursor = 0;
-function emitSpray(x, y, z, vx, vy, vz, count, spread) {
+function emitSpray(x, y, z, vx, vy, vz, count, spread, sizeScale = 1.0, lifeScale = 1.0) {
   for (let i = 0; i < count; i++) {
     const p = sprayPool[sprayCursor];
     sprayCursor = (sprayCursor + 1) % MAX_SPRAY;
-    p.x = x + (sprayRng() - 0.5) * 0.38;
-    p.y = y + 0.08 + sprayRng() * 0.12;
-    p.z = z + (sprayRng() - 0.5) * 0.38;
+    p.x = x + (sprayRng() - 0.5) * 0.52;
+    p.y = y + 0.06 + sprayRng() * 0.16;
+    p.z = z + (sprayRng() - 0.5) * 0.52;
     p.vx = vx + (sprayRng() - 0.5) * spread;
-    p.vy = vy + 0.95 + sprayRng() * 1.95;
+    p.vy = vy + (1.45 + sprayRng() * 2.35) * lifeScale;
     p.vz = vz + (sprayRng() - 0.5) * spread;
     p.age = 0;
-    p.life = 0.34 + sprayRng() * 0.34;
-    p.size = 0.36 + sprayRng() * 0.54;
+    p.life = (0.45 + sprayRng() * 0.55) * lifeScale;
+    p.size = (0.50 + sprayRng() * 0.78) * sizeScale;
   }
 }
 
@@ -61298,19 +62601,19 @@ function updateSpray(dt) {
   const pos = sprayGeo.attributes.position.array;
   const alpha = sprayGeo.attributes.aAlpha.array;
   const size = sprayGeo.attributes.aSize.array;
-  const drag = Math.exp(-3.2 * dt);
+  const drag = Math.exp(-2.8 * dt);
   let active = 0;
   for (let i = 0; i < MAX_SPRAY; i++) {
     const p = sprayPool[i];
     if (p.age < p.life) {
       p.age += dt;
-      p.vy -= 8.8 * dt;
+      p.vy -= 7.8 * dt;
       p.vx *= drag; p.vz *= drag;
       p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt;
       const t = clamp(p.age / p.life, 0, 1);
       pos[i * 3] = p.x; pos[i * 3 + 1] = p.y; pos[i * 3 + 2] = p.z;
-      alpha[i] = Math.sin(Math.min(1, t * 4.0) * Math.PI * 0.5) * Math.pow(1 - t, 1.55);
-      size[i] = p.size * (0.85 + t * 2.4);
+      alpha[i] = Math.sin(Math.min(1, t * 4.5) * Math.PI * 0.5) * Math.pow(1 - t, 1.25);
+      size[i] = p.size * (0.78 + t * 2.1);
       active++;
     } else {
       alpha[i] = 0;
@@ -61882,7 +63185,7 @@ function stepSimulation(dt) {
     const edgeLoad = clamp(Math.abs(skier.carve) * 2.2 + (skier.braking ? 0.90 : 0), 0, 1);
     const widthScale = lerp(0.94, 1.24, edgeLoad);
     const density = lerp(0.35, 0.95, edgeLoad);
-    const skiSep = 0.24, halfRib = 0.036 * widthScale, trackLift = 0.015;
+    const skiSep = (typeof skierRig !== 'undefined' && skierRig && skierRig.STANCE_HALF) ? skierRig.STANCE_HALF : 0.14, halfRib = 0.036 * widthScale, trackLift = 0.015;
     const lx = skier.x + rx * skiSep, lz = skier.z + rz * skiSep;
     const rrx = skier.x - rx * skiSep, rrz = skier.z - rz * skiSep;
     trackPts.push({
@@ -61901,30 +63204,61 @@ function stepSimulation(dt) {
   }
   updateTrackGeometry();
 
-  // Emit light carve spray ONLY during active high-edge-angle carving or braking; straight glide stays clean
+  // Emit full carve/braking spray OR light spray at shallow-section overlay edge peaks (zero below threshold)
   const sprayEdgeAmt = Math.abs(Math.tanh(skier.carve * 13.0));
   const isCarvingSpray = sprayEdgeAmt > 0.68 && skier.speed > 9.0;
   const isBrakingSpray = skier.braking && skier.speed > 4.5;
+  const effEdge = (typeof skierPose !== 'undefined' && typeof skierPose.lastEffectiveEdge === 'number')
+    ? skierPose.lastEffectiveEdge : Math.tanh(skier.carve * 13.0);
+  const effEdgeAmt = Math.abs(effEdge);
+  const shallowMaskNow = (typeof skierPose !== 'undefined' && skierPose.lastShallowMask) ? skierPose.lastShallowMask : 0;
+  const isLightOverlaySpray = !isCarvingSpray && !isBrakingSpray
+    && effEdgeAmt > 0.44 && skier.speed > 13.5 && shallowMaskNow > 0.18;
+  if (typeof skierPose !== 'undefined') skierPose.lastOverlaySpray = isLightOverlaySpray ? 1 : 0;
   if (isCarvingSpray || isBrakingSpray) {
     const rx = Math.cos(skier.heading);
     const rz = -Math.sin(skier.heading);
     const outDir = skier.braking ? (sprayRng() < 0.5 ? 1 : -1) : -Math.sign(skier.carve);
     const carvePow = smoothstep(0.68, 0.96, sprayEdgeAmt) * smoothstep(9.0, 22.0, skier.speed);
-    const intensity = skier.braking ? 6 : Math.max(1, Math.round(1 + carvePow * 3.0));
-    const sv = skier.speed * 0.16;
+    const intensity = skier.braking ? 14 : Math.max(4, Math.round(4 + carvePow * 12.0));
+    const sv = skier.speed * 0.18;
+    const tailDist = 0.20 + sprayRng() * 0.70;
+    const latDist = outDir * (0.18 + sprayRng() * 0.24);
     emitSpray(
-      skier.x - hx * 0.72 + rx * outDir * 0.28,
+      skier.x - hx * tailDist + rx * latDist,
       skier.y,
-      skier.z - hz * 0.72 + rz * outDir * 0.28,
-      rx * outDir * (2.6 + sv * 0.30) + hx * sv * 0.30,
-      0.55 + sv * 0.08,
-      rz * outDir * (2.6 + sv * 0.30) + hz * sv * 0.30,
+      skier.z - hz * tailDist + rz * latDist,
+      rx * outDir * (3.2 + sv * 0.45) + hx * sv * 0.25,
+      0.65 + sv * 0.10,
+      rz * outDir * (3.2 + sv * 0.45) + hz * sv * 0.25,
       intensity,
-      1.65
+      2.25
+    );
+  } else if (isLightOverlaySpray) {
+    const rx = Math.cos(skier.heading);
+    const rz = -Math.sin(skier.heading);
+    const outDir = -Math.sign(effEdge);
+    const ovPow = smoothstep(0.44, 0.72, effEdgeAmt) * smoothstep(13.5, 22.0, skier.speed) * shallowMaskNow;
+    const intensity = Math.max(2, Math.round(2 + ovPow * 4.0));
+    const sv = skier.speed * 0.15;
+    const tailDist = 0.24 + sprayRng() * 0.56;
+    const latDist = outDir * (0.16 + sprayRng() * 0.18);
+    emitSpray(
+      skier.x - hx * tailDist + rx * latDist,
+      skier.y,
+      skier.z - hz * tailDist + rz * latDist,
+      rx * outDir * (1.9 + sv * 0.32) + hx * sv * 0.20,
+      0.32 + sv * 0.06,
+      rz * outDir * (1.9 + sv * 0.32) + hz * sv * 0.20,
+      intensity,
+      1.35,
+      0.72,
+      0.58
     );
   }
   updateSpray(dt);
   updateAvalanche(dt);
+  updateCourseGuidance(simTime);
   if (typeof updateNpcSkiers === 'function') updateNpcSkiers(simTime);
   const descentProgress = courseTotalLen > 0 ? clamp(courseSamples[skier.courseIdx].s / courseTotalLen, 0, 1) : 0;
   updateLightingArc(descentProgress);
@@ -62037,12 +63371,14 @@ function updateCameraAndSkis(dt, advancePose = true) {
   skisGroup.updateMatrixWorld(true);
 
   const poseCarve = Math.tanh(skier.carve * 13.0);
-  const edgeRoll = -poseCarve * 0.42;
-  const skiZL = poseCarve * 0.11;
-  const skiZR = -poseCarve * 0.11;
+  const ovVis = (typeof skierPose !== 'undefined' && skierPose.shallowOv) ? skierPose.shallowOv.x : 0;
+  const edgeRoll = -poseCarve * 0.42 - ovVis * 0.21;
+  const skiZL = poseCarve * 0.065 + ovVis * 0.030;
+  const skiZR = -poseCarve * 0.065 - ovVis * 0.030;
 
-  seatSingleSkiOnMesh(leftSkiMesh,  0.24, skiZL, hx, hz, rx, rz, pitch, edgeRoll);
-  seatSingleSkiOnMesh(rightSkiMesh, -0.24, skiZR, hx, hz, rx, rz, pitch, edgeRoll);
+  const stanceHalf = (typeof skierRig !== 'undefined' && skierRig && skierRig.STANCE_HALF) ? skierRig.STANCE_HALF : 0.14;
+  seatSingleSkiOnMesh(leftSkiMesh,  stanceHalf, skiZL, hx, hz, rx, rz, pitch, edgeRoll);
+  seatSingleSkiOnMesh(rightSkiMesh, -stanceHalf, skiZR, hx, hz, rx, rz, pitch, edgeRoll);
 
   // Articulated skier figure: closed-chain leg IK, turn-phase lean/angulation & gripped poles
   updateSkierFigure(edgeRoll, advancePose ? dt : 0);
@@ -62361,18 +63697,20 @@ async function init() {
 
   window.__seek = (t) => {
     introDiveTimer = 0;
+    _lightingState.overrideProgress = null;
     simTime = 0; runTime = 0;
     resetSkier(true);
     updateLightingArc(0);
     const dt = 1 / 30;
     const n = Math.round(t / dt);
     for (let i = 0; i < n; i++) stepSimulation(dt);
+    updateCourseGuidance(simTime);
     updateHUD();
     renderFrame();
     window.__ready = true;
   };
   if (location.search.includes('clean')) {
-    for (const id of ['hud-tl', 'hud-bl', 'hud-br', 'top-controls', 'btn-audio', 'btn-cam', 'btn-hud', 'title-card']) {
+    for (const id of ['hud-tl', 'hud-bottom', 'hud-bl', 'hud-br', 'top-controls', 'btn-audio', 'btn-cam', 'btn-hud', 'title-card']) {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
     }
