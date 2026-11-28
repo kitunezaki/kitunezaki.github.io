@@ -59,6 +59,7 @@
   }
   .top-btn:hover { background: rgba(28, 42, 68, 0.72); }
   body.hud-hidden #hud-tl,
+  body.hud-hidden #hud-stall-hint,
   body.hud-hidden #hud-bottom,
   body.hud-hidden #hud-bl,
   body.hud-hidden #hud-br,
@@ -115,11 +116,39 @@
     color: rgba(255, 242, 226, 0.82); font-size: 11px; letter-spacing: 0.05em;
     white-space: nowrap; pointer-events: auto;
   }
+
+  /* Stall rescue hint pill above bottom HUD (zero overlap at 854x480 and 1280x720) */
+  #hud-stall-hint {
+    position: fixed; bottom: 64px; left: 50%;
+    transform: translate(-50%, 6px);
+    z-index: 15; pointer-events: none;
+    padding: 7px 16px; border-radius: 999px;
+    background: rgba(12, 22, 40, 0.68);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(164, 220, 255, 0.48);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
+    color: #f4faff; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.05em; white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.32s ease, transform 0.32s ease;
+  }
+  #hud-stall-hint.visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  #hud-stall-hint kbd {
+    display: inline-block; padding: 1px 6px; margin: 0 2px; border-radius: 4px;
+    background: rgba(120, 204, 255, 0.24); border: 1px solid rgba(164, 224, 255, 0.52);
+    font-family: inherit; font-size: 12px; font-weight: 700; color: #ffffff;
+  }
   @media (max-width: 1080px) {
     #hud-bottom { bottom: 10px; left: 12px; right: 12px; gap: 6px 10px; }
     #hud-bl { padding: 6px 10px; font-size: 11px; line-height: 1.4; }
     #hud-bl kbd { font-size: 10px; padding: 1px 4px; }
     #hud-br { padding: 4px 9px; font-size: 10px; }
+    #hud-stall-hint { bottom: 84px; padding: 6px 13px; font-size: 12px; }
+    #hud-stall-hint kbd { font-size: 11px; padding: 1px 5px; }
   }
 
   /* Fade overlay */
@@ -53200,6 +53229,8 @@ return { ACESFilmicToneMapping, AddEquation, AddOperation, AdditiveAnimationBlen
     <p>実地形データ（国土地理院DEM）× 星野リゾート トマム</p>
   </div>
 
+  <div id="hud-stall-hint" aria-live="polite"><kbd>W</kbd> / <kbd>↑</kbd> 長押しで漕いで進めます</div>
+
   <div id="hud-bottom">
     <div id="hud-bl">
       <kbd>←</kbd><kbd>→</kbd> / <kbd>A</kbd><kbd>D</kbd> ターン　
@@ -61619,6 +61650,8 @@ const skierPose = {
   // Shallow-section continuous cruising rhythm overlay (pose-only, ~0.39 Hz)
   shallowOv: makeSpring(0),
   shallowOvRate: makeSpring(0),
+  // Manual poling/skating stall-rescue assist blend (0 in DEMO / normal skiing)
+  poleAssist: makeSpring(0),
   // Independent spring-lagged pole carry vectors (poles trail with pendulum inertia, not welded)
   poleDirLX: makeSpring(0.14),
   poleDirLY: makeSpring(-0.46),
@@ -61682,6 +61715,7 @@ function resetSkierPose() {
     if (v && typeof v === 'object' && 'v' in v) v.v = 0;
   }
   skierPose.groundDelta.x = 0;
+  skierPose.poleAssist.x = 0;
   skierPose.hipWorldY.x = 1.07;
   skierPose.pelvisY.x = 1.06;
   skierPose.pelvisZ.x = -0.018;
@@ -61832,6 +61866,22 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   skierPose.lastShallowMask = ov.mask;
   skierPose.lastOverlayVal = ovS;
   skierPose.lastEffectiveEdge = clamp(rawC + ovS * 0.54, -1.0, 1.0);
+
+  // Manual poling/skating stall-rescue pose blend (strictly 0 in DEMO / high-speed skiing)
+  const polingRaw = (!demoMode && skier.poling > 0) ? skier.poling : 0;
+  const pAct = (polingRaw > 0 || Math.abs(skierPose.poleAssist.x) > 1e-6 || Math.abs(skierPose.poleAssist.v) > 1e-6)
+    ? clamp(driveSpring(skierPose.poleAssist, polingRaw, 9.0, dt, snap), 0, 1)
+    : 0;
+  let skateLat = 0, pReach = 0, pPlant = 0, pPush = 0, pTrail = 0;
+  if (pAct > 0) {
+    const ph = skier.polingPhase;
+    skateLat = Math.sin(ph);
+    const u = (((ph % Math.PI) + Math.PI) % Math.PI) / Math.PI;
+    pReach = Math.sin(clamp(u / 0.30, 0, 1) * Math.PI) * pAct;
+    pPlant = smoothstep(0.16, 0.30, u) * (1 - smoothstep(0.46, 0.64, u)) * pAct;
+    pPush  = smoothstep(0.22, 0.42, u) * (1 - smoothstep(0.68, 0.90, u)) * pAct;
+    pTrail = smoothstep(0.40, 0.62, u) * (1 - smoothstep(0.84, 0.99, u)) * pAct;
+  }
 
   // Read-only slope & course look-ahead (drives gaze, anticipation, & cadence modulation)
   const surf = terrainMeshSurfaceAt(skier.x, skier.z);
@@ -62024,14 +62074,21 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const troughMask = smoothstep(0.08, 0.22, Math.max(0, groundDeltaS));
   const tRollComp = clamp(terrainRoll * 0.65, -0.26, 0.26);
   const carvePelvisX = cShaped * 0.46 * (1.0 - troughMask * 0.72);
-  const pelvisXTgt = carvePelvisX + glideLatX + ovS * 0.165;
+  let pelvisXTgt = carvePelvisX + glideLatX + ovS * 0.165;
   const initFwd = clamp(rawC * rawR * 0.9, 0, 1) * (1 - smoothstep(0.25, 0.70, ac)) + unweightS * 0.65;
   const compAft = clamp(-rawC * rawR * 0.9, 0, 1) * smoothstep(0.30, 0.78, ac);
-  const pelvisZTgt = -0.018 + initFwd * 0.030 - compAft * 0.026 - tuckF * 0.025 - brakeF * 0.040 + microCompS * 0.20;
-  const pelvisRollTgt = -cShaped * 0.65 + tRollComp + glideRoll - ovS * 0.255 - cRateS * 0.055 * (1 - carveEnv) * moveMask;
-  const pelvisPitchTgt = 0.255 + speedNorm * 0.08 + acS * 0.07 + unweightS * 0.135 + tuckF * 0.28 - brakeF * 0.08 + crestFold * 0.14 - pitchCompS * 0.25 + torsoNoiseP * 0.35 + glideBreathPitch * 0.65 + Math.abs(ovS) * 0.048 + ovRateS * 0.018;
+  let pelvisZTgt = -0.018 + initFwd * 0.030 - compAft * 0.026 - tuckF * 0.025 - brakeF * 0.040 + microCompS * 0.20;
+  let pelvisRollTgt = -cShaped * 0.65 + tRollComp + glideRoll - ovS * 0.255 - cRateS * 0.055 * (1 - carveEnv) * moveMask;
+  let pelvisPitchTgt = 0.255 + speedNorm * 0.08 + acS * 0.07 + unweightS * 0.135 + tuckF * 0.28 - brakeF * 0.08 + crestFold * 0.14 - pitchCompS * 0.25 + torsoNoiseP * 0.35 + glideBreathPitch * 0.65 + Math.abs(ovS) * 0.048 + ovRateS * 0.018;
   // Counter-signed pelvis yaw (hip-socket separation / 外向)
-  const pelvisYawTgt = -cShaped * 0.22 - anticipateS * 0.045 + fallAngle * 0.03 - ovS * 0.070;
+  let pelvisYawTgt = -cShaped * 0.22 - anticipateS * 0.045 + fallAngle * 0.03 - ovS * 0.070;
+  if (pAct > 0) {
+    pelvisXTgt += skateLat * 0.115 * pAct;
+    pelvisZTgt += 0.032 * pPush - 0.015 * pReach;
+    pelvisRollTgt += -skateLat * 0.145 * pAct;
+    pelvisPitchTgt += 0.22 * pPush + 0.06 * pAct;
+    pelvisYawTgt += -skateLat * 0.08 * pAct;
+  }
 
   const pelvisXS = driveSpring(skierPose.pelvisX, pelvisXTgt, 7.5, dt, snap);
   const pelvisZS = driveSpring(skierPose.pelvisZ, pelvisZTgt, 9.5, dt, snap);
@@ -62050,10 +62107,13 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   const absorbY = absorbS < 0 ? absorbS * 0.65 : absorbS * 0.05;
   const ovDipY = -Math.abs(ovS) * 0.010 + ov.mask * 0.005;
   // Modern low-COM flexion-release transition (-0.054 * unweightS) with concave-dip upward pop damped
-  const postureYTgt = Math.min(
+  let postureYTgt = Math.min(
     baseHeight + 0.004,
     baseHeight - incDrop - turnFlexS - unweightS * 0.054 + absorbY + microCompS * 0.18 + breathWave * 0.003 + glideSettleY + ovDipY
   );
+  if (pAct > 0) {
+    postureYTgt -= 0.052 * pPush + 0.025 * Math.abs(skateLat) * pAct;
+  }
   const postureYS = driveSpring(skierPose.hipWorldY, postureYTgt, 5.0, dt, snap);
   const desiredWorldY = (skier.y + groundDeltaS) + 0.016 + (postureYS + 0.015) * cosSmoothP - pelvisZS * sinSmoothP;
   let py = (desiredWorldY - y0 - pelvisXS * ex - pelvisZS * ez) / ey;
@@ -62134,7 +62194,7 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
   updateBootCuff(rig.bootR, rig.bootCuffR, ankleR, rig.kneeR.position, skierPose.cuffPitchR, skierPose.cuffRollR);
 
   // Neutral-spine pitch (<=40% of total torso pitch), capped lateral bend (<=14.6 deg, net torso roll <=0 inside turn), capped axial torsion (<=10 deg)
-  const spineRollClamped = clamp(cShaped * 0.245 - tRollComp * 0.26 - glideRoll * 0.58 + ovS * 0.135 + anticipateS * 0.045 * (1 - carveEnv) + torsoNoiseR * 0.6, -0.250, 0.250);
+  const spineRollClamped = clamp(cShaped * 0.245 - tRollComp * 0.26 - glideRoll * 0.58 + ovS * 0.135 + anticipateS * 0.045 * (1 - carveEnv) + torsoNoiseR * 0.6 + (pAct > 0 ? skateLat * 0.075 * pAct : 0), -0.250, 0.250);
   let lumbarRollS = driveSpring(skierPose.lumbarRoll, spineRollClamped * 0.60, 8.2, dt, snap);
   let chestRollS  = driveSpring(skierPose.chestRoll,  spineRollClamped * 0.40, 7.8, dt, snap);
   const spRollSum = lumbarRollS + chestRollS;
@@ -62157,13 +62217,13 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     }
   }
   const spineYawClamped = clamp(-cShaped * 0.145 - anticipateS * 0.040 + torsoNoiseY * 0.45, -0.165, 0.165);
-  const lumbarPitchTgt = 0.045 + speedNorm * 0.030 + acS * 0.025 + unweightS * 0.022 + tuckF * 0.11 - brakeF * 0.04 - pitchCompS * 0.15 + breathWave * 0.010 + torsoNoiseP * 0.5 + glideBreathPitch * 0.16;
+  const lumbarPitchTgt = 0.045 + speedNorm * 0.030 + acS * 0.025 + unweightS * 0.022 + tuckF * 0.11 - brakeF * 0.04 - pitchCompS * 0.15 + breathWave * 0.010 + torsoNoiseP * 0.5 + glideBreathPitch * 0.16 + (pAct > 0 ? 0.11 * pPush : 0);
   const lumbarPitchS = driveSpring(skierPose.lumbarPitch, lumbarPitchTgt, 4.4, dt, snap);
   const lumbarYawS   = driveSpring(skierPose.lumbarYaw,   spineYawClamped * 0.48, 8.2, dt, snap);
   rig.lumbarG.rotation.order = 'YXZ';
   rig.lumbarG.rotation.set(lumbarPitchS, lumbarYawS, lumbarRollS);
 
-  const chestPitchTgt = 0.035 + speedNorm * 0.025 + tuckF * 0.10 - brakeF * 0.03 - crestFold * 0.28 - pitchCompS * 0.20 + breathWave * 0.018 + torsoNoiseP + glideBreathPitch * 0.19;
+  const chestPitchTgt = 0.035 + speedNorm * 0.025 + tuckF * 0.10 - brakeF * 0.03 - crestFold * 0.28 - pitchCompS * 0.20 + breathWave * 0.018 + torsoNoiseP + glideBreathPitch * 0.19 + (pAct > 0 ? 0.09 * pPush : 0);
   const chestPitchS = driveSpring(skierPose.chestPitch, chestPitchTgt, 4.0, dt, snap);
   const chestYawS   = driveSpring(skierPose.chestYaw,   spineYawClamped * 0.52, 7.8, dt, snap);
   rig.chestG.rotation.order = 'YXZ';
@@ -62253,6 +62313,14 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     plant: Math.max(ppR.plant, ovSwingR.plant * 0.85),
     trail: Math.max(ppR.trail, ovSwingR.trail * 0.90)
   };
+  if (pAct > 0) {
+    combPoleL.reach = Math.max(combPoleL.reach, pReach);
+    combPoleL.plant = Math.max(combPoleL.plant, pPlant);
+    combPoleL.trail = Math.max(combPoleL.trail, pTrail);
+    combPoleR.reach = Math.max(combPoleR.reach, pReach);
+    combPoleR.plant = Math.max(combPoleR.plant, pPlant);
+    combPoleR.trail = Math.max(combPoleR.trail, pTrail);
+  }
   const hipLag = clamp(skierPose.pelvisY.v * 0.28, -0.18, 0.18);
 
   function poseArmJoints(arm, sideSign, pp, flexSp, abdSp, elbSp, wristSp) {
@@ -62267,15 +62335,22 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
     const regripPulse = smoothstep(0.36, 0.74, smoothNoise1D(simTime * 0.34, sideSign > 0 ? 71.2 : 83.7)) * straightMask * regripGate;
     const glideArmCounter = sideSign * shiftEnv * 0.052 * straightMask + sideSign * ovS * 0.095;
 
-    const abductTgt = sideSign * (0.36 - tuckF * 0.18 + brakeF * 0.24 + insideAmt * 0.15 + outsideAmt * 0.10 + pp.reach * 0.22 + pp.plant * 0.16 - pp.trail * 0.08 + unweightS * 0.06 + armSwayAbd + breathWave * 0.008) + glideArmCounter;
-    const flexXTgt = -(totalTorsoPitch * 0.92 + 0.34 + tuckF * 0.26 + outsideAmt * 0.16 - insideAmt * 0.08 + pp.reach * 0.56 + pp.plant * 0.38 - pp.trail * 0.34 + unweightS * 0.14 + sideSign * anticipateS * 0.14 + hipLag + armSwayFlex + regripPulse * 0.09 + breathWave * 0.012 + glideArmCounter * 0.65);
+    let abductTgt = sideSign * (0.36 - tuckF * 0.18 + brakeF * 0.24 + insideAmt * 0.15 + outsideAmt * 0.10 + pp.reach * 0.22 + pp.plant * 0.16 - pp.trail * 0.08 + unweightS * 0.06 + armSwayAbd + breathWave * 0.008) + glideArmCounter;
+    let flexXTgt = -(totalTorsoPitch * 0.92 + 0.34 + tuckF * 0.26 + outsideAmt * 0.16 - insideAmt * 0.08 + pp.reach * 0.56 + pp.plant * 0.38 - pp.trail * 0.34 + unweightS * 0.14 + sideSign * anticipateS * 0.14 + hipLag + armSwayFlex + regripPulse * 0.09 + breathWave * 0.012 + glideArmCounter * 0.65);
     const yawY = -sideSign * (0.10 + tuckF * 0.18 - brakeF * 0.10 - pp.reach * 0.12 + pp.trail * 0.08 + regripPulse * 0.04);
-    const elbowXTgt = -(0.90 + tuckF * 0.42 - brakeF * 0.26 + outsideAmt * 0.18 - insideAmt * 0.08 - pp.reach * 0.22 - pp.plant * 0.42 + pp.trail * 0.22 + unweightS * 0.08 - hipLag * 0.35 + armSwayElb + regripPulse * 0.14);
+    let elbowXTgt = -(0.90 + tuckF * 0.42 - brakeF * 0.26 + outsideAmt * 0.18 - insideAmt * 0.08 - pp.reach * 0.22 - pp.plant * 0.42 + pp.trail * 0.22 + unweightS * 0.08 - hipLag * 0.35 + armSwayElb + regripPulse * 0.14);
     const elbowZ = -sideSign * (0.10 + tuckF * 0.14);
-    const wristXTgt = pp.reach * 0.22 + pp.plant * 0.52 - pp.trail * 0.36 + regripPulse * 0.18 + fbm1D(simTime, 0.55, seed + 14.1) * 0.06 * armScale;
+    let wristXTgt = pp.reach * 0.22 + pp.plant * 0.52 - pp.trail * 0.36 + regripPulse * 0.18 + fbm1D(simTime, 0.55, seed + 14.1) * 0.06 * armScale;
 
     // Responsive spring during pole plant swing; softer lag during carry/glide
-    const plantAct = Math.max(pp.reach, pp.plant);
+    let plantAct = Math.max(pp.reach, pp.plant);
+    if (pAct > 0) {
+      abductTgt += sideSign * (0.12 * pAct + 0.10 * pReach);
+      flexXTgt -= pReach * 0.48 + pPlant * 0.18 - pTrail * 0.72;
+      elbowXTgt += pReach * 0.34 - pPlant * 0.16 + pTrail * 0.48;
+      wristXTgt += pPlant * 0.30 - pTrail * 0.38;
+      plantAct = Math.max(plantAct, pAct * 0.85);
+    }
     const armOmega = lerp(6.4, 14.0, plantAct);
     const wristOmega = lerp(7.5, 16.0, plantAct);
     const abductS = driveSpring(abdSp, abductTgt, armOmega, dt, snap);
@@ -62317,6 +62392,15 @@ function updateSkierFigure(edgeRoll, dt = 1 / 30) {
       dirX = lerp(dirX, sideSign * 0.34, pp.trail);
       dirY = lerp(dirY, -0.24, pp.trail);
       dirZ = lerp(dirZ, -0.95, pp.trail);
+    }
+    if (pAct > 0) {
+      dirX = lerp(dirX, sideSign * 0.34, Math.max(pReach, pPlant));
+      dirZ = lerp(dirZ, 0.56, pReach);
+      dirY = lerp(dirY, -0.92, pPlant);
+      if (pTrail > 0) {
+        dirZ = lerp(dirZ, -0.97, pTrail);
+        dirY = lerp(dirY, -0.20, pTrail);
+      }
     }
 
     // Independent carry sway & inertial pendulum lag (poles feel suspended in hand, not welded)
@@ -62905,6 +62989,10 @@ const skier = {
   plantPhaseR: 0,
   tuck: false,
   braking: false,
+  poling: 0,
+  polingPhase: 0,
+  stallTimer: 0,
+  stallHintVisible: false,
   distTraveled: 0,
   courseIdx: 0,
   phase: 'skiing', // 'skiing' | 'holding' | 'fadingOut'
@@ -62988,6 +63076,10 @@ function resetSkier(snapCamera = false) {
   skier.plantPhaseR = 0;
   skier.tuck = false;
   skier.braking = false;
+  skier.poling = 0;
+  skier.polingPhase = 0;
+  skier.stallTimer = 0;
+  skier.stallHintVisible = false;
   skier.distTraveled = 0;
   skier.courseIdx = 0;
   skier.phase = 'skiing';
@@ -63134,6 +63226,17 @@ function stepSimulation(dt) {
   skier.tuck = tuckAmt;
   skier.braking = brakeAmt > 0.1;
 
+  // Poling/skating stall-rescue assist: strictly manual-mode only, low-speed only
+  const polingWant = !demoMode && tuckAmt && brakeAmt < 0.1;
+  const polingFade = polingWant ? (1.0 - smoothstep(2.9, 3.9, skier.speed)) : 0.0;
+  skier.poling = polingFade;
+  if (polingFade > 0.01) {
+    skier.polingPhase += dt * (7.0 + 1.6 * clamp(skier.speed / 3.5, 0, 1));
+  }
+  if (!demoMode && polingFade >= 0.05) {
+    skier.tuck = false;
+  }
+
   // Turning: rate proportional to speed & carve
   const speedTurnFactor = clamp(skier.speed / 11, 0.15, 1.15);
   const turnRate = skier.carve * 1.18 * speedTurnFactor;
@@ -63163,8 +63266,30 @@ function stepSimulation(dt) {
   const demoCarveDrag = demoMode ? (0.0018 * skier.speed * skier.speed + Math.max(0, skier.speed - 21.8) * 0.45) : 0;
   const brakeDrag = brakeAmt * (12.5 + 0.22 * skier.speed);
 
-  skier.speed += (gravityAccel - baseDrag - carveDrag - demoCarveDrag - brakeDrag) * dt;
+  let polingAccel = 0;
+  if (polingFade > 0) {
+    const uphillCancel = Math.max(0, -gravityAccel);
+    const stridePulse = 1.0 + 0.08 * Math.sin(skier.polingPhase * 2.0);
+    polingAccel = (2.45 + uphillCancel * 1.05) * polingFade * stridePulse;
+  }
+  const netAccel = polingAccel > 0
+    ? (gravityAccel + polingAccel - baseDrag - carveDrag - demoCarveDrag - brakeDrag)
+    : (gravityAccel - baseDrag - carveDrag - demoCarveDrag - brakeDrag);
+  skier.speed += netAccel * dt;
   skier.speed = clamp(skier.speed, 0, 26.0);
+
+  if (!demoMode && skier.phase === 'skiing') {
+    if (skier.speed < 1.0) {
+      skier.stallTimer += dt;
+      if (skier.stallTimer > 2.0) skier.stallHintVisible = true;
+    } else {
+      skier.stallTimer = 0;
+      if (skier.speed > 3.0) skier.stallHintVisible = false;
+    }
+  } else {
+    skier.stallTimer = 0;
+    skier.stallHintVisible = false;
+  }
 
   // Advance position within terrain bounds
   const move = skier.speed * dt;
@@ -63270,7 +63395,7 @@ const _seatPt = new THREE.Vector3();
 const _soleSampleZ = [-0.82, -0.55, -0.27, 0.0, 0.27, 0.55, 0.82];
 const _edgeSampleZ = [-0.82, 0.0, 0.82];
 
-function seatSingleSkiOnMesh(skiMesh, xOff, zOff, hx, hz, rx, rz, avgPitch, edgeRoll) {
+function seatSingleSkiOnMesh(skiMesh, xOff, zOff, hx, hz, rx, rz, avgPitch, edgeRoll, yawY = 0) {
   const cosP = Math.cos(avgPitch);
   const sinP = Math.sin(avgPitch);
   const wx = skier.x + rx * xOff + hx * (zOff * cosP);
@@ -63290,7 +63415,7 @@ function seatSingleSkiOnMesh(skiMesh, xOff, zOff, hx, hz, rx, rz, avgPitch, edge
   const skiRoll = clamp(terrainRoll * 0.85 + edgeRoll * 0.85, -0.68, 0.68);
 
   skiMesh.rotation.order = 'XYZ';
-  skiMesh.rotation.set(dPitch, 0, skiRoll);
+  skiMesh.rotation.set(dPitch, yawY, skiRoll);
   skiMesh.position.set(xOff, 0, zOff);
 
   // Five-pass exact minimax pitch + height seating on the rendered terrain mesh
@@ -63372,13 +63497,23 @@ function updateCameraAndSkis(dt, advancePose = true) {
 
   const poseCarve = Math.tanh(skier.carve * 13.0);
   const ovVis = (typeof skierPose !== 'undefined' && skierPose.shallowOv) ? skierPose.shallowOv.x : 0;
-  const edgeRoll = -poseCarve * 0.42 - ovVis * 0.21;
-  const skiZL = poseCarve * 0.065 + ovVis * 0.030;
-  const skiZR = -poseCarve * 0.065 - ovVis * 0.030;
+  let edgeRoll = -poseCarve * 0.42 - ovVis * 0.21;
+  let skiZL = poseCarve * 0.065 + ovVis * 0.030;
+  let skiZR = -poseCarve * 0.065 - ovVis * 0.030;
+  let skiYawL = 0, skiYawR = 0;
+  const pVis = (!demoMode && typeof skierPose !== 'undefined' && skierPose.poleAssist) ? clamp(skierPose.poleAssist.x, 0, 1) : 0;
+  if (pVis > 1e-4) {
+    const skW = Math.sin(skier.polingPhase);
+    edgeRoll += -skW * 0.14 * pVis;
+    skiZL += skW * 0.11 * pVis;
+    skiZR -= skW * 0.11 * pVis;
+    skiYawL = 0.16 * pVis * (0.65 + 0.35 * Math.max(0, -skW));
+    skiYawR = -0.16 * pVis * (0.65 + 0.35 * Math.max(0, skW));
+  }
 
   const stanceHalf = (typeof skierRig !== 'undefined' && skierRig && skierRig.STANCE_HALF) ? skierRig.STANCE_HALF : 0.14;
-  seatSingleSkiOnMesh(leftSkiMesh,  stanceHalf, skiZL, hx, hz, rx, rz, pitch, edgeRoll);
-  seatSingleSkiOnMesh(rightSkiMesh, -stanceHalf, skiZR, hx, hz, rx, rz, pitch, edgeRoll);
+  seatSingleSkiOnMesh(leftSkiMesh,  stanceHalf, skiZL, hx, hz, rx, rz, pitch, edgeRoll, skiYawL);
+  seatSingleSkiOnMesh(rightSkiMesh, -stanceHalf, skiZR, hx, hz, rx, rz, pitch, edgeRoll, skiYawR);
 
   // Articulated skier figure: closed-chain leg IK, turn-phase lean/angulation & gripped poles
   updateSkierFigure(edgeRoll, advancePose ? dt : 0);
@@ -63498,6 +63633,7 @@ const elAlt    = document.getElementById('hud-alt');
 const elMode   = document.getElementById('hud-mode');
 const elTitle  = document.getElementById('title-card');
 const elFade   = document.getElementById('fade');
+const elStallHint = document.getElementById('hud-stall-hint');
 
 function getActiveCourseLabel() {
   const s = courseSamples[skier.courseIdx] ? courseSamples[skier.courseIdx].s : 0;
@@ -63524,6 +63660,9 @@ function updateHUD() {
   }
 
   elFade.style.opacity = clamp(skier.fadeAlpha, 0, 1).toFixed(3);
+  if (elStallHint) {
+    elStallHint.classList.toggle('visible', !isCleanMode && !!skier.stallHintVisible);
+  }
 }
 
 let hudHidden = false;
@@ -63548,7 +63687,12 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Space') {
     e.preventDefault();
     demoMode = !demoMode;
-    if (demoMode && skier.phase !== 'skiing') resetSkier(true);
+    if (demoMode) {
+      skier.stallTimer = 0;
+      skier.stallHintVisible = false;
+      skier.poling = 0;
+      if (skier.phase !== 'skiing') resetSkier(true);
+    }
     return;
   }
   if (e.code === 'KeyR') {
@@ -63710,7 +63854,7 @@ async function init() {
     window.__ready = true;
   };
   if (location.search.includes('clean')) {
-    for (const id of ['hud-tl', 'hud-bottom', 'hud-bl', 'hud-br', 'top-controls', 'btn-audio', 'btn-cam', 'btn-hud', 'title-card']) {
+    for (const id of ['hud-tl', 'hud-stall-hint', 'hud-bottom', 'hud-bl', 'hud-br', 'top-controls', 'btn-audio', 'btn-cam', 'btn-hud', 'title-card']) {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
     }
